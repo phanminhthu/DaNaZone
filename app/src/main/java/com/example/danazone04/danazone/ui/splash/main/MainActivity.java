@@ -9,7 +9,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
@@ -19,6 +23,7 @@ import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.ShareDialog;
 import com.example.danazone04.danazone.dialog.StartDialog;
 import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
+import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
@@ -62,17 +67,30 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     LinearLayout mLnStart;
     @ViewById
     LinearLayout mLnEnd;
+    @ViewById
+    RelativeLayout mTvSetting;
+    @ViewById
+    ImageView mImgStart;
+    @ViewById
+    ImageView mImgEnd;
 
     @Override
     protected void afterView() {
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        Animation vibrateAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.vibrate);
+        mImgStart.startAnimation(vibrateAnimation);
+        mImgEnd.startAnimation(vibrateAnimation);
         setUpLocation();
     }
 
-    @Click({R.id.mLnStart, R.id.mLnEnd})
+    @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting})
     void onClick(View v) {
         switch (v.getId()) {
+            case R.id.mTvSetting:
+                SettingActivity_.intent(MainActivity.this).start();
+                break;
+
             case R.id.mLnStart:
                 new StartDialog(MainActivity.this, new StartDialog.OnDialogClickListener() {
                     @Override
@@ -100,7 +118,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                         new ShareDialog(MainActivity.this, new ShareDialog.OnDialogClickListener() {
                                             @Override
                                             public void onCallSerVice() {
-                                                
+
                                             }
                                         }).show();
                                     }
