@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMain"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/_20sdp">
+
+            <LinearLayout
+                android:id="@+id/mLinearProfile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_marginRight="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_50sdp"
+                android:background="@drawable/bg_dialog_profile"
+                android:orientation="vertical">
+
+                <EditText
+
+                    android:id="@+id/mEdtPhone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_40sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:hint="Nhap so dien thoai"
+                    android:imeOptions="actionNext"
+                    android:maxLines="1"
+                    android:textColor="@color/colorMain"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <EditText
+                    android:id="@+id/mEdtPassWord"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:hint="Mật khẩu"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColor="@color/colorMain"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/mTvSubmit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:text="Đăng nhập"
+                    android:textSize="@dimen/_10sdp" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/mImgAvatar"
+                android:layout_width="@dimen/_90sdp"
+                android:layout_height="@dimen/_90sdp"
+                android:layout_centerHorizontal="true"
+                android:src="@drawable/ic_btn_avatar_default_profile" />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

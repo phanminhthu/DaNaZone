@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.danazone04.danazone">
+    <!-- network -->
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Google map -->
+    <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+
+    <!-- Lock screen -->
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
+    <application
+        android:name=".BaseApp_"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <uses-library
+            android:name="com.google.android.maps"
+            android:required="true" />
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBv5-ltIWU3zpQf7JbavNzBO1PFDmWALP4" />
+
+        <activity android:name=".ui.splash.main.MainActivity_"/>
+        <activity android:name=".ui.splash.SplashActivity_">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ui.splash.login.LoginActivity_"/>
+        <activity android:name=".ui.splash.register.RegisterActivity_"/>
+        <activity android:name=".ui.splash.main.setting.information.InformationActivity_"/>
+        <activity android:name=".ui.splash.main.setting.SettingActivity_"/>
+        <activity android:name=".ui.splash.main.setting.outCome.OutComeActivity_"/>
+        <activity android:name=".ui.splash.main.setting.reset.ResetPassWord_"/>
+        <activity android:name=".ui.splash.main.setting.update.UpdateActivity_"/>
+    </application>
+
+</manifest>
