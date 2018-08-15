@@ -63,6 +63,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/mTvTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -73,12 +74,24 @@
                 android:textSize="@dimen/_14sdp" />
 
             <TextView
+                android:id="@+id/mTvKM"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:text="Quãng đường: 16km"
+                android:textColor="@color/colorMain"
+                android:textSize="@dimen/_14sdp" />
+
+            <TextView
+                android:id="@+id/mTvSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:text="Tốc độ: 16km/h"
                 android:textColor="@color/colorMain"
                 android:textSize="@dimen/_14sdp" />
 

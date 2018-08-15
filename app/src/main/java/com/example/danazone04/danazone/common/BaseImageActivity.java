@@ -45,6 +45,21 @@ public class BaseImageActivity extends BaseActivity {
     RelativeLayout mRlBase;
     @ViewById
     TextView mTvSubmit;
+    @ViewById
+    TextView mTvTime;
+    @ViewById
+    TextView mTvSpeed;
+    @ViewById
+    TextView mTvKM;
+
+    @Extra
+    String mTime;
+    @Extra
+    String mKM;
+    @Extra
+    String mSpeed;
+
+
     private String filename;
 
     public static int REQUEST_PERMISSIONS = 1;
@@ -53,9 +68,11 @@ public class BaseImageActivity extends BaseActivity {
 
     @Override
     protected void afterView() {
-        if (mStart != null && mEnd != null) {
+        if (mStart != null && mEnd != null && mTime !=null && mSpeed !=null) {
             mImgStart.setImageBitmap(mStart);
             mImgEnd.setImageBitmap(mEnd);
+            mTvTime.setText(mTime);
+            mTvSpeed.setText(mSpeed);
         }
         filename = String.valueOf(Random());
         fn_permission();
