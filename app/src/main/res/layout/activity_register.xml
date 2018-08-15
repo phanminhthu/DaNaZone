@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorMain"
+    android:gravity="center"
     android:orientation="vertical">
 
     <ScrollView
@@ -13,8 +14,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/_20sdp">
+            android:layout_centerInParent="true">
 
             <LinearLayout
                 android:id="@+id/mLinearProfile"
@@ -36,7 +36,7 @@
                     android:hint="Tên hiển thị"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
-                    android:textColor="@color/colorMain"
+                    android:textColor="@color/colorWhite"
                     android:textSize="@dimen/_11sdp"
                     android:background="@drawable/bg_edittext"
                     android:textColorHint="@color/colorWhite"
@@ -52,10 +52,11 @@
                     android:textColorHint="@color/colorWhite"
                     android:background="@drawable/bg_edittext"
                     android:imeOptions="actionNext"
-                    android:inputType="textEmailAddress"
+                    android:inputType="phone"
                     android:maxLines="1"
                     android:textColor="@color/colorWhite"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:maxLength="11"
                     android:textSize="@dimen/_11sdp" />
 
 

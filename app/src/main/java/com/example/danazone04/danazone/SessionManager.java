@@ -2,15 +2,18 @@ package com.example.danazone04.danazone;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 
 /**
  * Created by PC on 1/17/2018.
  */
 
 public class SessionManager {
-    private static final String SHARED_PREFERENCES_NAME = "com.ulatech.linkclick";
-    private static final String KEY_SAVE_PHONE = "key_save_phone_user";
-    private static final String KEY_SAVE_ID = "key_save_id_user";
+    private static final String SHARED_PREFERENCES_NAME = "com.example.danazone04.danazone";
+    private static final String KEY_SAVE_IMAGE_START = "key_save_image_start";
+    private static final String KEY_SAVE_IMAGE_END = "key_save_image_end";
+    private static final String KEY_SAVE_ID = "key_save_id";
+    private static final String KEY_SAVE_PASS = "key_save_pass";
 
     private static SessionManager sInstance;
 
@@ -36,8 +39,8 @@ public class SessionManager {
      *
      * @param token
      */
-    public void setKeySavePhone(String token) {
-        sharedPref.edit().putString(KEY_SAVE_PHONE, token).apply();
+    public void setKeyImageStart(Bitmap token) {
+        sharedPref.edit().putString(KEY_SAVE_IMAGE_START, String.valueOf(token)).apply();
     }
 
     /**
@@ -45,8 +48,8 @@ public class SessionManager {
      *
      * @return
      */
-    public String getKeySavePhone() {
-        return sharedPref.getString(KEY_SAVE_PHONE, "");
+    public String getKeySaveImageStart() {
+        return sharedPref.getString(KEY_SAVE_IMAGE_START, "");
     }
 
     /**
@@ -54,8 +57,8 @@ public class SessionManager {
      *
      * @param token
      */
-    public void setKeySaveID(String token) {
-        sharedPref.edit().putString(KEY_SAVE_ID, token).apply();
+    public void setKeySaveImageEnd(Bitmap token) {
+        sharedPref.edit().putString(KEY_SAVE_IMAGE_END, String.valueOf(token)).apply();
     }
 
     /**
@@ -63,9 +66,36 @@ public class SessionManager {
      *
      * @return
      */
-    public String getKeySaveID() {
+    public String getKeySaveImageEnd() {
+        return sharedPref.getString(KEY_SAVE_IMAGE_END, "");
+    }
+
+
+    /**
+     * get key save pass
+     *
+     * @return
+     */
+    public String getKeySavePass() {
+        return sharedPref.getString(KEY_SAVE_PASS, "");
+    }
+
+    public void setKeySavePass(String token) {
+        sharedPref.edit().putString(KEY_SAVE_PASS, token).apply();
+    }
+
+    /**
+     * get key save pass
+     *
+     * @return
+     */
+    public String getKeySaveId() {
         return sharedPref.getString(KEY_SAVE_ID, "");
     }
+    public void setKeySaveId(String token) {
+        sharedPref.edit().putString(KEY_SAVE_ID, token).apply();
+    }
+
 
 //    /**
 //     * remove key save pass

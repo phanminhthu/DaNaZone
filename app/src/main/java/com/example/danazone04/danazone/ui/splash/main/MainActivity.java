@@ -2,21 +2,42 @@ package com.example.danazone04.danazone.ui.splash.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.util.Base64;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.DefaultRetryPolicy;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.SessionManager;
+import com.example.danazone04.danazone.common.BaseImageActivity_;
+import com.example.danazone04.danazone.common.Common;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.EndDialog;
 import com.example.danazone04.danazone.dialog.FinishDialog;
@@ -43,13 +64,22 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
+
+import butterknife.internal.Utils;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, GoogleMap.OnInfoWindowClickListener{
+        LocationListener, GoogleMap.OnInfoWindowClickListener {
     private GoogleMap mMap;
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -62,7 +92,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private static int UPDATE_INTERVAL = 5000;
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
-
+    private JSONObject jsonObject;
     @ViewById
     LinearLayout mLnStart;
     @ViewById
@@ -73,6 +103,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     ImageView mImgStart;
     @ViewById
     ImageView mImgEnd;
+    Bitmap bitmap;
+    private static final int MY_CAMERA_REQUEST_CODE = 100;
+    private static final int MY_CAMERA_REQUEST_CODE_END = 101;
+    public static final String image = "image";
+    public static final String imageName = "name";
 
     @Override
     protected void afterView() {
@@ -82,6 +117,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         mImgStart.startAnimation(vibrateAnimation);
         mImgEnd.startAnimation(vibrateAnimation);
         setUpLocation();
+        jsonObject = new JSONObject();
     }
 
     @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting})
@@ -93,43 +129,145 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
             case R.id.mLnStart:
                 new StartDialog(MainActivity.this, new StartDialog.OnDialogClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-                        new DialogCheckin(MainActivity.this, new DialogCheckin.OnDialogClickListener() {
-                            @Override
-                            public void onCallSerVice() {
 
+                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                            dispatchTakenPictureIntent();
+                        } else {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                Toast.makeText(getApplicationContext(), "Permission NeededSSSSSS.", Toast.LENGTH_LONG).show();
                             }
-                        }).show();
+                            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+                        }
+
+
                     }
                 }).show();
                 break;
 
             case R.id.mLnEnd:
                 new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-                        new DialogCheckin(MainActivity.this, new DialogCheckin.OnDialogClickListener() {
-                            @Override
-                            public void onCallSerVice() {
-                                new FinishDialog(MainActivity.this, new FinishDialog.OnDialogClickListener() {
-                                    @Override
-                                    public void onCallSerVice() {
-                                        new ShareDialog(MainActivity.this, new ShareDialog.OnDialogClickListener() {
-                                            @Override
-                                            public void onCallSerVice() {
-
-                                            }
-                                        }).show();
-                                    }
-                                }).show();
+                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                            takenImageEnd();
+                        } else {
+                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                Toast.makeText(getApplicationContext(), "Permission NeededSSSSSS.", Toast.LENGTH_LONG).show();
                             }
-                        }).show();
+                            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+                        }
                     }
                 }).show();
                 break;
         }
     }
+
+    private void dispatchTakenPictureIntent() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
+        }
+    }
+
+    private void takenImageEnd(){
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if(intent.resolveActivity(getPackageManager()) !=null){
+            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (resultCode == RESULT_OK) {
+            if (requestCode == MY_CAMERA_REQUEST_CODE) {
+
+                Bundle extras = data.getExtras();
+                bitmap = (Bitmap) extras.get("data");
+
+                final String a = encodeTobase64(bitmap);
+
+                if (bitmap != null) {
+                    new DialogCheckin(MainActivity.this, bitmap, new DialogCheckin.OnDialogClickListener() {
+                        @Override
+                        public void onCallSerVice() {
+                            SessionManager.getInstance().setKeyImageStart(bitmap);
+                            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+
+                            StringRequest stringRequest = new StringRequest(Request.Method.POST, Common.URL_UP_AVATAR, new Response.Listener<String>() {
+                                @Override
+                                public void onResponse(String response) {
+
+                                    Log.i("Myresponse",""+response);
+                                    Toast.makeText(MainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
+
+                                }
+                            }, new Response.ErrorListener() {
+                                @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    Log.i("Mysmart",""+error);
+                                    Toast.makeText(MainActivity.this, ""+error, Toast.LENGTH_SHORT).show();
+
+                                }
+                            }){
+                                @Override
+                                protected Map<String, String> getParams() throws AuthFailureError {
+                                    Map<String,String> param = new HashMap<>();
+
+
+                                   // Log.i("Mynewsam",""+a);
+                                    param.put("image",a);
+                                    param.put("image1",a);
+                                    return param;
+                                }
+                            };
+
+                            requestQueue.add(stringRequest);
+
+
+                        }
+                    }).show();
+                }
+            }
+
+            if(requestCode == MY_CAMERA_REQUEST_CODE_END){
+                Bundle bundle = data.getExtras();
+                final Bitmap bm = (Bitmap) bundle.get("data");
+
+                String a = encodeTobase64(bm);
+
+                new DialogCheckin(MainActivity.this,bm, new DialogCheckin.OnDialogClickListener() {
+                    @Override
+                    public void onCallSerVice() {
+                        SessionManager.getInstance().setKeySaveImageEnd(bm);
+                        BaseImageActivity_.intent(MainActivity.this).mStart(bitmap).mEnd(bm).start();
+                    }
+                }).show();
+            }
+        }
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_CAMERA_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                dispatchTakenPictureIntent();
+            } else {
+                Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
+                dispatchTakenPictureIntent();
+            }
+        } else {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        }
+    }
+
     private void setUpLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
                 .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
@@ -183,29 +321,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
 
-    @SuppressLint("MissingPermission")
     private void displayLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
-                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
-                .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+
             return;
         }
-
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
 
         if (mLocation != null) {
             final double latitude = mLocation.getLatitude();
             final double longitude = mLocation.getLongitude();
-
             mLatLng = new LatLng(latitude, longitude);
-
-//            LatLng center = new LatLng(latitude, longitude);
-//            LatLng northSide = SphericalUtil.computeOffset(center, 100000, 0);
-//            LatLng southSide = SphericalUtil.computeOffset(center, 100000, 180);
-//            LatLngBounds bounds = LatLngBounds.builder()
-//                    .include(northSide)
-//                    .include(southSide)
-//                    .build();
 
             //add marker
             if (mCurrent != null)
@@ -270,5 +398,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             return;
         }
         LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    public static String encodeTobase64(Bitmap image) {
+        Bitmap immagex=image;
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] b = baos.toByteArray();
+        String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+        return imageEncoded;
     }
 }
