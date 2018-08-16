@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_50sdp"
             android:gravity="center"
-            android:text="Share Facebook"
+            android:text="Chúc mừng!"
             android:textColor="@color/colorMain"
             android:textSize="@dimen/_16sdp"
             android:textStyle="bold" />
@@ -28,7 +28,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:gravity="center"
-            android:text="Chia sẽ Facebook để mọi người cùng biết thành tích của bạn"
+            android:paddingLeft="@dimen/_5sdp"
+            android:paddingRight="@dimen/_5sdp"
+            android:text="Bạn vừa đạt 20 điểm, click vào đổi mã để đổi lấy mã giảm giá khi mua hàng tại xedapdana.com"
             android:textColor="@color/black" />
 
         <TextView
@@ -39,7 +41,7 @@
             android:layout_marginTop="@dimen/_30sdp"
             android:background="@drawable/bg_edittext"
             android:textSize="@dimen/_10sdp"
-            android:text="Chia sẽ ngay"
+            android:text="Lấy mã"
             android:layout_marginBottom="@dimen/_5sdp"/>
 
     </android.support.v7.widget.LinearLayoutCompat>

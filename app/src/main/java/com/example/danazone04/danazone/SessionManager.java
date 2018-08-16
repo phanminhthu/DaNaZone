@@ -14,6 +14,7 @@ public class SessionManager {
     private static final String KEY_SAVE_IMAGE_END = "key_save_image_end";
     private static final String KEY_SAVE_ID = "key_save_id";
     private static final String KEY_SAVE_PASS = "key_save_pass";
+    private static final String KEY_SAVE_COIN = "key_save_coin";
 
     private static SessionManager sInstance;
 
@@ -94,6 +95,18 @@ public class SessionManager {
     }
     public void setKeySaveId(String token) {
         sharedPref.edit().putString(KEY_SAVE_ID, token).apply();
+    }
+
+    public String getKeySaveCoin() {
+        return sharedPref.getString(KEY_SAVE_COIN, "");
+    }
+    public void setKeySaveCoin(String token) {
+        sharedPref.edit().putString(KEY_SAVE_COIN, token).apply();
+
+    }
+
+    public void updateCoin(String token){
+        sharedPref.edit().putString(KEY_SAVE_COIN, token).apply();
     }
 
 

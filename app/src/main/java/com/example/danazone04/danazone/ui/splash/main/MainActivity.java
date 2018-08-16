@@ -180,6 +180,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
+
                         if(isRun)
                             return;
                         isRun = true;
@@ -221,9 +222,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         }
 
 
-//                        mCurrent = mMap.addMarker(new MarkerOptions().position(mLatLng)
-//                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
-//                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.0f));
+                        mCurrent = mMap.addMarker(new MarkerOptions().position(mLatLng)
+                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.0f));
                         end();
                         getDirection();
 
@@ -289,7 +290,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                     Map<String,String> param = new HashMap<>();
 
 
-                                   // Log.i("Mynewsam",""+a);
+                                    // Log.i("Mynewsam",""+a);
                                     param.put("image",a);
                                     param.put("image1",a);
                                     return param;
@@ -393,7 +394,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void displayLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-           // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             return;
         }
         mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
@@ -409,42 +410,53 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             if (mCurrent != null)
                 mCurrent.remove();
 
-            mCurrent = mMap.addMarker(new MarkerOptions()
-                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
-                    .position(new LatLng(latitude, longitude)));
+//            mCurrent = mMap.addMarker(new MarkerOptions()
+//                   // .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
+//                    .position(new LatLng(latitude, longitude)));
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.0f));
 
         }
     }
 
     private void start(){
-        mMap.clear();
+
+        Toast.makeText(this,"bat dau", Toast.LENGTH_SHORT).show();
         final double latitud = mLocation.getLatitude();
         final double longitud = mLocation.getLongitude();
 
         mLats = String.valueOf(latitud);
         mLngs = String.valueOf(latitud);
 
+        System.out.println("22222222222222" + mLats + "---- " + mLngs);
+
+
         mLatLng = new LatLng(latitud, longitud);
         mCurrent = mMap.addMarker(new MarkerOptions()
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
-                .position(new LatLng(latitud, longitud)));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_blue))
+                .position(new LatLng(latitud, longitud)).title("bat dau"));
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitud, longitud), 14.0f));
 
     }
 
     private void end(){
-        mMap.clear();
-        final double latitu = mLocation.getLatitude();
-        final double longitu = mLocation.getLongitude();
+        Toast.makeText(this,"ket thuc", Toast.LENGTH_SHORT).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            return;
+        }
+        Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        final double latitu = location.getLatitude();
+        final double longitu = location.getLongitude();
 
         mLate = String.valueOf(latitu);
         mLnge = String.valueOf(latitu);
-
+        System.out.println("22222222222222333333" + mLate + "---- " + mLnge);
         mLatLng = new LatLng(latitu, longitu);
         mCurrent = mMap.addMarker(new MarkerOptions()
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
-                .position(new LatLng(latitu, longitu)));
+                .position(new LatLng(latitu, longitu))
+                .title("ket thuc")
+        );
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitu, longitu), 14.0f));
 
     }
@@ -452,7 +464,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public void onConnected(@Nullable Bundle bundle) {
         displayLocation();
-        startLocationUpdates();
+        //startLocationUpdates();
     }
 
     @Override
@@ -512,7 +524,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     private void getDirection() {
-       // currentPosition = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        // currentPosition = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
         String requestApi = null;
         try {
             requestApi = "https://maps.googleapis.com/maps/api/directions/json?" + "mode=driving&" +
@@ -565,7 +577,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     mLatLng = polyLineList.get(polyLineList.size() - 1);
                     mMap.addMarker(new MarkerOptions()
                             .position(polyLineList.get(polyLineList.size() - 1))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_blue))
                     );
 
                 } catch (Exception e) {
@@ -578,7 +590,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
             }
         });
-       getInformationService(mLats,mLngs , mLate, mLnge );
+        getInformationService(mLats,mLngs , mLate, mLnge );
     }
 
     /**
@@ -664,5 +676,4 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
         return poly;
     }
-
 }

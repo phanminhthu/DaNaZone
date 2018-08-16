@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.ui.splash.TakeImage_;
 
 import org.androidannotations.annotations.Click;
@@ -65,14 +66,32 @@ public class BaseImageActivity extends BaseActivity {
     public static int REQUEST_PERMISSIONS = 1;
     boolean boolean_permission;
     boolean boolean_save;
+    private int key = 0;
 
     @Override
     protected void afterView() {
-        if (mStart != null && mEnd != null && mTime !=null && mSpeed !=null) {
+        key = key + 1;
+        if (!SessionManager.getInstance().getKeySaveCoin().equals("")) {
+           // key = Integer.valueOf(SessionManager.getInstance().getKeySaveId() +1);
+
+            SessionManager.getInstance().updateCoin(String.valueOf(Integer.valueOf(SessionManager.getInstance().getKeySaveCoin()) +1));
+        } else {
+            SessionManager.getInstance().setKeySaveCoin(String.valueOf(key));
+        }
+        if (mStart != null && mEnd != null) {
             mImgStart.setImageBitmap(mStart);
             mImgEnd.setImageBitmap(mEnd);
             mTvTime.setText(mTime);
-            mTvSpeed.setText(mSpeed);
+            if (mSpeed == null) {
+                mTvSpeed.setText("0 KM/H");
+                mTvSpeed.setText(mSpeed);
+            }
+
+            if (mKM == null) {
+                mTvKM.setText("0.0 KM");
+            } else {
+                mTvKM.setText(mKM);
+            }
         }
         filename = String.valueOf(Random());
         fn_permission();
@@ -103,7 +122,7 @@ public class BaseImageActivity extends BaseActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
             fos.close();
-            Toast.makeText(getApplicationContext(),imagePath.getAbsolutePath()+"",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), imagePath.getAbsolutePath() + "", Toast.LENGTH_SHORT).show();
             boolean_save = true;
 
             mTvSubmit.setText("Check image");
@@ -125,7 +144,7 @@ public class BaseImageActivity extends BaseActivity {
     }
 
     private void fn_permission() {
-        if ((ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)||
+        if ((ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) ||
                 (ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
 
             if ((ActivityCompat.shouldShowRequestPermissionRationale(BaseImageActivity.this, android.Manifest.permission.READ_EXTERNAL_STORAGE))) {
@@ -156,7 +175,8 @@ public class BaseImageActivity extends BaseActivity {
             }
         }
     }
-    public int Random(){
+
+    public int Random() {
         //tong tu 10 den 19
         Random rand = new Random();
         int num = rand.nextInt(10000000);
