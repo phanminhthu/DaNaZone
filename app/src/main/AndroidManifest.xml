@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.danazone04.danazone">
+    package="com.example.danazone04.danazone"
+    android:installLocation="auto">
     <!-- network -->
 
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -55,7 +56,9 @@
         <activity android:name=".ui.splash.main.setting.update.UpdateActivity_"/>
         <activity android:name=".ui.splash.TakeImage_"/>
         <activity android:name=".common.BaseImageActivity_"/>
+        <activity android:name=".ui.splash.main.metter.MetterActivity_"/>
 
+        <service android:name=".speed.GpsServices"/>
     </application>
 
 </manifest>

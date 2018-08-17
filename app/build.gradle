@@ -58,5 +58,8 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:10.2.1'
     implementation 'com.google.android.gms:play-services:10.2.1'
     implementation 'com.google.maps.android:android-maps-utils:0.5+'
+
+    implementation 'com.google.code.gson:gson:+'
+   // implementation 'com.github.navasmdc:MaterialDesign:1.5@aar'
 }
 //apply plugin: 'com.google.gms.google-services'

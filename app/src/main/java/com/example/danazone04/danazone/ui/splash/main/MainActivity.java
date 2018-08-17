@@ -2,63 +2,64 @@ package com.example.danazone04.danazone.ui.splash.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 
+import android.location.GpsSatellite;
+import android.location.GpsStatus;
 import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.DefaultRetryPolicy;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.common.BaseImageActivity_;
-import com.example.danazone04.danazone.common.Common;
-import com.example.danazone04.danazone.common.GGApi;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.EndDialog;
 import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.ShareDialog;
 import com.example.danazone04.danazone.dialog.StartDialog;
 import com.example.danazone04.danazone.remote.IGoogleApi;
+import com.example.danazone04.danazone.speed.Data;
+import com.example.danazone04.danazone.speed.GpsServices;
 import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
+import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
 import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationListener;
+
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -74,32 +75,26 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.SquareCap;
+import com.google.gson.Gson;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
-
-import butterknife.internal.Utils;
-import retrofit2.Call;
-import retrofit2.Callback;
+import java.util.Locale;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_main)
 public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        Runnable, android.location.LocationListener {
+        LocationListener, GpsStatus.Listener {
     private GoogleMap mMap;
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -119,21 +114,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private IGoogleApi mService;
     private LatLng currentPosition;
     private List<LatLng> polyLineList;
-
-    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
-    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 30000;
-    protected LocationManager locationManager;
-    static double n = 0;
-    private Long s1, r1;
-    double plat, plon, clat, clon, dis;
-    MyCount counter;
-    Thread t1;
-    boolean bool = true;
-    Location location;
-    private final static int DISTANCE_UPDATES = 1;
-    private final static int TIME_UPDATES = 5;
-    private static final int PERMISSION_REQUEST_CODE = 1;
-    private boolean LocationAvailable;
 
 
     @ViewById
@@ -155,13 +135,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     @ViewById
     TextView mTvSpeed;
     @ViewById
-    TextView mTvTime;
+    Chronometer mTvTime;
     @ViewById
     TextView mTvCalo;
     @ViewById
     TextView mTvPause;
     @ViewById
-    TextView mTvResum;
+    RelativeLayout mRlPause;
+    private LocationManager mLocationManager;
+    @ViewById
+    TextView mTvMaxSpeed;
+    @ViewById
+    TextView mTvMinxSpeed;
+
 
     Bitmap bitmap;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -171,22 +157,19 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private String distanceValue;
     private String mLats, mLngs, mLate, mLnge;
 
-    long lStartTime, lPauseTime, lSystemTime = 0L;
-    Handler handler = new Handler();
-    boolean isRun;
+    private Data.onGpsServiceUpdate onGpsServiceUpdate;
+    private SharedPreferences sharedPreferences;
+    private static Data data;
 
-    Runnable runnable = new Runnable() {
-        @Override
-        public void run() {
-            lSystemTime = SystemClock.uptimeMillis() - lStartTime;
-            long lUpdateTime = lPauseTime + lSystemTime;
-            long secs = (long) (lUpdateTime / 1000);
-            long mins = secs / 60;
-            secs = secs % 60;
-            mTvTime.setText("" + mins + ":" + String.format("%02d", secs));
-            handler.postDelayed(this, 0);
-        }
-    };
+    private boolean firstfix;
+
+    private boolean LocationAvailable;
+    private final static int DISTANCE_UPDATES = 1;
+    private final static int TIME_UPDATES = 5;
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private String date;
+    private String time, timeEnd;
+
 
     @Override
     protected void afterView() {
@@ -196,92 +179,146 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         mImgStart.startAnimation(vibrateAnimation);
         mImgEnd.startAnimation(vibrateAnimation);
 
-        LocationAvailable = false;
-
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        if (checkPermission()) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
-        } else {
-            requestPermission();
-        }
-
-        //setUpLocation();
-        showCurrentLocation();
+        data = new Data(onGpsServiceUpdate);
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        mTvPause.setText("ananana");
+        updateService();
         buidGoogleApiClient();
         createLocationRequest();
         displayLocation();
 
+
     }
 
-    protected void showCurrentLocation() {
+    private void updateService() {
+        onGpsServiceUpdate = new Data.onGpsServiceUpdate() {
+            @Override
+            public void update() {
+                double maxSpeedTemp = data.getMaxSpeed();
+                double distanceTemp = data.getDistance();
+                double averageTemp;
+                if (sharedPreferences.getBoolean("auto_average", false)) {
+                    averageTemp = data.getAverageSpeedMotion();
+                } else {
+                    averageTemp = data.getAverageSpeed();
+                }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                String speedUnits;
+                String distanceUnits;
+                if (sharedPreferences.getBoolean("miles_per_hour", false)) {
+                    maxSpeedTemp *= 0.62137119;
+                    distanceTemp = distanceTemp / 1000.0 * 0.62137119;
+                    averageTemp *= 0.62137119;
+                    speedUnits = "mi/h";
+                    distanceUnits = "mi";
+                } else {
+                    speedUnits = "km/h";
+                    if (distanceTemp <= 1000.0) {
+                        distanceUnits = "m";
+                    } else {
+                        distanceTemp /= 1000.0;
+                        distanceUnits = "km";
+                    }
+                }
+                SpannableString s = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
+                s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
+                mTvMaxSpeed.setText(s);
 
-        if (location != null) {
-            String message = String.format(
-                    "Current Location \n Longitude: %1$s \n Latitude: %2$s",
-                    location.getLongitude(), location.getLatitude()
-            );
-            clat = location.getLatitude();
-            clon = location.getLongitude();
-            Toast.makeText(MainActivity.this, message,
-                    Toast.LENGTH_LONG).show();
+                s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
+                s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
+                mTvSpeed.setText(s);
+
+                SpannableString s1 = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
+                s1.setSpan(new RelativeSizeSpan(0.5f), s1.length() - 2, s1.length(), 0);
+                // distance.setText(s);
+                mTvDistance.setText(s1);
+            }
+        };
+
+        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        if (checkPermission()) {
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
         } else {
-            Toast.makeText(MainActivity.this, "null location",
-                    Toast.LENGTH_LONG).show();
+            requestPermission();
         }
+        mTvTime.setText("00:00:00");
+        mTvTime.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
+            boolean isPair = true;
+
+            @Override
+            public void onChronometerTick(Chronometer chrono) {
+                long time;
+                if (data.isRunning()) {
+                    time = SystemClock.elapsedRealtime() - chrono.getBase();
+                    data.setTime(time);
+                } else {
+                    time = data.getTime();
+                }
+
+                int h = (int) (time / 3600000);
+                int m = (int) (time - h * 3600000) / 60000;
+                int s = (int) (time - h * 3600000 - m * 60000) / 1000;
+                String hh = h < 10 ? "0" + h : h + "";
+                String mm = m < 10 ? "0" + m : m + "";
+                String ss = s < 10 ? "0" + s : s + "";
+                chrono.setText(hh + ":" + mm + ":" + ss);
+
+                if (data.isRunning()) {
+                    chrono.setText(hh + ":" + mm + ":" + ss);
+                } else {
+                    if (isPair) {
+                        isPair = false;
+                        chrono.setText(hh + ":" + mm + ":" + ss);
+                    } else {
+                        isPair = true;
+                        chrono.setText("");
+                    }
+                }
+
+            }
+        });
 
     }
 
-    @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting, R.id.mTvPause, R.id.mTvResum})
+    @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting, R.id.mRlPause})
     void onClick(View v) {
         switch (v.getId()) {
-            case R.id.mTvPause:
-                counter.cancel();
-                bool = false;
+            case R.id.mRlPause:
+                setUpDate();
+                setUpTime();
+                if (!data.isRunning()) {
+                    mTvPause.setText("Tạm dừng");
+                    data.setRunning(true);
+                    mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
+                    mTvTime.start();
+                    data.setFirstTime(true);
+                    startService(new Intent(getBaseContext(), GpsServices.class));
+                    // refresh.setVisibility(View.INVISIBLE);
+                } else {
 
-                if(!isRun)
-                    return;
-                isRun = false;
-                lPauseTime += lSystemTime;
-                handler.removeCallbacks(runnable);
+                    mTvPause.setText("Tiếp tục");
+                    data.setRunning(false);
 
+
+                    stopService(new Intent(getBaseContext(), GpsServices.class));
+                    // refresh.setVisibility(View.VISIBLE);
+                }
                 break;
-            case R.id.mTvResum:
-                counter = new MyCount(s1, 1000);
-                counter.start();
-                bool = true;
 
-                if(isRun)
-                    return;
-                isRun = true;
-                lStartTime = lPauseTime;
-                handler.postDelayed(runnable, 0);
-
-                break;
             case R.id.mTvSetting:
                 SettingActivity_.intent(MainActivity.this).start();
                 break;
+
 
             case R.id.mLnStart:
                 new StartDialog(MainActivity.this, new StartDialog.OnDialogClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-                        if (isRun)
-                            return;
-                        isRun = true;
-                        lStartTime = SystemClock.uptimeMillis();
-                        handler.postDelayed(runnable, 0);
-
                         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                             dispatchTakenPictureIntent();
                         } else {
                             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                Toast.makeText(getApplicationContext(), "Permission NeededSSSSSS.", Toast.LENGTH_LONG).show();
                             }
                             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
                         }
@@ -292,28 +329,20 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 break;
 
             case R.id.mLnEnd:
-//                if (!isRun)
-//                    return;
-//                isRun = false;
-//                lPauseTime = 0;
-//                handler.removeCallbacks(runnable);
+                setUpTimeEnd();
+                data.setRunning(false);
+                stopService(new Intent(getBaseContext(), GpsServices.class));
 
 
                 new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-                        if (!isRun)
-                            return;
-                        isRun = false;
-                        lPauseTime = 0;
-                        handler.removeCallbacks(runnable);
 
                         if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                             takenImageEnd();
                         } else {
                             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                                Toast.makeText(getApplicationContext(), "Permission NeededSSSSSS.", Toast.LENGTH_LONG).show();
                             }
                             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
                         }
@@ -362,18 +391,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         @Override
                         public void onCallSerVice() {
                             SessionManager.getInstance().setKeyImageStart(bitmap);
-                            // start();
-                            t1 = new Thread();
-                            t1.start();
-                            counter = new MyCount(30000, 1000);
-                            counter.start();
-
-//                            double time = n * 30 + r1;
-//                            Toast.makeText(MainActivity.this, "distance in metres:" + String.valueOf(dis) + "Velocity in m/sec :" + String.valueOf(dis / time) + "Time :" + String.valueOf(time), Toast.LENGTH_LONG).show();
-//
-//                            mTvCalo.setText("11111");
-//                            mTvDistance.setText(String.valueOf(dis));
-//                            mTvSpeed.setText(String.valueOf(dis / time));
 
                         }
                     }).show();
@@ -383,7 +400,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             if (requestCode == MY_CAMERA_REQUEST_CODE_END) {
                 Bundle bundle = data.getExtras();
                 final Bitmap bm = (Bitmap) bundle.get("data");
-
                 String a = encodeTobase64(bm);
 
                 new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
@@ -395,7 +411,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                 .mEnd(bm)
                                 .mTime(mTvTime.getText().toString())
                                 .mKM(mTvDistance.getText().toString())
-                                .mSpeed(mImgText.getText().toString()).start();
+                                .mSpeed(mTvMinxSpeed.getText().toString())
+                                .mMaxSpeed(mTvMaxSpeed.getText().toString())
+                                .mCalo("")
+                                .mTimeStart(time)
+                                .mTimeEnd(timeEnd)
+                                .mDate(date)
+                                .start();
                     }
                 }).show();
             }
@@ -415,14 +437,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-
         if (requestCode == PERMISSION_REQUEST_CODE) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 /**
                  * We are good, turn on monitoring
                  */
                 if (checkPermission()) {
-                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
+                    mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
                 } else {
                     requestPermission();
                 }
@@ -497,6 +518,37 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public void onLocationChanged(Location location) {
+
+        if (location.hasAccuracy()) {
+            SpannableString s = new SpannableString(String.format("%.0f", location.getAccuracy()) + "m");
+            s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
+            //  accuracy.setText(s);
+
+            if (firstfix) {
+
+
+                mTvPause.setText("HIEN HIEN");
+                if (!data.isRunning()) {
+
+                }
+                firstfix = false;
+            }
+        } else {
+            firstfix = true;
+        }
+
+        if (location.hasSpeed()) {
+
+            String speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6) + "km/h";
+
+            if (sharedPreferences.getBoolean("miles_per_hour", false)) { // Convert to MPH
+                speed = String.format(Locale.ENGLISH, "%.0f", location.getSpeed() * 3.6 * 0.62137119) + "mi/h";
+            }
+            SpannableString s = new SpannableString(speed);
+            s.setSpan(new RelativeSizeSpan(0.25f), s.length() - 4, s.length(), 0);
+            mTvSpeed.setText(s);
+
+        }
         mLocation = location;
         displayLocation();
     }
@@ -508,22 +560,39 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     @Override
     public void onProviderEnabled(String provider) {
-        if (checkPermission()) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
-        } else {
-            requestPermission();
-        }
+
     }
 
     @Override
     public void onProviderDisabled(String provider) {
-        if (checkPermission()) {
-            locationManager.removeUpdates(this);
+
+    }
+
+    /**
+     * Request permissions from the user
+     */
+    private void requestPermission() {
+
+        /**
+         * Previous denials will warrant a rationale for the user to help convince them.
+         */
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Toast.makeText(this, "This app relies on location data for it's main functionality. Please enable GPS data to access all features.", Toast.LENGTH_LONG).show();
         } else {
-            requestPermission();
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
         }
     }
 
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            LocationAvailable = true;
+            return true;
+        } else {
+            LocationAvailable = false;
+            return false;
+        }
+    }
 
     @SuppressLint("MissingPermission")
     @Override
@@ -585,85 +654,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         return poly;
     }
 
-    @Override
-    public void run() {
-        while (bool) {
-            clat = location.getLatitude();
-            clon = location.getLongitude();
-            if (clat != plat || clon != plon) {
-                dis += getDistance(plat, plon, clat, clon);
-                plat = clat;
-                plon = clon;
-
-            }
-
-        }
-    }
-
-    public class MyCount extends CountDownTimer {
-        public MyCount(long millisInFuture, long countDownInterval) {
-            super(millisInFuture, countDownInterval);
-        }
-
-        @Override
-        public void onFinish() {
-            counter = new MyCount(30000, 1000);
-            counter.start();
-            n = n + 1;
-        }
-
-        @Override
-        public void onTick(long millisUntilFinished) {
-            s1 = millisUntilFinished;
-            r1 = (30000 - s1) / 1000;
-            //e1.setText(String.valueOf(r1));
-            double time = n * 30 + r1;
-
-            mTvCalo.setText("11111");
-            mTvDistance.setText(String.valueOf(dis));
-            mTvSpeed.setText(String.valueOf(dis / time));
-
-
-        }
-    }
-
-    public double getDistance(double lat1, double lon1, double lat2, double lon2) {
-        double latA = Math.toRadians(lat1);
-        double lonA = Math.toRadians(lon1);
-        double latB = Math.toRadians(lat2);
-        double lonB = Math.toRadians(lon2);
-        double cosAng = (Math.cos(latA) * Math.cos(latB) * Math.cos(lonB - lonA)) +
-                (Math.sin(latA) * Math.sin(latB));
-        double ang = Math.acos(cosAng);
-        double dist = ang * 6371;
-        return dist;
-    }
-
-    private boolean checkPermission() {
-        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            LocationAvailable = true;
-            return true;
-        } else {
-            LocationAvailable = false;
-            return false;
-        }
-    }
-
-    /**
-     * Request permissions from the user
-     */
-    private void requestPermission() {
-
-        /**
-         * Previous denials will warrant a rationale for the user to help convince them.
-         */
-        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
-            Toast.makeText(this, "This app relies on location data for it's main functionality. Please enable GPS data to access all features.", Toast.LENGTH_LONG).show();
-        } else {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
-        }
-    }
 
     private void displayLocation() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
@@ -701,5 +691,137 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         mLocationRequest.setFastestInterval(FATEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firstfix = true;
+        if (!data.isRunning()) {
+            Gson gson = new Gson();
+            String json = sharedPreferences.getString("data", "");
+            data = gson.fromJson(json, Data.class);
+        }
+        if (data == null) {
+            data = new Data(onGpsServiceUpdate);
+        } else {
+            data.setOnGpsServiceUpdate(onGpsServiceUpdate);
+        }
+
+        if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
+
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
+        } else {
+            Log.w("MainActivity", "No GPS location provider found. GPS data display will not be available.");
+        }
+
+        if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            showGpsDisabledDialog();
+        }
+
+        mLocationManager.addGpsStatusListener(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mLocationManager.removeUpdates(this);
+        mLocationManager.removeGpsStatusListener(this);
+        SharedPreferences.Editor prefsEditor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(data);
+        prefsEditor.putString("data", json);
+        prefsEditor.commit();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        stopService(new Intent(getBaseContext(), GpsServices.class));
+    }
+
+    @Override
+    public void onGpsStatusChanged(int event) {
+        switch (event) {
+            case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+
+
+                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
+                int satsInView = 0;
+                int satsUsed = 0;
+                Iterable<GpsSatellite> sats = gpsStatus.getSatellites();
+                for (GpsSatellite sat : sats) {
+                    satsInView++;
+                    if (sat.usedInFix()) {
+                        satsUsed++;
+                    }
+                }
+                //satellite.setText(String.valueOf(satsUsed) + "/" + String.valueOf(satsInView));
+                if (satsUsed == 0) {
+                    mTvPause.setText("Tiếp tục");
+                    data.setRunning(false);
+                    stopService(new Intent(getBaseContext(), GpsServices.class));
+                    mTvPause.setText("ananananan");
+                    firstfix = true;
+                }
+                break;
+
+            case GpsStatus.GPS_EVENT_STOPPED:
+                if (!mLocationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    showGpsDisabledDialog();
+                }
+                break;
+            case GpsStatus.GPS_EVENT_FIRST_FIX:
+                break;
+        }
+    }
+
+    public void showGpsDisabledDialog() {
+        new ShareDialog(MainActivity.this, new ShareDialog.OnDialogClickListener() {
+            @Override
+            public void onCallSerVice() {
+                startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
+            }
+        }).show();
+    }
+
+    public static Data getData() {
+        return data;
+    }
+
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
+
+    /**
+     * setup date
+     * dd/MM/yyyy
+     */
+    private void setUpDate() {
+        String pattern = "dd/MM/yyyy";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        date = simpleDateFormat.format(new Date());
+    }
+
+    private void setUpTime() {
+        String pattern = "HH:mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        time = simpleDateFormat.format(new Date());
+    }
+
+    private void setUpTimeEnd() {
+        String pattern = "HH:mm";
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
+        timeEnd = simpleDateFormat.format(new Date());
     }
 }

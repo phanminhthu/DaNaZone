@@ -73,6 +73,10 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     TextView mTvHide;
     @ViewById
     ImageView mImgCancelDialog;
+    @ViewById
+    TextView mTvMaxSpeed;
+    @ViewById
+    TextView mTvCalo;
 
 
     @Extra
@@ -81,6 +85,27 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     String mKM;
     @Extra
     String mSpeed;
+    @Extra
+    String mMaxSpeed;
+    @Extra
+    String mCalo;
+    @Extra
+    String mStartPoint;
+    @Extra
+    String mEndPoint;
+    @Extra
+    String mTimeStart;
+    @Extra
+    String mTimeEnd;
+    @Extra
+    String mDate;
+
+    @ViewById
+    TextView mTvTimeStart;
+    @ViewById
+    TextView mTvTimeEnd;
+    @ViewById
+    TextView mTvData;
 
 
     private String filename;
@@ -129,6 +154,12 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
             } else {
                 mTvKM.setText(mKM);
             }
+
+            mTvTimeStart.setText(mTimeStart +"h");
+            mTvTimeEnd.setText(mTimeEnd + "h");
+            mTvData.setText(mDate);
+            mTvMaxSpeed.setText(mMaxSpeed);
+            mTvCalo.setText(mCalo);
         }
         filename = String.valueOf(Random());
         fn_permission();

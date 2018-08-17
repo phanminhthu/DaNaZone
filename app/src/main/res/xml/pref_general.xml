@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="Cài đặt">
+
+    <SwitchPreference
+        android:key="auto_average"
+        android:title="Tự động phát hiện thời gian dừng"
+        android:summary="Thời gian dừng sẽ không tính tốc độ trung bình"
+        />
+
+    <SwitchPreference
+        android:key="miles_per_hour"
+        android:title="Sử dụng mi/h"
+        android:summary="Hiển thị tốc độ tính bằng mi/h thay vì km/h"
+    />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>

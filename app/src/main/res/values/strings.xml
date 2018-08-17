@@ -2,4 +2,7 @@
     <string name="app_name">DaNaZone</string>
     <string name="key_map">AIzaSyBv5-ltIWU3zpQf7JbavNzBO1PFDmWALP4</string>
     <string name="google_direction_api">AIzaSyBv5-ltIWU3zpQf7JbavNzBO1PFDmWALP4</string>
+    <string name="running">Đang tính toán...</string>
+    <string name="notification">Tốc độ tối đa : %1$s, Quãng đường : %2$s.</string>
+    <string name="noti_id" translatable="false">Speedmeterisanid</string>
 </resources>

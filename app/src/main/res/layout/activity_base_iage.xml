@@ -22,7 +22,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/mTvTimeStart"
-            android:text="- "
+            android:text=" - "
             android:textColor="@color/colorWhite" />
 
         <TextView
@@ -39,6 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/mTvTimeEnd"
             android:text="17/2/2018"
+            android:layout_marginLeft="@dimen/_20sdp"
             android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
@@ -48,12 +49,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_40sdp" />
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_40sdp"
-        android:scrollbars="none">
 
         <RelativeLayout
             android:id="@+id/mRlBase"
@@ -261,67 +256,67 @@
                         android:textColor="@color/black" />
                 </RelativeLayout>
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="@dimen/_10sdp">-->
 
-                    <ImageView
-                        android:id="@+id/mImgf"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:background="@drawable/ic_alarm" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/mImgf"-->
+                        <!--android:layout_width="@dimen/_20sdp"-->
+                        <!--android:layout_height="@dimen/_20sdp"-->
+                        <!--android:background="@drawable/ic_alarm" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_toRightOf="@id/mImgf"
-                        android:text="BẮT ĐẦU"
-                        android:textColor="@color/black" />
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="@dimen/_10sdp"-->
+                        <!--android:layout_toRightOf="@id/mImgf"-->
+                        <!--android:text="BẮT ĐẦU"-->
+                        <!--android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/mTvStart"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:text="00:00"
-                        android:textColor="@color/black" />
-                </RelativeLayout>
+                    <!--<TextView-->
+                        <!--android:id="@+id/mTvStart"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:text="00:00"-->
+                        <!--android:textColor="@color/black" />-->
+                <!--</RelativeLayout>-->
 
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp">
+                <!--<RelativeLayout-->
+                    <!--android:layout_width="match_parent"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:layout_marginBottom="@dimen/_10sdp">-->
 
-                    <ImageView
-                        android:id="@+id/mImgg"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:background="@drawable/ic_alarm" />
+                    <!--<ImageView-->
+                        <!--android:id="@+id/mImgg"-->
+                        <!--android:layout_width="@dimen/_20sdp"-->
+                        <!--android:layout_height="@dimen/_20sdp"-->
+                        <!--android:background="@drawable/ic_alarm" />-->
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_toRightOf="@id/mImgg"
-                        android:text="KẾT THÚC"
-                        android:textColor="@color/black" />
+                    <!--<TextView-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:layout_marginLeft="@dimen/_10sdp"-->
+                        <!--android:layout_toRightOf="@id/mImgg"-->
+                        <!--android:text="KẾT THÚC"-->
+                        <!--android:textColor="@color/black" />-->
 
-                    <TextView
-                        android:id="@+id/mTvEnd"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:text="00:00"
-                        android:textColor="@color/black" />
-                </RelativeLayout>
+                    <!--<TextView-->
+                        <!--android:id="@+id/mTvEnd"-->
+                        <!--android:layout_width="wrap_content"-->
+                        <!--android:layout_height="wrap_content"-->
+                        <!--android:layout_alignParentRight="true"-->
+                        <!--android:layout_alignParentTop="true"-->
+                        <!--android:layout_centerVertical="true"-->
+                        <!--android:text="00:00"-->
+                        <!--android:textColor="@color/black" />-->
+                <!--</RelativeLayout>-->
 
 
                 <TextView
@@ -353,7 +348,6 @@
                 android:layout_marginTop="@dimen/dialog_cancel"
                 android:background="@drawable/ic_btn_cancel_chat" />
         </RelativeLayout>
-    </ScrollView>
 
     <TextView
         android:id="@+id/mTvHide"
