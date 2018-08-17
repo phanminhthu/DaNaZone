@@ -73,11 +73,11 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/mTvCode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:paddingTop="@dimen/_10sdp"
-            android:text="ABCXJ"
             android:textColor="@color/colorMain"
             android:textSize="@dimen/_18sdp"
             android:textStyle="bold" />

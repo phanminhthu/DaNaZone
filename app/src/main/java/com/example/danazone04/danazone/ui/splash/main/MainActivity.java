@@ -2,13 +2,16 @@ package com.example.danazone04.danazone.ui.splash.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Color;
+
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.provider.MediaStore;
@@ -96,7 +99,7 @@ import retrofit2.Callback;
 public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        LocationListener, GoogleMap.OnInfoWindowClickListener {
+        Runnable, android.location.LocationListener {
     private GoogleMap mMap;
     private static final int MY_PERMISSION_REQUEST_CODE = 7000;
     private static final int PLAY_SERVICE_RES_REQUEST = 7001;
@@ -117,11 +120,26 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private LatLng currentPosition;
     private List<LatLng> polyLineList;
 
+    private static final long MINIMUM_DISTANCE_CHANGE_FOR_UPDATES = 1; // in Meters
+    private static final long MINIMUM_TIME_BETWEEN_UPDATES = 30000;
+    protected LocationManager locationManager;
+    static double n = 0;
+    private Long s1, r1;
+    double plat, plon, clat, clon, dis;
+    MyCount counter;
+    Thread t1;
+    boolean bool = true;
+    Location location;
+    private final static int DISTANCE_UPDATES = 1;
+    private final static int TIME_UPDATES = 5;
+    private static final int PERMISSION_REQUEST_CODE = 1;
+    private boolean LocationAvailable;
+
 
     @ViewById
     LinearLayout mLnStart;
     @ViewById
-    LinearLayout mLnEnd;
+    RelativeLayout mLnEnd;
     @ViewById
     RelativeLayout mTvSetting;
     @ViewById
@@ -130,6 +148,20 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     ImageView mImgEnd;
     @ViewById
     TextView mImgText;
+    @ViewById
+    RelativeLayout mRlmView;
+    @ViewById
+    TextView mTvDistance;
+    @ViewById
+    TextView mTvSpeed;
+    @ViewById
+    TextView mTvTime;
+    @ViewById
+    TextView mTvCalo;
+    @ViewById
+    TextView mTvPause;
+    @ViewById
+    TextView mTvResum;
 
     Bitmap bitmap;
     private static final int MY_CAMERA_REQUEST_CODE = 100;
@@ -137,7 +169,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     public static final String image = "image";
     public static final String imageName = "name";
     private String distanceValue;
-    private String mLats, mLngs,  mLate, mLnge;
+    private String mLats, mLngs, mLate, mLnge;
 
     long lStartTime, lPauseTime, lSystemTime = 0L;
     Handler handler = new Handler();
@@ -148,11 +180,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         public void run() {
             lSystemTime = SystemClock.uptimeMillis() - lStartTime;
             long lUpdateTime = lPauseTime + lSystemTime;
-            long secs = (long)(lUpdateTime/1000);
-            long mins= secs/60;
-            secs = secs %60;
-            mImgText.setText(""+mins+":" + String.format("%02d",secs));
-            handler.postDelayed(this,0);
+            long secs = (long) (lUpdateTime / 1000);
+            long mins = secs / 60;
+            secs = secs % 60;
+            mTvTime.setText("" + mins + ":" + String.format("%02d", secs));
+            handler.postDelayed(this, 0);
         }
     };
 
@@ -163,14 +195,73 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         Animation vibrateAnimation = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.vibrate);
         mImgStart.startAnimation(vibrateAnimation);
         mImgEnd.startAnimation(vibrateAnimation);
-        mService = GGApi.getGoogleAPI();
-        setUpLocation();
-        jsonObject = new JSONObject();
+
+        LocationAvailable = false;
+
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        if (checkPermission()) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
+        } else {
+            requestPermission();
+        }
+
+        //setUpLocation();
+        showCurrentLocation();
+        buidGoogleApiClient();
+        createLocationRequest();
+        displayLocation();
+
     }
 
-    @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting})
+    protected void showCurrentLocation() {
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+
+        if (location != null) {
+            String message = String.format(
+                    "Current Location \n Longitude: %1$s \n Latitude: %2$s",
+                    location.getLongitude(), location.getLatitude()
+            );
+            clat = location.getLatitude();
+            clon = location.getLongitude();
+            Toast.makeText(MainActivity.this, message,
+                    Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(MainActivity.this, "null location",
+                    Toast.LENGTH_LONG).show();
+        }
+
+    }
+
+    @Click({R.id.mLnStart, R.id.mLnEnd, R.id.mTvSetting, R.id.mTvPause, R.id.mTvResum})
     void onClick(View v) {
         switch (v.getId()) {
+            case R.id.mTvPause:
+                counter.cancel();
+                bool = false;
+
+                if(!isRun)
+                    return;
+                isRun = false;
+                lPauseTime += lSystemTime;
+                handler.removeCallbacks(runnable);
+
+                break;
+            case R.id.mTvResum:
+                counter = new MyCount(s1, 1000);
+                counter.start();
+                bool = true;
+
+                if(isRun)
+                    return;
+                isRun = true;
+                lStartTime = lPauseTime;
+                handler.postDelayed(runnable, 0);
+
+                break;
             case R.id.mTvSetting:
                 SettingActivity_.intent(MainActivity.this).start();
                 break;
@@ -180,8 +271,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-
-                        if(isRun)
+                        if (isRun)
                             return;
                         isRun = true;
                         lStartTime = SystemClock.uptimeMillis();
@@ -195,18 +285,25 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                             }
                             requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
                         }
-
+                        // BaseImageActivity_.intent(MainActivity.this).start();
 
                     }
                 }).show();
                 break;
 
             case R.id.mLnEnd:
+//                if (!isRun)
+//                    return;
+//                isRun = false;
+//                lPauseTime = 0;
+//                handler.removeCallbacks(runnable);
+
+
                 new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
-                        if(!isRun)
+                        if (!isRun)
                             return;
                         isRun = false;
                         lPauseTime = 0;
@@ -226,8 +323,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.0f));
                         end();
-                        getDirection();
-
 
                     }
                 }).show();
@@ -243,9 +338,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
     }
 
-    private void takenImageEnd(){
+    private void takenImageEnd() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(intent.resolveActivity(getPackageManager()) !=null){
+        if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
         }
     }
@@ -267,56 +362,39 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         @Override
                         public void onCallSerVice() {
                             SessionManager.getInstance().setKeyImageStart(bitmap);
-                            RequestQueue requestQueue = Volley.newRequestQueue(MainActivity.this);
+                            // start();
+                            t1 = new Thread();
+                            t1.start();
+                            counter = new MyCount(30000, 1000);
+                            counter.start();
 
-                            StringRequest stringRequest = new StringRequest(Request.Method.POST, Common.URL_UP_AVATAR, new Response.Listener<String>() {
-                                @Override
-                                public void onResponse(String response) {
+//                            double time = n * 30 + r1;
+//                            Toast.makeText(MainActivity.this, "distance in metres:" + String.valueOf(dis) + "Velocity in m/sec :" + String.valueOf(dis / time) + "Time :" + String.valueOf(time), Toast.LENGTH_LONG).show();
+//
+//                            mTvCalo.setText("11111");
+//                            mTvDistance.setText(String.valueOf(dis));
+//                            mTvSpeed.setText(String.valueOf(dis / time));
 
-                                    Log.i("Myresponse",""+response);
-                                    Toast.makeText(MainActivity.this, ""+response, Toast.LENGTH_SHORT).show();
-                                    start();
-                                }
-                            }, new Response.ErrorListener() {
-                                @Override
-                                public void onErrorResponse(VolleyError error) {
-                                    Log.i("Mysmart",""+error);
-                                    Toast.makeText(MainActivity.this, ""+error, Toast.LENGTH_SHORT).show();
-
-                                }
-                            }){
-                                @Override
-                                protected Map<String, String> getParams() throws AuthFailureError {
-                                    Map<String,String> param = new HashMap<>();
-
-
-                                    // Log.i("Mynewsam",""+a);
-                                    param.put("image",a);
-                                    param.put("image1",a);
-                                    return param;
-                                }
-                            };
-
-                            requestQueue.add(stringRequest);
                         }
                     }).show();
                 }
             }
 
-            if(requestCode == MY_CAMERA_REQUEST_CODE_END){
+            if (requestCode == MY_CAMERA_REQUEST_CODE_END) {
                 Bundle bundle = data.getExtras();
                 final Bitmap bm = (Bitmap) bundle.get("data");
 
                 String a = encodeTobase64(bm);
 
-                new DialogCheckin(MainActivity.this,bm, new DialogCheckin.OnDialogClickListener() {
+                new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
                     @Override
                     public void onCallSerVice() {
                         SessionManager.getInstance().setKeySaveImageEnd(bm);
                         BaseImageActivity_.intent(MainActivity.this)
-                                .mStart(bitmap
-                                ).mEnd(bm)
-                                .mKM(distanceValue)
+                                .mStart(bitmap)
+                                .mEnd(bm)
+                                .mTime(mTvTime.getText().toString())
+                                .mKM(mTvDistance.getText().toString())
                                 .mSpeed(mImgText.getText().toString()).start();
                     }
                 }).show();
@@ -337,90 +415,30 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         }
-    }
 
-    private void setUpLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
-                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
-                .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            //request runtime permission
-            ActivityCompat.requestPermissions(this, new String[]{
-                    Manifest.permission.ACCESS_COARSE_LOCATION,
-                    Manifest.permission.ACCESS_FINE_LOCATION
-            }, MY_PERMISSION_REQUEST_CODE);
-
-        } else {
-            if (checkPlayServices()) {
-                buidGoogleApiClient();
-                createLocationRequest();
-                //  startLocationUpdates();
-                displayLocation();
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                /**
+                 * We are good, turn on monitoring
+                 */
+                if (checkPermission()) {
+                    locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
+                } else {
+                    requestPermission();
+                }
+            } else {
+                /**
+                 * No permissions, block out all activities that require a location to function
+                 */
+                Toast.makeText(this, "Permission Not Granted.", Toast.LENGTH_LONG).show();
             }
         }
     }
 
-    private void createLocationRequest() {
-        mLocationRequest = new LocationRequest();
-        mLocationRequest.setInterval(UPDATE_INTERVAL);
-        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
-        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
-        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
-    }
 
-    private void buidGoogleApiClient() {
+    private void start() {
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
-                .addApi(LocationServices.API)
-                .addConnectionCallbacks(this)
-                .addOnConnectionFailedListener(this)
-                .build();
-        mGoogleApiClient.connect();
-    }
-
-    private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
-        if (resultCode != ConnectionResult.SUCCESS) {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
-            else {
-                //Toast.makeText(this, getResources().getString(R.string.text_app_name), Toast.LENGTH_SHORT).show();
-                finish();
-            }
-            return false;
-        }
-        return true;
-    }
-
-
-    private void displayLocation() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-            return;
-        }
-        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
-
-
-        if (mLocation != null) {
-            final double latitude = mLocation.getLatitude();
-            final double longitude = mLocation.getLongitude();
-            System.out.println("111111111111111111111" + latitude + "----- " +longitude);
-            mLatLng = new LatLng(latitude, longitude);
-
-            //add marker
-            if (mCurrent != null)
-                mCurrent.remove();
-
-//            mCurrent = mMap.addMarker(new MarkerOptions()
-//                   // .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
-//                    .position(new LatLng(latitude, longitude)));
-            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.0f));
-
-        }
-    }
-
-    private void start(){
-
-        Toast.makeText(this,"bat dau", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "bat dau", Toast.LENGTH_SHORT).show();
         final double latitud = mLocation.getLatitude();
         final double longitud = mLocation.getLongitude();
 
@@ -438,8 +456,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     }
 
-    private void end(){
-        Toast.makeText(this,"ket thuc", Toast.LENGTH_SHORT).show();
+    private void end() {
+        Toast.makeText(this, "ket thuc", Toast.LENGTH_SHORT).show();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             return;
@@ -484,9 +502,28 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     @Override
-    public void onInfoWindowClick(Marker marker) {
+    public void onStatusChanged(String provider, int status, Bundle extras) {
 
     }
+
+    @Override
+    public void onProviderEnabled(String provider) {
+        if (checkPermission()) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
+        } else {
+            requestPermission();
+        }
+    }
+
+    @Override
+    public void onProviderDisabled(String provider) {
+        if (checkPermission()) {
+            locationManager.removeUpdates(this);
+        } else {
+            requestPermission();
+        }
+    }
+
 
     @SuppressLint("MissingPermission")
     @Override
@@ -503,146 +540,17 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
         mMap.setMyLocationEnabled(true);
     }
-    @SuppressLint("MissingPermission")
-    private void startLocationUpdates() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
-                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
-                .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            return;
-        }
-        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
-    }
 
     public static String encodeTobase64(Bitmap image) {
-        Bitmap immagex=image;
+        Bitmap immagex = image;
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         immagex.compress(Bitmap.CompressFormat.JPEG, 100, baos);
         byte[] b = baos.toByteArray();
-        String imageEncoded = Base64.encodeToString(b,Base64.DEFAULT);
+        String imageEncoded = Base64.encodeToString(b, Base64.DEFAULT);
         return imageEncoded;
     }
 
-    private void getDirection() {
-        // currentPosition = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
-        String requestApi = null;
-        try {
-            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" + "mode=driving&" +
-                    "transit_routing_preference=less_driving&" +
-                    "origin=" + mLats + "," + mLngs + "&"
-                    + "destination=" + mLate + "," + mLnge + "&" +
-                    "key+" + getResources().getString(R.string.google_direction_api);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        mService.getPath(requestApi).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                try {
-                    JSONObject jsonObject = new JSONObject(response.body().toString());
-                    JSONArray jsonArray = jsonObject.getJSONArray("routes");
-                    for (int i = 0; i < jsonArray.length(); i++) {
-                        JSONObject route = jsonArray.getJSONObject(i);
-                        JSONObject poly = route.getJSONObject("overview_polyline");
-                        String polyline = poly.getString("points");
-                        polyLineList = decodePoly(polyline);
-                    }
-                    // bound
-                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                    for (LatLng latLng : polyLineList)
-                        builder.include(latLng);
-                    LatLngBounds bounds = builder.build();
-                    CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
-                    mMap.animateCamera(mCameraUpdate);
-
-                    polylineOptions = new PolylineOptions();
-                    polylineOptions.color(Color.GRAY);
-                    polylineOptions.width(5);
-                    polylineOptions.startCap(new SquareCap());
-                    polylineOptions.endCap(new SquareCap());
-                    polylineOptions.jointType(JointType.ROUND);
-                    polylineOptions.addAll(polyLineList);
-                    greyPolyline = mMap.addPolyline(polylineOptions);
-
-                    blackPolylineOptions = new PolylineOptions();
-                    blackPolylineOptions.color(Color.BLACK);
-                    blackPolylineOptions.width(5);
-                    blackPolylineOptions.startCap(new SquareCap());
-                    blackPolylineOptions.endCap(new SquareCap());
-                    blackPolylineOptions.jointType(JointType.ROUND);
-                    blackPolylineOptions.addAll(polyLineList);
-                    blackPolyline = mMap.addPolyline(blackPolylineOptions);
-
-                    mLatLng = polyLineList.get(polyLineList.size() - 1);
-                    mMap.addMarker(new MarkerOptions()
-                            .position(polyLineList.get(polyLineList.size() - 1))
-                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_blue))
-                    );
-
-                } catch (Exception e) {
-
-                }
-            }
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-
-            }
-        });
-        getInformationService(mLats,mLngs , mLate, mLnge );
-    }
-
-    /**
-     *
-     * @param mLats
-     * @param mLngs
-     * @param mLate
-     * @param mLnge
-     */
-    private void getInformationService(String mLats, String mLngs, String mLate, String mLnge) {
-        String requestUrl = null;
-        try {
-            requestUrl = "https://maps.googleapis.com/maps/api/directions/json?" + "mode=driving&" +
-                    "transit_routing_preference=less_driving&" +
-                    "origin=" + mLats + "," + mLngs + "&"
-                    + "destination=" + mLate + "," + mLnge + "&" +
-                    "key+" + getResources().getString(R.string.google_direction_api);
-            mService.getPath(requestUrl).enqueue(new Callback<String>() {
-
-                @Override
-                public void onResponse(Call<String> call, retrofit2.Response<String> response) {
-                    try {
-
-                        JSONObject jsonObject = new JSONObject(response.body().toString());
-                        JSONArray router = jsonObject.getJSONArray("routes");
-
-                        JSONObject object = router.getJSONObject(0);
-                        JSONArray legs = object.getJSONArray("legs");
-
-                        JSONObject legsObject = legs.getJSONObject(0);
-                        JSONObject distance = legsObject.getJSONObject("distance");
-                        String distance_text = distance.getString("text");
-
-                        Double distance_value = Double.parseDouble(distance_text.replaceAll("[^0-9\\\\.]+", ""));
-                        distanceValue = String.valueOf(distance_value);
-
-
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<String> call, Throwable t) {
-
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
     private List decodePoly(String encoded) {
 
         List poly = new ArrayList();
@@ -675,5 +583,123 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
 
         return poly;
+    }
+
+    @Override
+    public void run() {
+        while (bool) {
+            clat = location.getLatitude();
+            clon = location.getLongitude();
+            if (clat != plat || clon != plon) {
+                dis += getDistance(plat, plon, clat, clon);
+                plat = clat;
+                plon = clon;
+
+            }
+
+        }
+    }
+
+    public class MyCount extends CountDownTimer {
+        public MyCount(long millisInFuture, long countDownInterval) {
+            super(millisInFuture, countDownInterval);
+        }
+
+        @Override
+        public void onFinish() {
+            counter = new MyCount(30000, 1000);
+            counter.start();
+            n = n + 1;
+        }
+
+        @Override
+        public void onTick(long millisUntilFinished) {
+            s1 = millisUntilFinished;
+            r1 = (30000 - s1) / 1000;
+            //e1.setText(String.valueOf(r1));
+            double time = n * 30 + r1;
+
+            mTvCalo.setText("11111");
+            mTvDistance.setText(String.valueOf(dis));
+            mTvSpeed.setText(String.valueOf(dis / time));
+
+
+        }
+    }
+
+    public double getDistance(double lat1, double lon1, double lat2, double lon2) {
+        double latA = Math.toRadians(lat1);
+        double lonA = Math.toRadians(lon1);
+        double latB = Math.toRadians(lat2);
+        double lonB = Math.toRadians(lon2);
+        double cosAng = (Math.cos(latA) * Math.cos(latB) * Math.cos(lonB - lonA)) +
+                (Math.sin(latA) * Math.sin(latB));
+        double ang = Math.acos(cosAng);
+        double dist = ang * 6371;
+        return dist;
+    }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            LocationAvailable = true;
+            return true;
+        } else {
+            LocationAvailable = false;
+            return false;
+        }
+    }
+
+    /**
+     * Request permissions from the user
+     */
+    private void requestPermission() {
+
+        /**
+         * Previous denials will warrant a rationale for the user to help convince them.
+         */
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
+            Toast.makeText(this, "This app relies on location data for it's main functionality. Please enable GPS data to access all features.", Toast.LENGTH_LONG).show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
+    private void displayLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+
+        if (mLocation != null) {
+            final double latitude = mLocation.getLatitude();
+            final double longitude = mLocation.getLongitude();
+
+            mLatLng = new LatLng(latitude, longitude);
+            if (mCurrent != null)
+                mCurrent.remove();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.0f));
+
+        }
+    }
+
+    private void buidGoogleApiClient() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 }

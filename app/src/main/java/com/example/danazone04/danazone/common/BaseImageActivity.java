@@ -6,6 +6,10 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
@@ -19,6 +23,17 @@ import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.ui.splash.TakeImage_;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -33,7 +48,9 @@ import java.util.Random;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_base_iage)
-public class BaseImageActivity extends BaseActivity {
+public class BaseImageActivity extends BaseActivity implements OnMapReadyCallback,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener, LocationListener {
     @Extra
     Bitmap mStart;
     @Extra
@@ -52,6 +69,11 @@ public class BaseImageActivity extends BaseActivity {
     TextView mTvSpeed;
     @ViewById
     TextView mTvKM;
+    @ViewById
+    TextView mTvHide;
+    @ViewById
+    ImageView mImgCancelDialog;
+
 
     @Extra
     String mTime;
@@ -68,13 +90,28 @@ public class BaseImageActivity extends BaseActivity {
     boolean boolean_save;
     private int key = 0;
 
+
+    private GoogleApiClient mGoogleApiClient;
+    private Marker mCurrent;
+    private LatLng mLatLng;
+    private Location mLocation = null;
+    private GoogleMap mMap;
+    private static int UPDATE_INTERVAL = 5000;
+    private static int FATEST_INTERVAL = 3000;
+    private static int DISPLACEMENT = 10;
+    private LocationRequest mLocationRequest;
+
+
     @Override
     protected void afterView() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(BaseImageActivity.this);
+        buidGoogleApiClient();
+        createLocationRequest();
+        displayLocation();
         key = key + 1;
         if (!SessionManager.getInstance().getKeySaveCoin().equals("")) {
-           // key = Integer.valueOf(SessionManager.getInstance().getKeySaveId() +1);
-
-            SessionManager.getInstance().updateCoin(String.valueOf(Integer.valueOf(SessionManager.getInstance().getKeySaveCoin()) +1));
+            SessionManager.getInstance().updateCoin(String.valueOf(Integer.valueOf(SessionManager.getInstance().getKeySaveCoin()) + 1));
         } else {
             SessionManager.getInstance().setKeySaveCoin(String.valueOf(key));
         }
@@ -98,18 +135,29 @@ public class BaseImageActivity extends BaseActivity {
     }
 
 
-    @Click(R.id.mTvSubmit)
+    @Click({R.id.mTvSubmit, R.id.mTvHide, R.id.mImgCancelDialog})
     void onClick(View v) {
-        if (boolean_save) {
-            TakeImage_.intent(this).fileName(filename).start();
+        switch (v.getId()) {
+            case R.id.mTvSubmit:
+                if (boolean_save) {
+                    TakeImage_.intent(this).fileName(filename).start();
 
-        } else {
-            if (boolean_permission) {
-                Bitmap bitmap1 = loadBitmapFromView(mRlBase, mRlBase.getWidth(), mRlBase.getHeight());
-                saveBitmap(bitmap1);
-            } else {
-
-            }
+                } else {
+                    if (boolean_permission) {
+                        Bitmap bitmap1 = loadBitmapFromView(mRlBase, mRlBase.getWidth(), mRlBase.getHeight());
+                        saveBitmap(bitmap1);
+                    } else {
+                    }
+                }
+                break;
+            case R.id.mTvHide:
+                mRlBase.setVisibility(View.VISIBLE);
+                mTvHide.setVisibility(View.GONE);
+                break;
+            case R.id.mImgCancelDialog:
+                mRlBase.setVisibility(View.GONE);
+                mTvHide.setVisibility(View.VISIBLE);
+                break;
         }
     }
 
@@ -182,5 +230,79 @@ public class BaseImageActivity extends BaseActivity {
         int num = rand.nextInt(10000000);
         return num;
 
+    }
+
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        displayLocation();
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLocation = location;
+        displayLocation();
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setTrafficEnabled(false);
+        mMap.setIndoorEnabled(false);
+        mMap.setBuildingsEnabled(false);
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+    }
+
+    private void displayLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+            return;
+        }
+        mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+
+
+        if (mLocation != null) {
+            final double latitude = mLocation.getLatitude();
+            final double longitude = mLocation.getLongitude();
+
+            mLatLng = new LatLng(latitude, longitude);
+            if (mCurrent != null)
+                mCurrent.remove();
+            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(latitude, longitude), 14.0f));
+
+        }
+    }
+
+    private void buidGoogleApiClient() {
+
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .build();
+        mGoogleApiClient.connect();
+    }
+
+    private void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FATEST_INTERVAL);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
+        mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 }

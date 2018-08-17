@@ -59,57 +59,26 @@ public class RegisterActivity extends BaseActivity {
                 final String username = mEdtName.getText().toString();
                 final String phone = mEdtPhone.getText().toString();
                 final String password = mEdtPassWord.getText().toString();
-                if(username.equals("")){
+                if (username.equals("")) {
                     mEdtName.requestFocus();
                     showAlertDialog("Tên không được để trống!");
                     return;
                 }
-                if(phone.equals("")){
+                if (phone.equals("")) {
                     mEdtPhone.requestFocus();
                     showAlertDialog("Số điện thoại không được để trống!");
                     return;
                 }
-                if(password.equals("")){
+                if (password.equals("")) {
                     mEdtPassWord.requestFocus();
                     showAlertDialog("Mật khẩu không được để trống!");
                     return;
                 }
 
-                final AlertDialog waitingDialog = new SpotsDialog(RegisterActivity.this);
-                waitingDialog.show();
+                SessionManager.getInstance().setKeySaveId(phone);
+                SessionManager.getInstance().setKeySavePass(password);
 
-                StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                        Common.URL_REGISTER, new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String response) {
-                        if (response.contains("thanhcong")) {
-                            SessionManager.getInstance().setKeySaveId(phone);
-                            SessionManager.getInstance().setKeySavePass(password);
-                            waitingDialog.dismiss();
-                            MainActivity_.intent(RegisterActivity.this).start();
-                        } else {
-                            waitingDialog.dismiss();
-                            Toast.makeText(getApplicationContext(), " Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        waitingDialog.dismiss();
-                        Toast.makeText(getApplicationContext(), "Có lỗi", Toast.LENGTH_SHORT).show();
-                    }
-                }) {
-                    @Override
-                    protected Map<String, String> getParams() throws AuthFailureError {
-                        Map<String, String> parms = new HashMap<>();
-                        parms.put("username", username);
-                        parms.put("phone", phone);
-                        parms.put("password", password);
-
-                        return parms;
-                    }
-                };//ket thuc stringresquet
-                MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+                MainActivity_.intent(RegisterActivity.this).start();
 
                 break;
         }

@@ -46,34 +46,7 @@ public class SplashActivity extends BaseActivity {
         mImgLogo.startAnimation(mAnimation);
 
         if (!SessionManager.getInstance().getKeySaveId().equals("") && !SessionManager.getInstance().getKeySavePass().equals("")) {
-
-            StringRequest stringRequest = new StringRequest(Request.Method.POST,
-                    Common.URL_LOGIN, new Response.Listener<String>() {
-                @Override
-                public void onResponse(String response) {
-                    if (response.contains("thanhcong")) {
-                        MainActivity_.intent(SplashActivity.this).start();
-                    } else {
-                        Toast.makeText(getApplicationContext(), " Đăng nhập thất bại!", Toast.LENGTH_SHORT).show();
-
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Toast.makeText(getApplicationContext(), "Có lỗi", Toast.LENGTH_SHORT).show();
-                }
-            }) {
-                @Override
-                protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String, String> parms = new HashMap<>();
-                    parms.put("phone", SessionManager.getInstance().getKeySaveId());
-                    parms.put("password", SessionManager.getInstance().getKeySavePass());
-
-                    return parms;
-                }
-            };//ket thuc stringresquet
-            MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+            MainActivity_.intent(SplashActivity.this).start();
         } else {
             Runnable mActivityStarter = new Runnable() {
                 @Override

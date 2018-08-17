@@ -10,109 +10,227 @@
         android:layout_height="@dimen/_40sdp"
         android:layout_alignParentTop="true" />
 
+    <LinearLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_40sdp"
+        android:background="@color/colorWhite"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/_20sdp"
+        android:paddingTop="@dimen/_20sdp"
+        android:weightSum="2">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="QUÃNG ĐƯỜNG (KM)"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/mTvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_30sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:text="TỐC ĐỘ"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/mTvSpeed"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_30sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="THỜI GIAN"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/mTvTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_30sdp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:text="CALO"
+                android:textColor="@color/black" />
+
+            <TextView
+                android:id="@+id/mTvCalo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:text="0"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_30sdp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+
     <fragment
         android:id="@+id/map"
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_40sdp" />
+        android:layout_marginTop="@dimen/_220sdp" />
+
     <android.support.v7.widget.LinearLayoutCompat
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/_10sdp"
+        android:orientation="horizontal"
         android:weightSum="2">
 
         <LinearLayout
             android:id="@+id/mLnStart"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/_26sdp"
             android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_marginRight="@dimen/_26sdp"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <RelativeLayout
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_detail"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_9sdp"
                 android:paddingLeft="@dimen/_5sdp"
                 android:paddingRight="@dimen/_5sdp"
-                android:paddingBottom="@dimen/_9sdp"
-                android:paddingTop="@dimen/_9sdp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:paddingTop="@dimen/_9sdp">
+
                 <android.support.v7.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Bắt đầu"
-                    android:textColor="@color/colorMain"
-                    />
+                    android:textColor="@color/colorMain" />
             </RelativeLayout>
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                android:background="@drawable/ic_arrows"
                 android:layout_gravity="center"
-                />
+                android:background="@drawable/ic_arrows" />
+
             <RelativeLayout
-                android:layout_gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_ellipse"
-                >
+                android:layout_gravity="center"
+                android:background="@drawable/ic_ellipse">
+
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/mImgStart"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:background="@drawable/ic_phone"
                     android:layout_centerInParent="true"
-                    />
+                    android:background="@drawable/ic_phone" />
             </RelativeLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/mLnEnd"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="@dimen/_26sdp"
             android:layout_marginLeft="@dimen/_13sdp"
+            android:layout_marginRight="@dimen/_26sdp"
+            android:layout_weight="1"
             android:orientation="vertical">
+
             <RelativeLayout
-                android:gravity="center"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:background="@drawable/bg_detail"
+                android:gravity="center"
+                android:paddingBottom="@dimen/_9sdp"
                 android:paddingLeft="@dimen/_5sdp"
                 android:paddingRight="@dimen/_5sdp"
-                android:paddingBottom="@dimen/_9sdp"
-                android:paddingTop="@dimen/_9sdp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
+                android:paddingTop="@dimen/_9sdp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Kết thúc"
-                    android:textColor="@color/colorMain"
-                    />
+                    android:orientation="horizontal"
+                    android:weightSum="2"
+                    >
+                    <TextView
+                        android:id="@+id/mTvPause"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dừng"
+                        android:textColor="@color/colorMain"
+                        />
+                    <TextView
+                        android:id="@+id/mTvResum"
+                        android:gravity="center"
+                        android:layout_weight="1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Tiếp"
+                        android:textColor="@color/colorMain"
+                        />
+                </LinearLayout>
             </RelativeLayout>
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_width="@dimen/_10sdp"
                 android:layout_height="@dimen/_10sdp"
-                android:background="@drawable/ic_arrows"
                 android:layout_gravity="center"
-                />
+                android:background="@drawable/ic_arrows" />
+
             <RelativeLayout
-                android:layout_gravity="center"
+                android:id="@+id/mLnEnd"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/ic_ellipse"
-                >
+                android:layout_gravity="center"
+                android:background="@drawable/ic_ellipse">
+
                 <android.support.v7.widget.AppCompatImageView
                     android:id="@+id/mImgEnd"
                     android:layout_width="@dimen/_30sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:background="@drawable/ic_phone"
                     android:layout_centerInParent="true"
-                    />
+                    android:background="@drawable/ic_phone" />
             </RelativeLayout>
         </LinearLayout>
     </android.support.v7.widget.LinearLayoutCompat>
