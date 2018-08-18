@@ -5,4 +5,7 @@
     <string name="running">Đang tính toán...</string>
     <string name="notification">Tốc độ tối đa : %1$s, Quãng đường : %2$s.</string>
     <string name="noti_id" translatable="false">Speedmeterisanid</string>
+
+    <string name="facebook_app_id">229417001107563</string>
+    <string name="facebook_schema">fb229417001107563</string>
 </resources>

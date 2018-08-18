@@ -2,11 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
+    android:background="@color/colorWhite"
     android:orientation="vertical">
 
     <RelativeLayout
-
         android:layout_width="match_parent"
         android:layout_height="@dimen/_45sdp"
         android:background="@color/colorMain">
@@ -16,70 +15,82 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:layout_gravity="center"
-            android:text="Thành tích"
-            android:textColor="@color/colorWhite" />
-
-        <ImageView
-            android:id="@+id/mImgEnter"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/_10sdp"
-            android:background="@drawable/ic_enter"
+            android:text="Cài đặt"
             android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
-    <ImageView
-        android:layout_width="@dimen/_80sdp"
-        android:layout_height="@dimen/_80sdp"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:background="@drawable/ic_cup"
-        android:textColor="@color/colorWhite" />
-
-    <TextView
-        android:id="@+id/mTvCoin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"
-        android:layout_marginTop="@dimen/_5sdp"
-        android:text="10"
-        android:textColor="@color/colorWhite"
-        android:textSize="@dimen/_30sdp" />
-
-    <android.support.v7.widget.LinearLayoutCompat
-        android:id="@+id/mLinearProfile"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_120sdp"
-        android:layout_marginLeft="@dimen/_10sdp"
-        android:layout_marginRight="@dimen/_10sdp"
-        android:layout_marginTop="@dimen/_50sdp"
-        android:background="@drawable/bg_dialog_profile"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:orientation="horizontal"
+        android:weightSum="3">
 
-        <TextView
+        <LinearLayout
+            android:id="@+id/mLlCoin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="@dimen/_10sdp"
-            android:text="Mã giảm giá"
-            android:textColor="@color/colorMain"
-            android:textSize="@dimen/_18sdp"
-            android:textStyle="bold" />
+            android:layout_weight="1"
+            android:background="@drawable/ic_image_white"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/mTvCode"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_cup_setting" />
+
+            <TextView
+                android:id="@+id/mTvMyProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thành tích"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/mLlSetting"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:paddingTop="@dimen/_10sdp"
-            android:textColor="@color/colorMain"
-            android:textSize="@dimen/_18sdp"
-            android:textStyle="bold" />
-    </android.support.v7.widget.LinearLayoutCompat>
+            android:layout_weight="1"
+            android:background="@drawable/ic_image_white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_setting_run" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cài đặt"
+                android:textColor="@color/black" />
+            />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/mLlContact"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/ic_image_white"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_contact" />
+
+            <TextView
+                android:id="@+id/mTvContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Liên hệ"
+                android:textColor="@color/black" />
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>

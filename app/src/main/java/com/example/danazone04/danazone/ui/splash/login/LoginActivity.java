@@ -6,7 +6,10 @@ import android.widget.TextView;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
+import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
+import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -18,14 +21,44 @@ import org.androidannotations.annotations.ViewById;
 public class LoginActivity extends BaseActivity {
     @ViewById
     TextView mTvSubmit;
+    @ViewById
+    TextView mEdtPhone;
+    @ViewById
+    TextView mEdtPassWord;
+    @ViewById
+    TextView mTvLogin;
 
     @Override
     protected void afterView() {
 
     }
 
-    @Click(R.id.mTvSubmit)
-    void onClick(View v){
-        MainActivity_.intent(LoginActivity.this).start();
+    @Click({R.id.mTvSubmit, R.id.mTvLogin})
+    void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.mTvLogin:
+                RegisterActivity_.intent(LoginActivity.this).start();
+                break;
+            case R.id.mTvSubmit:
+                final String phone = mEdtPhone.getText().toString();
+                final String password = mEdtPassWord.getText().toString();
+
+                if (phone.equals("")) {
+                    mEdtPhone.requestFocus();
+                    showAlertDialog("Số điện thoại không được để trống!");
+                    return;
+                }
+                if (password.equals("")) {
+                    mEdtPassWord.requestFocus();
+                    showAlertDialog("Mật khẩu không được để trống!");
+                    return;
+                }
+
+                SessionManager.getInstance().setKeySaveId(phone);
+                SessionManager.getInstance().setKeySavePass(password);
+                MainActivity_.intent(LoginActivity.this).start();
+                break;
+        }
+
     }
 }

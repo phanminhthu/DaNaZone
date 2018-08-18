@@ -41,7 +41,7 @@
         android:layout_width="@dimen/_100sdp"
         android:layout_height="@dimen/_100sdp"
         android:layout_centerHorizontal="true"
-        android:src="@drawable/ic_btn_avatar_default_profile" />
+        android:src="@drawable/banner" />
 
     <ImageView
         android:id="@+id/mImgCancelDialog"

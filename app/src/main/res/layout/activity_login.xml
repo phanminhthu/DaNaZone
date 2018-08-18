@@ -58,6 +58,16 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <TextView
+                    android:id="@+id/mTvLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:text="Chưa có tài khoản"
+                    android:textColor="@color/colorMain"
+                    android:textStyle="bold" />
+
+                <TextView
                     android:id="@+id/mTvSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

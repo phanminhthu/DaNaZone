@@ -113,7 +113,6 @@
                     android:id="@+id/mTvCalo"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-
                     android:text="0"
                     android:textColor="@color/black"
                     android:textSize="@dimen/_30sdp"
@@ -147,113 +146,50 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_245sdp" />
 
-    <android.support.v7.widget.LinearLayoutCompat
+    <ImageView
+        android:id="@+id/mImgStart"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/start" />
+
+    <LinearLayout
+        android:id="@+id/mLnStop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="@dimen/_10sdp"
-        android:orientation="horizontal"
-        android:weightSum="2">
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/mLnStart"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_13sdp"
-            android:layout_marginRight="@dimen/_26sdp"
-            android:layout_weight="1"
-            android:orientation="vertical">
+        <RelativeLayout
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_30sdp"
+            android:layout_gravity="center">
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_detail"
-                android:gravity="center"
-                android:paddingBottom="@dimen/_9sdp"
-                android:paddingLeft="@dimen/_5sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:paddingTop="@dimen/_9sdp">
-
-                <android.support.v7.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Bắt đầu"
-                    android:textColor="@color/colorMain" />
-            </RelativeLayout>
-
-            <android.support.v7.widget.AppCompatTextView
-                android:layout_width="@dimen/_10sdp"
-                android:layout_height="@dimen/_10sdp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_arrows" />
-
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_ellipse">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/mImgStart"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/ic_phone" />
-            </RelativeLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/_13sdp"
-            android:layout_marginRight="@dimen/_26sdp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <RelativeLayout
+            <ImageView
+                android:scaleType="fitXY"
+                android:visibility="invisible"
                 android:id="@+id/mRlPause"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/bg_detail"
-                android:gravity="center"
-                android:paddingBottom="@dimen/_9sdp"
-                android:paddingLeft="@dimen/_5sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:paddingTop="@dimen/_9sdp">
+                android:layout_height="match_parent"
+                android:background="@drawable/play_ic" />
+        </RelativeLayout>
 
-                <TextView
-                    android:id="@+id/mTvPause"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="center"
-                    android:text="Play"
-                    android:textColor="@color/colorMain" />
 
-            </RelativeLayout>
+        <android.support.v7.widget.AppCompatTextView
+            android:layout_width="@dimen/_10sdp"
+            android:layout_height="@dimen/_10sdp"
+            android:layout_gravity="center"
+            android:background="@drawable/ic_down" />
 
-            <android.support.v7.widget.AppCompatTextView
-                android:layout_width="@dimen/_10sdp"
-                android:layout_height="@dimen/_10sdp"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_arrows" />
-
-            <RelativeLayout
-                android:id="@+id/mLnEnd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/ic_ellipse">
-
-                <android.support.v7.widget.AppCompatImageView
-                    android:id="@+id/mImgEnd"
-                    android:layout_width="@dimen/_30sdp"
-                    android:layout_height="@dimen/_20sdp"
-                    android:layout_centerInParent="true"
-                    android:background="@drawable/ic_phone" />
-            </RelativeLayout>
-        </LinearLayout>
-    </android.support.v7.widget.LinearLayoutCompat>
-
+        <ImageView
+            android:id="@+id/mImgStop"
+            android:layout_width="@dimen/_60sdp"
+            android:layout_height="@dimen/_60sdp"
+            android:layout_gravity="center"
+            android:background="@drawable/stop" />
+    </LinearLayout>
 
 </RelativeLayout>

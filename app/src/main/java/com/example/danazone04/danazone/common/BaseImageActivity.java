@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -22,29 +23,46 @@ import android.widget.Toast;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
+import com.example.danazone04.danazone.remote.IGoogleApi;
 import com.example.danazone04.danazone.ui.splash.TakeImage_;
+import com.example.danazone04.danazone.utils.ConnectionUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.SquareCap;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+
+import retrofit2.Call;
+import retrofit2.Callback;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_base_iage)
@@ -99,6 +117,14 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     String mTimeEnd;
     @Extra
     String mDate;
+    @Extra
+    String mLats;
+    @Extra
+    String mLngs;
+    @Extra
+    String mLate;
+    @Extra
+    String mLnge;
 
     @ViewById
     TextView mTvTimeStart;
@@ -125,6 +151,13 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
     private LocationRequest mLocationRequest;
+    private JSONObject jsonObject;
+
+    private PolylineOptions polylineOptions, blackPolylineOptions;
+    private Polyline blackPolyline, greyPolyline;
+    private IGoogleApi mService;
+    private LatLng currentPosition;
+    private List<LatLng> polyLineList;
 
 
     @Override
@@ -134,6 +167,12 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         buidGoogleApiClient();
         createLocationRequest();
         displayLocation();
+
+        if (ConnectionUtil.isConnected(this)) {
+            mService = GGApi.getGoogleAPI();
+            getDirection();
+        }
+
         key = key + 1;
         if (!SessionManager.getInstance().getKeySaveCoin().equals("")) {
             SessionManager.getInstance().updateCoin(String.valueOf(Integer.valueOf(SessionManager.getInstance().getKeySaveCoin()) + 1));
@@ -155,7 +194,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
                 mTvKM.setText(mKM);
             }
 
-            mTvTimeStart.setText(mTimeStart +"h");
+            mTvTimeStart.setText(mTimeStart + "h");
             mTvTimeEnd.setText(mTimeEnd + "h");
             mTvData.setText(mDate);
             mTvMaxSpeed.setText(mMaxSpeed);
@@ -335,5 +374,120 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         mLocationRequest.setFastestInterval(FATEST_INTERVAL);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
+    }
+
+
+    private void getDirection() {
+        // currentPosition = new LatLng(mLocation.getLatitude(), mLocation.getLongitude());
+        String requestApi = null;
+        try {
+            requestApi = "https://maps.googleapis.com/maps/api/directions/json?" + "mode=driving&" +
+                    "transit_routing_preference=less_driving&" +
+                    "origin=" + mLats + "," + mLngs + "&"
+                    + "destination=" + mLate + "," + mLnge + "&" +
+                    "key+" + getResources().getString(R.string.google_direction_api);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        mService.getPath(requestApi).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, retrofit2.Response<String> response) {
+                try {
+                    JSONObject jsonObject = new JSONObject(response.body().toString());
+                    JSONArray jsonArray = jsonObject.getJSONArray("routes");
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject route = jsonArray.getJSONObject(i);
+                        JSONObject poly = route.getJSONObject("overview_polyline");
+                        String polyline = poly.getString("points");
+                        polyLineList = decodePoly(polyline);
+                    }
+                    // bound
+                    LatLngBounds.Builder builder = new LatLngBounds.Builder();
+                    for (LatLng latLng : polyLineList)
+                        builder.include(latLng);
+                    LatLngBounds bounds = builder.build();
+                    CameraUpdate mCameraUpdate = CameraUpdateFactory.newLatLngBounds(bounds, 2);
+                    mMap.animateCamera(mCameraUpdate);
+
+                    polylineOptions = new PolylineOptions();
+                    polylineOptions.color(Color.GRAY);
+                    polylineOptions.width(5);
+                    polylineOptions.startCap(new SquareCap());
+                    polylineOptions.endCap(new SquareCap());
+                    polylineOptions.jointType(JointType.ROUND);
+                    polylineOptions.addAll(polyLineList);
+                    greyPolyline = mMap.addPolyline(polylineOptions);
+
+                    blackPolylineOptions = new PolylineOptions();
+                    blackPolylineOptions.color(Color.BLACK);
+                    blackPolylineOptions.width(5);
+                    blackPolylineOptions.startCap(new SquareCap());
+                    blackPolylineOptions.endCap(new SquareCap());
+                    blackPolylineOptions.jointType(JointType.ROUND);
+                    blackPolylineOptions.addAll(polyLineList);
+                    blackPolyline = mMap.addPolyline(blackPolylineOptions);
+
+                    mLatLng = polyLineList.get(polyLineList.size() - 1);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(polyLineList.get(polyLineList.size() - 1))
+                            .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_blue))
+                    );
+
+                } catch (Exception e) {
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
+        // getInformationService(mLats, mLngs, mLate, mLnge);
+    }
+
+
+    private List decodePoly(String encoded) {
+
+        List poly = new ArrayList();
+        int index = 0, len = encoded.length();
+        int lat = 0, lng = 0;
+
+        while (index < len) {
+            int b, shift = 0, result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lat += dlat;
+
+            shift = 0;
+            result = 0;
+            do {
+                b = encoded.charAt(index++) - 63;
+                result |= (b & 0x1f) << shift;
+                shift += 5;
+            } while (b >= 0x20);
+            int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+            lng += dlng;
+
+            LatLng p = new LatLng((((double) lat / 1E5)),
+                    (((double) lng / 1E5)));
+            poly.add(p);
+        }
+
+        return poly;
+    }
+
+    private void start() {
+        if (mLats != null && mLngs != null) {
+            mLatLng = new LatLng(Double.valueOf(mLats), Double.valueOf(mLngs));
+            mMap.addMarker(new MarkerOptions()
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker))
+                    .position(new LatLng(Double.valueOf(mLats), Double.valueOf(mLngs))));
+        }
     }
 }

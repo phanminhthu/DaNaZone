@@ -25,7 +25,7 @@
     <application
         android:name=".BaseApp_"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -57,8 +57,18 @@
         <activity android:name=".ui.splash.TakeImage_"/>
         <activity android:name=".common.BaseImageActivity_"/>
         <activity android:name=".ui.splash.main.metter.MetterActivity_"/>
+        <activity android:name=".ui.splash.main.setting.contact.ContactActivity_"/>
+        <activity android:name=".ui.splash.main.setting.run.SettingRunActivity_"/>
 
         <service android:name=".speed.GpsServices"/>
+
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+
+        <provider
+            android:authorities="com.facebook.app.FacebookContentProvider229417001107563"
+            android:name="com.facebook.FacebookContentProvider"
+            android:exported="true"/>
     </application>
 
 </manifest>

@@ -6,29 +6,18 @@ import android.os.Handler;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
-import com.android.volley.Request;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
-import com.example.danazone04.danazone.common.Common;
-import com.example.danazone04.danazone.common.MySingleton;
+
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
-import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
+
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import dmax.dialog.SpotsDialog;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_splash)

@@ -95,6 +95,8 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:paddingRight="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
@@ -164,6 +166,8 @@
                 </LinearLayout>
 
                 <RelativeLayout
+                    android:paddingRight="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp">
@@ -195,6 +199,8 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:paddingRight="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp">
@@ -226,6 +232,8 @@
                 </RelativeLayout>
 
                 <RelativeLayout
+                    android:paddingRight="@dimen/_5sdp"
+                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp">
@@ -337,7 +345,7 @@
                 android:layout_width="@dimen/_80sdp"
                 android:layout_height="@dimen/_80sdp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/ic_btn_avatar_default_profile" />
+                android:src="@drawable/banner" />
 
             <ImageView
                 android:id="@+id/mImgCancelDialog"
