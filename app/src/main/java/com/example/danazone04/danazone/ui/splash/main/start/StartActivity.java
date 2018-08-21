@@ -190,19 +190,19 @@ public class StartActivity extends BaseActivity implements OnMapReadyCallback, G
                 Bundle extras = data.getExtras();
                 bitmap = (Bitmap) extras.get("data");
                 if (bitmap != null) {
-                    new DialogCheckin(StartActivity.this, bitmap, new DialogCheckin.OnDialogClickListener() {
-                        @Override
-                        public void onCallSerVice() {
-                            SessionManager.getInstance().setKeyImageStart(bitmap);
-                            if (mLat != null && mLng != null) {
-                                MainActivity_.intent(StartActivity.this)
-                                        .mLat(mLat)
-                                        .mLng(mLng)
-                                        .mBitmapStart(bitmap)
-                                        .start();
-                            }
-                        }
-                    }).show();
+//                    new DialogCheckin(StartActivity.this, bitmap, new DialogCheckin.OnDialogClickListener() {
+//                        @Override
+//                        public void onCallSerVice() {
+//                            SessionManager.getInstance().setKeyImageStart(bitmap);
+//                            if (mLat != null && mLng != null) {
+//                                MainActivity_.intent(StartActivity.this)
+//                                        .mLat(mLat)
+//                                        .mLng(mLng)
+//                                        .mBitmapStart(bitmap)
+//                                        .start();
+//                            }
+//                        }
+//                    }).show();
                 }
             }
         }

@@ -334,32 +334,32 @@ public class InformationFragment extends BaseContainerFragment implements OnMapR
                 Bundle bundle = data.getExtras();
                 final Bitmap bm = (Bitmap) bundle.get("data");
 
-                new DialogCheckin(getContext(), bm, new DialogCheckin.OnDialogClickListener() {
-                    @Override
-                    public void onCallSerVice() {
-
-                        SessionManager.getInstance().setKeySaveImageEnd(bm);
-                        resetData();
-
-//                        BaseImageActivity_.intent(getContext())
-//                                .mStart(mBitmapStart)
-//                                .mEnd(bm)
-//                                .mTime(numTime)
-//                                .mKM(ms2)
-//                                .mSpeed(ms1)
-//                                .mMaxSpeed(ms)
-//                                .mCalo(String.valueOf(calos) + " calo")
-//                                .mTimeStart(time)
-//                                .mTimeEnd(timeEnd)
-//                                .mDate(date)
-//                                .mLats(mLat)
-//                                .mLngs(mLng)
-//                                .mLate(mLate)
-//                                .mLnge(mLnge)
-//                                .start();
-//                        getBaseActivity().finish();
-                    }
-                }).show();
+//                new DialogCheckin(getContext(), bm, new DialogCheckin.OnDialogClickListener() {
+//                    @Override
+//                    public void onCallSerVice() {
+//
+//                        SessionManager.getInstance().setKeySaveImageEnd(bm);
+//                        resetData();
+//
+////                        BaseImageActivity_.intent(getContext())
+////                                .mStart(mBitmapStart)
+////                                .mEnd(bm)
+////                                .mTime(numTime)
+////                                .mKM(ms2)
+////                                .mSpeed(ms1)
+////                                .mMaxSpeed(ms)
+////                                .mCalo(String.valueOf(calos) + " calo")
+////                                .mTimeStart(time)
+////                                .mTimeEnd(timeEnd)
+////                                .mDate(date)
+////                                .mLats(mLat)
+////                                .mLngs(mLng)
+////                                .mLate(mLate)
+////                                .mLnge(mLnge)
+////                                .start();
+////                        getBaseActivity().finish();
+//                    }
+//                }).show();
             }
         }
     }

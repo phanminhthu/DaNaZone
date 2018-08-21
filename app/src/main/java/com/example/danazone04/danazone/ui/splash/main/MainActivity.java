@@ -144,6 +144,18 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     ImageView mImgStop;
     @ViewById
     LinearLayout mLnStop;
+    @ViewById
+    ImageView mImgPlay;
+    @ViewById
+    ImageView mImgStops;
+    @ViewById
+    ImageView mImgLock;
+    @ViewById
+    ImageView mImgUnlocked;
+    @ViewById
+    ImageView mImgLocked;
+
+
     @Extra
     Bitmap mBitmapStart;
     @Extra
@@ -170,6 +182,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private String ms, ms1, ms2, ms3;
     private double calos;
     private AlertDialog waitingDialog;
+    boolean mLocked;
 
     @Override
     protected void afterView() {
@@ -179,7 +192,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
         data = new Data(onGpsServiceUpdate);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        mRlPause.setVisibility(View.INVISIBLE);
+
         waitingDialog = new SpotsDialog(MainActivity.this);
 
         updateService();
@@ -293,14 +306,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     }
 
-    @Click({R.id.mImgStop, R.id.mTvSetting, R.id.mRlPause})
+    @Click({R.id.mImgStops, R.id.mTvSetting, R.id.mImgPlay, R.id.mImgLock})
     void onClick(View v) {
         switch (v.getId()) {
-            case R.id.mRlPause:
+            case R.id.mImgPlay:
                 setUpDate();
                 setUpTime();
                 if (!data.isRunning()) {
-                    mRlPause.setImageDrawable(getResources().getDrawable(R.drawable.pause_ic));
+                    mImgPlay.setImageDrawable(getResources().getDrawable(R.drawable.new_pause));
                     data.setRunning(true);
                     mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
                     mTvTime.start();
@@ -308,27 +321,27 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     startService(new Intent(getBaseContext(), GpsServices.class));
 
                 } else {
-                    mRlPause.setImageDrawable(getResources().getDrawable(R.drawable.play_ic));
+                    mImgPlay.setImageDrawable(getResources().getDrawable(R.drawable.new_play));
                     data.setRunning(false);
                     stopService(new Intent(getBaseContext(), GpsServices.class));
                 }
                 break;
 
             case R.id.mTvSetting:
-               String title = "Iridescent";
+                String title = "Iridescent";
 
                 Intent intent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
                 intent.putExtra(MediaStore.EXTRA_MEDIA_FOCUS,
                         MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE);
-                intent.putExtra(MediaStore.EXTRA_MEDIA_TITLE,title);
-                intent.putExtra(SearchManager.QUERY,title);
+                intent.putExtra(MediaStore.EXTRA_MEDIA_TITLE, title);
+                intent.putExtra(SearchManager.QUERY, title);
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 }
 
                 break;
 
-            case R.id.mImgStop:
+            case R.id.mImgStops:
                 setUpTimeEnd();
                 data.setRunning(false);
                 stopService(new Intent(getBaseContext(), GpsServices.class));
@@ -354,6 +367,29 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
                     }
                 }).show();
+                break;
+
+            case R.id.mImgLock:
+
+                System.out.println("6666666666666666666666: " + mLocked);
+                if (!mLocked) {
+                    mImgLocked.setVisibility(View.VISIBLE);
+                    mImgUnlocked.setVisibility(View.GONE);
+                    mImgPlay.setClickable(false);
+                    mImgPlay.setEnabled(false);
+                    mImgStops.setClickable(false);
+                    mImgStops.setEnabled(false);
+                    mLocked = true;
+                } else {
+                    mImgLocked.setVisibility(View.GONE);
+                    mImgUnlocked.setVisibility(View.VISIBLE);
+                    mImgPlay.setClickable(true);
+                    mImgPlay.setEnabled(true);
+                    mImgStops.setClickable(true);
+                    mImgStops.setEnabled(true);
+                    mLocked = false;
+                }
+
                 break;
         }
     }
@@ -382,32 +418,32 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 Bundle bundle = data.getExtras();
                 final Bitmap bm = (Bitmap) bundle.get("data");
 
-                new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
-                    @Override
-                    public void onCallSerVice() {
-
-                        SessionManager.getInstance().setKeySaveImageEnd(bm);
-                        resetData();
-
-                        BaseImageActivity_.intent(MainActivity.this)
-                                .mStart(mBitmapStart)
-                                .mEnd(bm)
-                                .mTime(numTime)
-                                .mKM(ms2)
-                                .mSpeed(ms1)
-                                .mMaxSpeed(ms)
-                                .mCalo(String.valueOf(calos) + " calo")
-                                .mTimeStart(time)
-                                .mTimeEnd(timeEnd)
-                                .mDate(date)
-                                .mLats(mLat)
-                                .mLngs(mLng)
-                                .mLate(mLate)
-                                .mLnge(mLnge)
-                                .start();
-                        finish();
-                    }
-                }).show();
+//                new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
+//                    @Override
+//                    public void onCallSerVice() {
+//
+//                        SessionManager.getInstance().setKeySaveImageEnd(bm);
+//                        resetData();
+//
+//                        BaseImageActivity_.intent(MainActivity.this)
+//                                .mStart(mBitmapStart)
+//                                .mEnd(bm)
+//                                .mTime(numTime)
+//                                .mKM(ms2)
+//                                .mSpeed(ms1)
+//                                .mMaxSpeed(ms)
+//                                .mCalo(String.valueOf(calos) + " calo")
+//                                .mTimeStart(time)
+//                                .mTimeEnd(timeEnd)
+//                                .mDate(date)
+//                                .mLats(mLat)
+//                                .mLngs(mLng)
+//                                .mLate(mLate)
+//                                .mLnge(mLnge)
+//                                .start();
+//                        finish();
+//                    }
+//                }).show();
             }
         }
     }
@@ -474,7 +510,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
 
             if (firstfix) {
-                mRlPause.setVisibility(View.VISIBLE);
+                //mRlPause.setVisibility(View.VISIBLE);
                 if (!data.isRunning()) {
 
                 }
@@ -670,17 +706,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         satsUsed++;
                     }
                 }
-                //satellite.setText(String.valueOf(satsUsed) + "/" + String.valueOf(satsInView));
+
                 if (satsUsed == 0) {
-                    mRlPause.setImageDrawable(getResources().getDrawable(R.drawable.play_ic));
+                    mImgPlay.setImageDrawable(getResources().getDrawable(R.drawable.new_play));
                     data.setRunning(false);
-                    //mTvPause.setText("");
-                    // waitingDialog.dismiss();
+
                     stopService(new Intent(getBaseContext(), GpsServices.class));
-                    mRlPause.setVisibility(View.INVISIBLE);
-                    //mTvPause.setText("GPS");
-                    //
-                    // waitingDialog.show();
                     firstfix = true;
                 }
                 break;

@@ -6,17 +6,21 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -50,6 +54,9 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
+import java.io.File;
+import java.util.UUID;
+
 import static android.app.Activity.RESULT_OK;
 import static com.facebook.FacebookSdk.getApplicationContext;
 
@@ -75,6 +82,7 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private String mLat, mLng;
     private LocationManager mLocationManager;
+    private  File mTempCameraPhotoFile= null;
 
     @ViewById
     ImageView mImgStart;
@@ -152,7 +160,6 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
                 SettingActivity_.intent(getContext()).start();
                 break;
 
-
             case R.id.mImgStart:
                 new StartDialog(getContext(), new StartDialog.OnDialogClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
@@ -173,10 +180,26 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     }
 
     private void dispatchTakenPictureIntent() {
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
+//        if (intent.resolveActivity(getPackageManager()) != null) {
+//            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
+//        }
+
+
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+            File exportDir = new File(Environment.getExternalStorageDirectory(), "TempFolder");
+            if (!exportDir.exists()) {
+                exportDir.mkdirs();
+            } else {
+                exportDir.delete();
+            }
+             mTempCameraPhotoFile = new File(exportDir, "/" + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
+
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempCameraPhotoFile));
+            startActivityForResult(takePictureIntent, MY_CAMERA_REQUEST_CODE);
         }
     }
 
@@ -186,10 +209,25 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
 
         if (resultCode == RESULT_OK) {
             if (requestCode == MY_CAMERA_REQUEST_CODE) {
-                Bundle extras = data.getExtras();
-                bitmap = (Bitmap) extras.get("data");
-                if (bitmap != null) {
-                    new DialogCheckin(getContext(), bitmap, new DialogCheckin.OnDialogClickListener() {
+//                Bundle extras = data.getExtras();
+//                bitmap = (Bitmap) extras.get("data");
+
+                    String filePath = mTempCameraPhotoFile.getPath();
+                System.out.println("5555555555555555555555" + filePath);
+
+                /*
+                // extracted file path can be load into imageview for example with Picasso loader
+                Uri uri = Uri.fromFile(new File(mReportImageList.get(position).getUrl()));
+                Picasso.with(mContext)
+                        .load(uri)
+                        .fit()
+                        .centerCrop()
+                        .into(ivPhoto);*/
+
+
+                if (filePath != null) {
+
+                    new DialogCheckin(getContext(), filePath, new DialogCheckin.OnDialogClickListener() {
                         @Override
                         public void onCallSerVice() {
                             SessionManager.getInstance().setKeyImageStart(bitmap);
@@ -200,8 +238,6 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
                                         .mBitmapStart(bitmap)
                                         .start();
                             }
-//                                BaseContainerFragment.getInstance().replaceFragment(InformationFragment_.builder().mBitmapStart(bitmap)
-//                                        .mLat(mLat).mLng(mLng).build(),true);
                         }
                     }).show();
                 }

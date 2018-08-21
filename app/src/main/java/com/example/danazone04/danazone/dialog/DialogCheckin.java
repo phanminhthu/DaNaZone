@@ -7,11 +7,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.danazone04.danazone.BaseDialog;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.ui.splash.TakeImage;
+import com.squareup.picasso.Picasso;
 
 public class DialogCheckin extends BaseDialog implements View.OnClickListener {
-    private Bitmap bitmap;
+    private String bitmap;
     /**
      * Interface dialog click listener
      */
@@ -22,7 +25,7 @@ public class DialogCheckin extends BaseDialog implements View.OnClickListener {
     private OnDialogClickListener mListener;
 
 
-    public DialogCheckin(Context context,Bitmap bitmap, OnDialogClickListener listener) {
+    public DialogCheckin(Context context,String bitmap, OnDialogClickListener listener) {
         super(context);
         mListener = listener;
         this.bitmap = bitmap;
@@ -36,7 +39,13 @@ public class DialogCheckin extends BaseDialog implements View.OnClickListener {
 
         mImgCancelDialog.setOnClickListener(this);
         mTvCall.setOnClickListener(this);
-        mImgCheckin.setImageBitmap(bitmap);
+       // mImgCheckin.setImageBitmap(bitmap);
+        Glide.with(getContext()).load(bitmap).error(R.drawable.image1).into(mImgCheckin);
+//        Picasso.with(getContext())
+//                .load(bitmap)
+//                .fit()
+//                .centerCrop()
+//                .into(mImgCheckin);
     }
 
     @Override

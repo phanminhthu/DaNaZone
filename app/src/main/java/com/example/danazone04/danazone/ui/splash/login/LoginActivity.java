@@ -32,7 +32,7 @@ public class LoginActivity extends BaseActivity {
 
     @Override
     protected void afterView() {
-
+    getSupportActionBar().hide();
     }
 
     @Click({R.id.mTvSubmit, R.id.mTvLogin})

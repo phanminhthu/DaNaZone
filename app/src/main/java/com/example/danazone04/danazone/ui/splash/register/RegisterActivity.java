@@ -42,7 +42,7 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     protected void afterView() {
-
+        getSupportActionBar().hide();
     }
 
     @Click({R.id.mTvLogin, R.id.mTvSubmit})

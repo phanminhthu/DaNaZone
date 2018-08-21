@@ -32,6 +32,7 @@ public class SplashActivity extends BaseActivity {
 
     @Override
     protected void afterView() {
+        getSupportActionBar().hide();
         Animation mAnimation = new AlphaAnimation(1, 0);
         mAnimation.setDuration(400);
         mAnimation.setRepeatCount(android.view.animation.Animation.INFINITE);
