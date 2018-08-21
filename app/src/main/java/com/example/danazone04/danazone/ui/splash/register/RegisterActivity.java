@@ -2,6 +2,7 @@ package com.example.danazone04.danazone.ui.splash.register;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -14,6 +15,7 @@ import com.example.danazone04.danazone.common.Common;
 import com.example.danazone04.danazone.common.MySingleton;
 import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
+import com.example.danazone04.danazone.ui.splash.main.start.StartActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
@@ -73,8 +75,10 @@ public class RegisterActivity extends BaseActivity {
                 SessionManager.getInstance().setKeySaveId(phone);
                 SessionManager.getInstance().setKeySavePass(password);
 
-                MainActivity_.intent(RegisterActivity.this).start();
-
+                StartActivity_.intent(RegisterActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK).start();
+                finish();
                 break;
         }
     }

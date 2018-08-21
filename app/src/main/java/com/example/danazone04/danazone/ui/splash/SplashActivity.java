@@ -2,6 +2,7 @@ package com.example.danazone04.danazone.ui.splash;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Handler;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
@@ -13,6 +14,9 @@ import com.example.danazone04.danazone.SessionManager;
 
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
 
+import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
+import com.example.danazone04.danazone.ui.splash.main.start.StartActivity_;
+import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
 
 import org.androidannotations.annotations.EActivity;
@@ -35,7 +39,10 @@ public class SplashActivity extends BaseActivity {
         mImgLogo.startAnimation(mAnimation);
 
         if (!SessionManager.getInstance().getKeySaveId().equals("") && !SessionManager.getInstance().getKeySavePass().equals("")) {
-            MainActivity_.intent(SplashActivity.this).start();
+            MainMenuActivity_.intent(SplashActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_NEW_TASK).start();
+            finish();
         } else {
             Runnable mActivityStarter = new Runnable() {
                 @Override

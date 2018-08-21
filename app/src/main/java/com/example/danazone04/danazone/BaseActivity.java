@@ -29,7 +29,6 @@ import org.androidannotations.annotations.WindowFeature;
  */
 
 @EActivity
-@WindowFeature(Window.FEATURE_NO_TITLE)
 public abstract class BaseActivity extends AppCompatActivity implements BaseActivityListener {
     protected final String TAG = this.getClass().getSimpleName();
 
@@ -44,10 +43,7 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // handler SCREEN_ORIENTATION_PORTRAIT
-
         intProgressBar();
-
     }
 
 
@@ -55,7 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     @AfterViews
     protected void initView() {
         this.afterView();
-        //ApiCallBack.setOnServiceErrorListener(this);
     }
 
     @Override
@@ -73,20 +68,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
 
     @Override
     protected void onDestroy() {
-//        try {
-//            if (mProgressDialog != null && mProgressDialog.isShowing()) {
-//                mProgressDialog.dismiss();
-//                mProgressDialog = null;
-//            }
-//
-//            if (mDialog != null && mDialog.isShowing()) {
-//                mDialog.dismiss();
-//                mDialog = null;
-//            }
-//        } catch (Exception e) {
-//            Log.e(TAG, "" + e.getMessage());
-//        }
-
         super.onDestroy();
     }
 
@@ -102,8 +83,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage("waiting");
         mProgressDialog.setCancelable(false);
-
-        //mDialog = new PFLoadingDialog(this);
     }
 
     /**
@@ -123,22 +102,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         }, 30000);
     }
 
-    /**
-     * show dialog not message.
-     */
-//    public void showDialog() {
-//        if (mDialog != null && !mDialog.isShowing() && !isFinishing()) {
-//            mDialog.show();
-//        }
-//
-//        // dismiss process bar about 10 second
-//        mHandlerProcess.postDelayed(new Runnable() {
-//            @Override
-//            public void run() {
-//                dismissDialog();
-//            }
-//        }, 30000);
-//    }
     @Override
     public void showMessage(String message) {
         showMessage(null, message);
@@ -154,15 +117,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     }
 
     /**
-     * dismiss dialog
-     */
-//    public void dismissDialog() {
-//        if (!isFinishing() && mDialog != null && mDialog.isShowing()) {
-//            mDialog.dismiss();
-//        }
-//    }
-
-    /**
      * show message dialog
      *
      * @param msg
@@ -176,36 +130,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * show alertDialog option
-     *
-     * @param msg
-     * @param listener
-     */
-    protected void showAlertDialog(@NonNull String msg, final DialogInterface.OnClickListener listener) {
-        new AlertDialog.Builder(this)
-                .setMessage(msg)
-                .setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        if (listener != null) {
-                            listener.onClick(dialogInterface, i);
-                        }
-                        dialogInterface.dismiss();
-                    }
-                }).show();
-    }
-
-    /**
-     * show dialog
-     *
-     * @param resId
-     */
-    protected void showAlertDialog(@StringRes int resId) {
-        showAlertDialog(getString(resId));
     }
 
     /**
@@ -249,24 +173,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
     }
 
     /**
-     * show network
-     */
-    public void showDialogNetwork() {
-        if (!isFinishing()) {
-            new AlertDialog.Builder(this)
-                    .setTitle("error")
-                    .setMessage("error")
-                    .setCancelable(false)
-                    .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    }).show();
-        }
-    }
-
-    /**
      * show message and title
      *
      * @param title
@@ -285,27 +191,6 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
                         }
                     }).show();
         }
-    }
-
-    /**
-     * show option dialog
-     */
-    protected void showMessageOptionDialog(String message, String stringYes, String stringNo, final DialogInterface.OnClickListener listener) {
-        new AlertDialog.Builder(this)
-                .setMessage(message)
-                .setCancelable(false)
-                .setPositiveButton(stringYes, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        if (listener != null) {
-                            listener.onClick(dialog, id);
-                        }
-                    }
-                })
-                .setNegativeButton(stringNo, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                    }
-                }).show();
     }
 
     /**

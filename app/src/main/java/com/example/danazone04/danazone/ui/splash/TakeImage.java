@@ -48,8 +48,10 @@ public class TakeImage extends BaseActivity {
 
     @Override
     protected void afterView() {
-        Toast.makeText(TakeImage.this, fileName, Toast.LENGTH_LONG).show();
-        completePath = Environment.getExternalStorageDirectory() + "/" + fileName + ".jpg";
+
+        completePath = Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/"+ fileName + ".jpg";
+        System.out.println("00000000000000: " + completePath);
         Glide.with(TakeImage.this).load(completePath).error(R.drawable.image1).into(iv_image);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
@@ -58,7 +60,7 @@ public class TakeImage extends BaseActivity {
 
     @Click(R.id.mTvSubmit)
     void clickView(View v) {
-        Toast.makeText(TakeImage.this, "helllllllo", Toast.LENGTH_SHORT).show();
+
 //        Uri imageUri = Uri.parse(completePath);
 //        Intent intent = new Intent(Intent.ACTION_SEND);
 //        intent.setType("image/jpg");
@@ -80,7 +82,7 @@ public class TakeImage extends BaseActivity {
 
             }
         });
-        Picasso.with(getBaseContext()).load(completePath).into(new Target() {
+        Picasso.with(getBaseContext()).load("http://chohoaviet.com/wp-content/uploads/2016/05/hoa-dong-tien-1.jpg").into(new Target() {
             @Override
             public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
                 SharePhoto sharePhoto = new SharePhoto.Builder()

@@ -8,4 +8,8 @@
 
     <string name="facebook_app_id">229417001107563</string>
     <string name="facebook_schema">fb229417001107563</string>
+    <string name="title_activity_maps">Map</string>
+    <string name="open">Open</string>
+    <string name="colose">Close</string>
+    <string name="text_back_exit">Click BACK lần nữa để thoát</string>
 </resources>

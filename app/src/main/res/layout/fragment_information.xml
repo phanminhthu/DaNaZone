@@ -4,25 +4,18 @@
     android:layout_height="match_parent"
     android:background="#ffffff">
 
-    <include
-        layout="@layout/tab_bar_top"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_alignParentTop="true" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_40sdp"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/_20sdp"
-        android:paddingTop="@dimen/_10sdp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
             android:orientation="horizontal"
+            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:weightSum="2">
 
             <LinearLayout
@@ -144,16 +137,15 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_245sdp" />
+        android:layout_marginTop="@dimen/_190sdp" />
 
     <LinearLayout
-        android:id="@+id/mLnStop"
+        android:id="@+id/c"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="@dimen/_100sdp"
@@ -184,56 +176,4 @@
             android:background="@drawable/stop" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/mImgPlay"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:background="@drawable/new_play" />
-
-            <ImageView
-                android:id="@+id/mImgStops"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_toRightOf="@+id/mImgPlay"
-                android:background="@drawable/new_stop" />
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/mImgLock"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/new_lock" />
-
-        <ImageView
-            android:id="@+id/mImgUnlocked"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/unlocked" />
-
-        <ImageView
-            android:id="@+id/mImgLocked"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/unlocked"
-            android:visibility="gone" />
-    </RelativeLayout>
 </RelativeLayout>

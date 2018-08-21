@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/mHome"
+        android:icon="@drawable/home"
+        android:title="Trang chủ" />
+    <item
+        android:id="@+id/mSetting"
+        android:icon="@drawable/settings"
+        android:title="Cài đặt" />
+    <item
+        android:id="@+id/mCoin"
+        android:icon="@drawable/cupcake"
+        android:title="Thành tích" />
+    <item
+        android:id="@+id/mBMI  "
+        android:icon="@drawable/calculator"
+        android:title="Chỉ số" />
+    <item
+        android:id="@+id/mContact"
+        android:icon="@drawable/contact_mail"
+        android:title="Liên hệ" />
+    <item
+        android:id="@+id/mExit"
+        android:icon="@drawable/exit_to_app"
+        android:title="Thoát" />
+</menu>

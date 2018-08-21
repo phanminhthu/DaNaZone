@@ -1,18 +1,14 @@
-package com.example.danazone04.danazone.ui.splash.main;
+package com.example.danazone04.danazone.ui.splash.main.start.info;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.Signature;
 import android.graphics.Bitmap;
-
 import android.location.GpsSatellite;
 import android.location.GpsStatus;
 import android.location.Location;
@@ -20,8 +16,6 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
-import android.os.Handler;
 import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -32,12 +26,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.RelativeSizeSpan;
-import android.util.Base64;
 import android.util.Log;
 import android.view.View;
-import android.view.Window;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Chronometer;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -45,65 +35,48 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.danazone04.danazone.BaseActivity;
+import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.common.BaseImageActivity_;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.EndDialog;
-import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.GpsDialog;
-import com.example.danazone04.danazone.dialog.ShareDialog;
-import com.example.danazone04.danazone.dialog.StartDialog;
-import com.example.danazone04.danazone.remote.IGoogleApi;
 import com.example.danazone04.danazone.speed.Data;
 import com.example.danazone04.danazone.speed.GpsServices;
-import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
-import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
-import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
-import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
+import com.example.danazone04.danazone.ui.splash.main.MainActivity;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
-
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.JointType;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Polyline;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.gson.Gson;
 
 import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Extra;
+import org.androidannotations.annotations.FragmentArg;
 import org.androidannotations.annotations.ViewById;
 import org.json.JSONObject;
 
-import java.io.ByteArrayOutputStream;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import dmax.dialog.SpotsDialog;
 
-@SuppressLint("Registered")
-@EActivity(R.layout.activity_main)
-public class MainActivity extends BaseActivity implements OnMapReadyCallback,
-        GoogleApiClient.ConnectionCallbacks,
+import static android.support.v4.provider.FontsContractCompat.FontRequestCallback.RESULT_OK;
+
+@EFragment(R.layout.fragment_information)
+public class InformationFragment extends BaseContainerFragment implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener, GpsStatus.Listener {
     private GoogleMap mMap;
@@ -119,12 +92,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private static int FATEST_INTERVAL = 3000;
     private static int DISPLACEMENT = 10;
     private JSONObject jsonObject;
-
-
-    @ViewById
-    RelativeLayout mTvSetting;
-    @ViewById
-    TextView mImgText;
 
     @ViewById
     TextView mTvDistance;
@@ -144,11 +111,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     ImageView mImgStop;
     @ViewById
     LinearLayout mLnStop;
-    @Extra
+    @FragmentArg
     Bitmap mBitmapStart;
-    @Extra
+    @FragmentArg
     String mLat;
-    @Extra
+    @FragmentArg
     String mLng;
 
     private LocationManager mLocationManager;
@@ -172,15 +139,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private AlertDialog waitingDialog;
 
     @Override
-    protected void afterView() {
-        getSupportActionBar().hide();
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+    protected void afterViews() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
         data = new Data(onGpsServiceUpdate);
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         mRlPause.setVisibility(View.INVISIBLE);
-        waitingDialog = new SpotsDialog(MainActivity.this);
+        waitingDialog = new SpotsDialog(getContext());
 
         updateService();
         buidGoogleApiClient();
@@ -248,7 +214,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             }
         };
 
-        mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+        mLocationManager = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
 //        if (checkPermission()) {
 //            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
 //        } else {
@@ -293,7 +259,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     }
 
-    @Click({R.id.mImgStop, R.id.mTvSetting, R.id.mRlPause})
+    @Click({R.id.mImgStop, R.id.mRlPause})
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.mRlPause:
@@ -305,41 +271,27 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
                     mTvTime.start();
                     data.setFirstTime(true);
-                    startService(new Intent(getBaseContext(), GpsServices.class));
+                    getActivity().startService(new Intent(getContext(), GpsServices.class));
 
                 } else {
                     mRlPause.setImageDrawable(getResources().getDrawable(R.drawable.play_ic));
                     data.setRunning(false);
-                    stopService(new Intent(getBaseContext(), GpsServices.class));
+                    getActivity().stopService(new Intent(getContext(), GpsServices.class));
                 }
-                break;
-
-            case R.id.mTvSetting:
-               String title = "Iridescent";
-
-                Intent intent = new Intent(MediaStore.INTENT_ACTION_MEDIA_PLAY_FROM_SEARCH);
-                intent.putExtra(MediaStore.EXTRA_MEDIA_FOCUS,
-                        MediaStore.Audio.Artists.ENTRY_CONTENT_TYPE);
-                intent.putExtra(MediaStore.EXTRA_MEDIA_TITLE,title);
-                intent.putExtra(SearchManager.QUERY,title);
-                if (intent.resolveActivity(getPackageManager()) != null) {
-                    startActivity(intent);
-                }
-
                 break;
 
             case R.id.mImgStop:
                 setUpTimeEnd();
                 data.setRunning(false);
-                stopService(new Intent(getBaseContext(), GpsServices.class));
+                getActivity().stopService(new Intent(getContext(), GpsServices.class));
                 numTime = mTvTime.getText().toString();
 
-                new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
+                new EndDialog(getContext(), new EndDialog.OnDialogClickListener() {
                     @RequiresApi(api = Build.VERSION_CODES.M)
                     @Override
                     public void onCallSerVice() {
 
-                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
                             takenImageEnd();
                         } else {
                             if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
@@ -361,20 +313,20 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private void dispatchTakenPictureIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
         }
     }
 
     private void takenImageEnd() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
         }
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
@@ -382,30 +334,30 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 Bundle bundle = data.getExtras();
                 final Bitmap bm = (Bitmap) bundle.get("data");
 
-                new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
+                new DialogCheckin(getContext(), bm, new DialogCheckin.OnDialogClickListener() {
                     @Override
                     public void onCallSerVice() {
 
                         SessionManager.getInstance().setKeySaveImageEnd(bm);
                         resetData();
 
-                        BaseImageActivity_.intent(MainActivity.this)
-                                .mStart(mBitmapStart)
-                                .mEnd(bm)
-                                .mTime(numTime)
-                                .mKM(ms2)
-                                .mSpeed(ms1)
-                                .mMaxSpeed(ms)
-                                .mCalo(String.valueOf(calos) + " calo")
-                                .mTimeStart(time)
-                                .mTimeEnd(timeEnd)
-                                .mDate(date)
-                                .mLats(mLat)
-                                .mLngs(mLng)
-                                .mLate(mLate)
-                                .mLnge(mLnge)
-                                .start();
-                        finish();
+//                        BaseImageActivity_.intent(getContext())
+//                                .mStart(mBitmapStart)
+//                                .mEnd(bm)
+//                                .mTime(numTime)
+//                                .mKM(ms2)
+//                                .mSpeed(ms1)
+//                                .mMaxSpeed(ms)
+//                                .mCalo(String.valueOf(calos) + " calo")
+//                                .mTimeStart(time)
+//                                .mTimeEnd(timeEnd)
+//                                .mDate(date)
+//                                .mLats(mLat)
+//                                .mLngs(mLng)
+//                                .mLate(mLate)
+//                                .mLnge(mLnge)
+//                                .start();
+//                        getBaseActivity().finish();
                     }
                 }).show();
             }
@@ -419,7 +371,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakenPictureIntent();
             } else {
-                Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
                 dispatchTakenPictureIntent();
             }
         } else {
@@ -429,7 +380,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void end() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             return;
         }
@@ -516,6 +467,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     }
 
+
     @SuppressLint("MissingPermission")
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -523,9 +475,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         mMap.setTrafficEnabled(false);
         mMap.setIndoorEnabled(false);
         mMap.setBuildingsEnabled(false);
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
+                && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
             return;
         }
@@ -535,18 +487,18 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void displayLocation() {
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
-                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager
+                .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission
                 .ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             //request runtime permission
-            ActivityCompat.requestPermissions(this, new String[]{
+            ActivityCompat.requestPermissions(getActivity(), new String[]{
                     Manifest.permission.ACCESS_COARSE_LOCATION,
                     Manifest.permission.ACCESS_FINE_LOCATION
             }, MY_PERMISSION_REQUEST_CODE);
 
         }
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // mLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
             return;
         }
@@ -566,13 +518,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     private boolean checkPlayServices() {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(getContext());
         if (resultCode != ConnectionResult.SUCCESS) {
             if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
-                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICE_RES_REQUEST).show();
+                GooglePlayServicesUtil.getErrorDialog(resultCode, getActivity(), PLAY_SERVICE_RES_REQUEST).show();
             else {
                 //Toast.makeText(this, getResources().getString(R.string.text_app_name), Toast.LENGTH_SHORT).show();
-                finish();
+                getBaseActivity().finish();
             }
             return false;
         }
@@ -581,7 +533,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void buidGoogleApiClient() {
 
-        mGoogleApiClient = new GoogleApiClient.Builder(this)
+        mGoogleApiClient = new GoogleApiClient.Builder(getContext())
                 .addApi(LocationServices.API)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -599,7 +551,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         displayLocation();
 
@@ -617,7 +569,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
         if (mLocationManager.getAllProviders().indexOf(LocationManager.GPS_PROVIDER) >= 0) {
 
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
             mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 500, 0, this);
@@ -633,7 +585,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     @Override
-    protected void onPause() {
+    public void onPause() {
         super.onPause();
         mLocationManager.removeUpdates(this);
         mLocationManager.removeGpsStatusListener(this);
@@ -648,7 +600,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     public void onDestroy() {
         super.onDestroy();
         resetData();
-        stopService(new Intent(getBaseContext(), GpsServices.class));
+        getActivity().stopService(new Intent(getContext(), GpsServices.class));
     }
 
     @Override
@@ -657,7 +609,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
 
 
-                if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
                 GpsStatus gpsStatus = mLocationManager.getGpsStatus(null);
@@ -676,7 +628,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     data.setRunning(false);
                     //mTvPause.setText("");
                     // waitingDialog.dismiss();
-                    stopService(new Intent(getBaseContext(), GpsServices.class));
+                    getActivity().stopService(new Intent(getContext(), GpsServices.class));
                     mRlPause.setVisibility(View.INVISIBLE);
                     //mTvPause.setText("GPS");
                     //
@@ -696,7 +648,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     }
 
     public void showGpsDisabledDialog() {
-        new GpsDialog(MainActivity.this, new GpsDialog.OnDialogClickListener() {
+        new GpsDialog(getContext(), new GpsDialog.OnDialogClickListener() {
             @Override
             public void onCallSerVice() {
                 startActivity(new Intent("android.settings.LOCATION_SOURCE_SETTINGS"));
@@ -717,6 +669,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         return data;
     }
 
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
 
     /**
      * setup date

@@ -29,7 +29,7 @@ public class GpsDialog extends BaseDialog implements View.OnClickListener {
     @Override
     protected void onCreateView(Bundle savedInstanceState) {
         ImageView mImgCancelDialog = (ImageView) findViewById(R.id.mImgCancelDialog);
-        TextView mTvCall = (TextView)findViewById(R.id.mTvSubmit);
+        TextView mTvCall = (TextView) findViewById(R.id.mTvSubmit);
 
         mImgCancelDialog.setOnClickListener(this);
         mTvCall.setOnClickListener(this);
@@ -38,7 +38,7 @@ public class GpsDialog extends BaseDialog implements View.OnClickListener {
 
     @Override
     protected int getLayout() {
-        return R.layout.dialog_share;
+        return R.layout.dialog_gps;
     }
 
     @Override

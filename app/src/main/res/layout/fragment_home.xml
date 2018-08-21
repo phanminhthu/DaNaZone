@@ -3,22 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ffffff">
-
-    <include
-        layout="@layout/tab_bar_top"
+    <FrameLayout
+        android:id="@+id/mFrameContainers"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        android:layout_alignParentTop="true" />
-
+        android:layout_height="match_parent"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_40sdp"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/_20sdp"
-        android:paddingTop="@dimen/_10sdp">
+        android:orientation="vertical">
 
         <LinearLayout
+            android:paddingBottom="@dimen/_5sdp"
+            android:paddingTop="@dimen/_5sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorWhite"
@@ -144,96 +140,14 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_245sdp" />
+        android:layout_marginTop="@dimen/_190sdp" />
 
-    <LinearLayout
-        android:id="@+id/mLnStop"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <ImageView
+        android:id="@+id/mImgStart"
+        android:layout_width="@dimen/_60sdp"
+        android:layout_height="@dimen/_60sdp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:orientation="vertical"
-        android:visibility="gone">
+        android:background="@drawable/start" />
 
-        <RelativeLayout
-            android:layout_width="@dimen/_100sdp"
-            android:layout_height="@dimen/_30sdp"
-            android:layout_gravity="center">
-
-            <ImageView
-                android:id="@+id/mRlPause"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/play_ic"
-                android:scaleType="fitXY"
-                android:visibility="invisible" />
-        </RelativeLayout>
-
-
-        <android.support.v7.widget.AppCompatTextView
-            android:layout_width="@dimen/_10sdp"
-            android:layout_height="@dimen/_10sdp"
-            android:layout_gravity="center"
-            android:background="@drawable/ic_down" />
-
-        <ImageView
-            android:id="@+id/mImgStop"
-            android:layout_width="@dimen/_60sdp"
-            android:layout_height="@dimen/_60sdp"
-            android:layout_gravity="center"
-            android:background="@drawable/stop" />
-    </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true">
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:gravity="center">
-
-            <ImageView
-                android:id="@+id/mImgPlay"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/_20sdp"
-                android:background="@drawable/new_play" />
-
-            <ImageView
-                android:id="@+id/mImgStops"
-                android:layout_width="@dimen/_100sdp"
-                android:layout_height="@dimen/_30sdp"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/_20sdp"
-                android:layout_toRightOf="@+id/mImgPlay"
-                android:background="@drawable/new_stop" />
-        </RelativeLayout>
-
-        <ImageView
-            android:id="@+id/mImgLock"
-            android:layout_width="@dimen/_70sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/new_lock" />
-
-        <ImageView
-            android:id="@+id/mImgUnlocked"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/unlocked" />
-
-        <ImageView
-            android:id="@+id/mImgLocked"
-            android:layout_width="@dimen/_25sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:layout_centerInParent="true"
-            android:background="@drawable/unlocked"
-            android:visibility="gone" />
-    </RelativeLayout>
 </RelativeLayout>

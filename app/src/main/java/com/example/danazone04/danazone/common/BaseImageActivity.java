@@ -8,7 +8,10 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.location.Location;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -233,14 +236,15 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
     public void saveBitmap(Bitmap bitmap) {
 
-        File imagePath = new File("/sdcard/" + filename + ".jpg");
+        File imagePath = new File(Environment
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/" + filename + ".jpg");
+
         FileOutputStream fos;
         try {
             fos = new FileOutputStream(imagePath);
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
             fos.flush();
             fos.close();
-            Toast.makeText(getApplicationContext(), imagePath.getAbsolutePath() + "", Toast.LENGTH_SHORT).show();
             boolean_save = true;
 
             mTvSubmit.setText("Check image");
@@ -251,6 +255,15 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         } catch (IOException e) {
             Log.e("GREC", e.getMessage(), e);
         }
+        // Tell the media scanner about the new file so that it is
+        // immediately available to the user.
+        MediaScannerConnection.scanFile(this, new String[]{imagePath.toString()}, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.i("ExternalStorage", "Scanned " + path + ":");
+                        Log.i("ExternalStorage", "-> uri=" + uri);
+                    }
+                });
     }
 
     public static Bitmap loadBitmapFromView(View v, int width, int height) {
