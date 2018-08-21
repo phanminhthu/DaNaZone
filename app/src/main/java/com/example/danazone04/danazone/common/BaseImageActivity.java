@@ -12,6 +12,7 @@ import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -73,9 +74,9 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener, LocationListener {
     @Extra
-    Bitmap mStart;
+    String mStart;
     @Extra
-    Bitmap mEnd;
+    String mEnd;
     @ViewById
     ImageView mImgStart;
     @ViewById
@@ -161,10 +162,13 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     private IGoogleApi mService;
     private LatLng currentPosition;
     private List<LatLng> polyLineList;
+    private Uri mUriStart, mUriEnd;
+    private Bitmap bmStart, bmEnd;
 
 
     @Override
     protected void afterView() {
+        getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(BaseImageActivity.this);
         buidGoogleApiClient();
@@ -182,27 +186,37 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         } else {
             SessionManager.getInstance().setKeySaveCoin(String.valueOf(key));
         }
-        if (mStart != null && mEnd != null) {
-            mImgStart.setImageBitmap(mStart);
-            mImgEnd.setImageBitmap(mEnd);
-            mTvTime.setText(mTime);
-            if (mSpeed == null) {
-                mTvSpeed.setText("0 KM/H");
-                mTvSpeed.setText(mSpeed);
-            }
+        mUriStart = Uri.parse(mStart);
+        mUriEnd = Uri.parse(mEnd);
 
-            if (mKM == null) {
-                mTvKM.setText("0.0 KM");
-            } else {
-                mTvKM.setText(mKM);
-            }
-
-            mTvTimeStart.setText(mTimeStart + "h");
-            mTvTimeEnd.setText(mTimeEnd + "h");
-            mTvData.setText(mDate);
-            mTvMaxSpeed.setText(mMaxSpeed);
-            mTvCalo.setText(mCalo);
+        try {
+            bmStart = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriStart);
+            bmEnd = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriEnd);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+        mImgStart.setImageBitmap(bmStart);
+        mImgEnd.setImageBitmap(bmEnd);
+        mTvTime.setText(mTime);
+        if (mSpeed == null) {
+            mTvSpeed.setText("0 KM/H");
+
+        }else{
+            mTvSpeed.setText(mSpeed);
+        }
+
+        if (mKM == null) {
+            mTvKM.setText("0.0 KM");
+        } else {
+            mTvKM.setText(mKM);
+        }
+
+        mTvTimeStart.setText(mTimeStart + "h");
+        mTvTimeEnd.setText(mTimeEnd + "h");
+        mTvData.setText(mDate);
+        mTvMaxSpeed.setText(mMaxSpeed);
+        mTvCalo.setText(mCalo);
+
         filename = String.valueOf(Random());
         fn_permission();
     }

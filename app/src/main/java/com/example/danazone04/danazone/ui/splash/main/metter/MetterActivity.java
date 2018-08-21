@@ -19,9 +19,11 @@ import org.androidannotations.annotations.ViewById;
 public class MetterActivity extends BaseActivity {
     @ViewById
     FrameLayout content_frame;
+
     @Override
     protected void afterView() {
         // Display the fragment as the main content.
+        getSupportActionBar().hide();
         getFragmentManager()
                 .beginTransaction()
                 .replace(R.id.content_frame, new SettingsFragment())

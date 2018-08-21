@@ -6,4 +6,7 @@
     <color name="colorMain">#8cc63f</color>
     <color name="colorWhite">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="mau1">#3f000000</color>
+    <color name="mau2">#7f000000</color>
+    <color name="mau3">#bf000000</color>
 </resources>

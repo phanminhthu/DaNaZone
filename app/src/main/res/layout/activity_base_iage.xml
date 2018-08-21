@@ -2,12 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorMain"
+    android:background="@color/colorWhite"
     android:gravity="center">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_40sdp"
+        android:background="@color/colorMain"
         android:gravity="center">
 
         <TextView
@@ -37,9 +38,9 @@
             android:id="@+id/mTvData"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_20sdp"
             android:layout_toRightOf="@+id/mTvTimeEnd"
             android:text="17/2/2018"
-            android:layout_marginLeft="@dimen/_20sdp"
             android:textColor="@color/colorWhite" />
     </RelativeLayout>
 
@@ -50,77 +51,138 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_40sdp" />
 
-        <RelativeLayout
-            android:id="@+id/mRlBase"
+    <RelativeLayout
+        android:id="@+id/mRlBase"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="false"
+        android:layout_marginTop="@dimen/_40sdp">
+
+        <LinearLayout
+            android:id="@+id/mLinearProfile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="false"
-            android:layout_marginTop="@dimen/_40sdp">
+            android:layout_marginLeft="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:background="@drawable/bg_dialog_profile"
+            android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/mLinearProfile"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_10sdp"
-                android:layout_marginRight="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_40sdp"
-                android:background="@drawable/bg_dialog_profile"
-                android:orientation="vertical">
+                android:layout_height="@dimen/_160sdp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
                     <ImageView
                         android:id="@+id/mImgStart"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_120sdp"
+                        android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_2sdp"
                         android:layout_marginTop="@dimen/_40sdp"
                         android:layout_weight="1"
-                        android:background="@drawable/checkin"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitCenter" />
 
                     <ImageView
                         android:id="@+id/mImgEnd"
                         android:layout_width="match_parent"
-                        android:layout_height="@dimen/_120sdp"
+                        android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/_2sdp"
                         android:layout_marginTop="@dimen/_40sdp"
                         android:layout_weight="1"
-                        android:background="@drawable/checkin"
-                        android:scaleType="fitXY" />
+                        android:scaleType="fitCenter" />
                 </LinearLayout>
 
                 <LinearLayout
-                    android:paddingRight="@dimen/_5sdp"
-                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:orientation="vertical">
+                    android:layout_height="@dimen/_40sdp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="@dimen/_2sdp"
+                    android:layout_marginRight="@dimen/_2sdp"
+                    android:background="@color/mau1"
+                    android:orientation="horizontal"
+                    android:weightSum="4">
 
-                    <RelativeLayout
+                    <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_10sdp">
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1.2"
+                        android:gravity="center">
 
                         <ImageView
-                            android:id="@+id/mImga"
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:background="@drawable/ic_alarm" />
+                            android:layout_width="@dimen/_30sdp"
+                            android:layout_height="@dimen/_30sdp"
+                            android:background="@drawable/ic_logo" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:orientation="vertical">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:text="Quãng Đường"
+                            android:textColor="@color/colorWhite" />
+
+                        <TextView
+                            android:id="@+id/mTvKM"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="00:00"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Vận Tốc"
+                            android:textColor="@color/colorWhite" />
+
+                        <TextView
+                            android:id="@+id/mTvSpeed"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentTop="true"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_toRightOf="@id/mImga"
-                            android:text="THỜI GIAN"
-                            android:textColor="@color/black" />
+                            android:text="00:00"
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_weight="0.9"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thời Gian"
+                            android:textColor="@color/colorWhite" />
 
                         <TextView
                             android:id="@+id/mTvTime"
@@ -130,50 +192,27 @@
                             android:layout_alignParentTop="true"
                             android:layout_centerVertical="true"
                             android:text="00:00"
-                            android:textColor="@color/black" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/_10sdp">
-
-                        <ImageView
-                            android:id="@+id/mImgb"
-                            android:layout_width="@dimen/_20sdp"
-                            android:layout_height="@dimen/_20sdp"
-                            android:background="@drawable/ic_alarm" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/_10sdp"
-                            android:layout_toRightOf="@id/mImgb"
-                            android:text="KHOẢNG CÁCH"
-                            android:textColor="@color/black" />
-
-                        <TextView
-                            android:id="@+id/mTvKM"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                            android:layout_alignParentTop="true"
-                            android:layout_centerVertical="true"
-                            android:text="00:00"
-                            android:textColor="@color/black" />
-                    </RelativeLayout>
+                            android:textColor="@color/colorWhite"
+                            android:textSize="@dimen/_17sdp" />
+                    </LinearLayout>
                 </LinearLayout>
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:visibility="gone">
 
                 <RelativeLayout
-                    android:paddingRight="@dimen/_5sdp"
-                    android:paddingLeft="@dimen/_5sdp"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp">
 
                     <ImageView
-                        android:id="@+id/mImgc"
+                        android:id="@+id/mImga"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:background="@drawable/ic_alarm" />
@@ -183,30 +222,21 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_toRightOf="@id/mImgc"
-                        android:text="VẬN TỐC TỐI ĐA"
+                        android:layout_toRightOf="@id/mImga"
+                        android:text="THỜI GIAN"
                         android:textColor="@color/black" />
 
-                    <TextView
-                        android:id="@+id/mTvMaxSpeed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:text="00:00"
-                        android:textColor="@color/black" />
+
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:paddingRight="@dimen/_5sdp"
-                    android:paddingLeft="@dimen/_5sdp"
+
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_10sdp">
 
                     <ImageView
-                        android:id="@+id/mImgd"
+                        android:id="@+id/mImgb"
                         android:layout_width="@dimen/_20sdp"
                         android:layout_height="@dimen/_20sdp"
                         android:background="@drawable/ic_alarm" />
@@ -216,146 +246,199 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_toRightOf="@id/mImgd"
-                        android:text="VẬN TỐC TRUNG BÌNH"
+                        android:layout_toRightOf="@id/mImgb"
+                        android:text="KHOẢNG CÁCH"
                         android:textColor="@color/black" />
 
-                    <TextView
-                        android:id="@+id/mTvSpeed"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:text="00:00"
-                        android:textColor="@color/black" />
+
                 </RelativeLayout>
-
-                <RelativeLayout
-                    android:paddingRight="@dimen/_5sdp"
-                    android:paddingLeft="@dimen/_5sdp"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/_10sdp">
-
-                    <ImageView
-                        android:id="@+id/mImge"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:background="@drawable/ic_alarm" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="@dimen/_10sdp"
-                        android:layout_toRightOf="@id/mImge"
-                        android:text="CALO"
-                        android:textColor="@color/black" />
-
-                    <TextView
-                        android:id="@+id/mTvCalo"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_centerVertical="true"
-                        android:text="00:00"
-                        android:textColor="@color/black" />
-                </RelativeLayout>
-
-                <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="@dimen/_10sdp">-->
-
-                    <!--<ImageView-->
-                        <!--android:id="@+id/mImgf"-->
-                        <!--android:layout_width="@dimen/_20sdp"-->
-                        <!--android:layout_height="@dimen/_20sdp"-->
-                        <!--android:background="@drawable/ic_alarm" />-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:layout_marginLeft="@dimen/_10sdp"-->
-                        <!--android:layout_toRightOf="@id/mImgf"-->
-                        <!--android:text="BẮT ĐẦU"-->
-                        <!--android:textColor="@color/black" />-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/mTvStart"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_alignParentTop="true"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:text="00:00"-->
-                        <!--android:textColor="@color/black" />-->
-                <!--</RelativeLayout>-->
-
-                <!--<RelativeLayout-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:layout_marginBottom="@dimen/_10sdp">-->
-
-                    <!--<ImageView-->
-                        <!--android:id="@+id/mImgg"-->
-                        <!--android:layout_width="@dimen/_20sdp"-->
-                        <!--android:layout_height="@dimen/_20sdp"-->
-                        <!--android:background="@drawable/ic_alarm" />-->
-
-                    <!--<TextView-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:layout_marginLeft="@dimen/_10sdp"-->
-                        <!--android:layout_toRightOf="@id/mImgg"-->
-                        <!--android:text="KẾT THÚC"-->
-                        <!--android:textColor="@color/black" />-->
-
-                    <!--<TextView-->
-                        <!--android:id="@+id/mTvEnd"-->
-                        <!--android:layout_width="wrap_content"-->
-                        <!--android:layout_height="wrap_content"-->
-                        <!--android:layout_alignParentRight="true"-->
-                        <!--android:layout_alignParentTop="true"-->
-                        <!--android:layout_centerVertical="true"-->
-                        <!--android:text="00:00"-->
-                        <!--android:textColor="@color/black" />-->
-                <!--</RelativeLayout>-->
-
-
-                <TextView
-                    android:id="@+id/mTvSubmit"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_marginBottom="@dimen/_5sdp"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:background="@drawable/bg_edittext"
-                    android:text="Đồng ý"
-                    android:textSize="@dimen/_10sdp" />
-
             </LinearLayout>
 
-            <android.support.v7.widget.AppCompatImageView
-                android:id="@+id/mImgAvatar"
-                android:layout_width="@dimen/_80sdp"
-                android:layout_height="@dimen/_80sdp"
-                android:layout_centerHorizontal="true"
-                android:src="@drawable/banner" />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:visibility="gone">
 
-            <ImageView
-                android:id="@+id/mImgCancelDialog"
-                android:layout_width="@dimen/_25sdp"
-                android:layout_height="@dimen/_25sdp"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/mLinearProfile"
-                android:layout_marginTop="@dimen/dialog_cancel"
-                android:background="@drawable/ic_btn_cancel_chat" />
-        </RelativeLayout>
+                <ImageView
+                    android:id="@+id/mImgc"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:background="@drawable/ic_alarm" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_toRightOf="@id/mImgc"
+                    android:text="VẬN TỐC TỐI ĐA"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/mTvMaxSpeed"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:text="00:00"
+                    android:textColor="@color/black" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/mImgd"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:background="@drawable/ic_alarm" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_toRightOf="@id/mImgd"
+                    android:text="VẬN TỐC TRUNG BÌNH"
+                    android:textColor="@color/black" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:paddingLeft="@dimen/_5sdp"
+                android:paddingRight="@dimen/_5sdp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/mImge"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:background="@drawable/ic_alarm" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/_10sdp"
+                    android:layout_toRightOf="@id/mImge"
+                    android:text="CALO"
+                    android:textColor="@color/black" />
+
+                <TextView
+                    android:id="@+id/mTvCalo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerVertical="true"
+                    android:text="00:00"
+                    android:textColor="@color/black" />
+            </RelativeLayout>
+
+            <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp">-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/mImgf"-->
+            <!--android:layout_width="@dimen/_20sdp"-->
+            <!--android:layout_height="@dimen/_20sdp"-->
+            <!--android:background="@drawable/ic_alarm" />-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="@dimen/_10sdp"-->
+            <!--android:layout_toRightOf="@id/mImgf"-->
+            <!--android:text="BẮT ĐẦU"-->
+            <!--android:textColor="@color/black" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/mTvStart"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:text="00:00"-->
+            <!--android:textColor="@color/black" />-->
+            <!--</RelativeLayout>-->
+
+            <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="@dimen/_10sdp">-->
+
+            <!--<ImageView-->
+            <!--android:id="@+id/mImgg"-->
+            <!--android:layout_width="@dimen/_20sdp"-->
+            <!--android:layout_height="@dimen/_20sdp"-->
+            <!--android:background="@drawable/ic_alarm" />-->
+
+            <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:layout_marginLeft="@dimen/_10sdp"-->
+            <!--android:layout_toRightOf="@id/mImgg"-->
+            <!--android:text="KẾT THÚC"-->
+            <!--android:textColor="@color/black" />-->
+
+            <!--<TextView-->
+            <!--android:id="@+id/mTvEnd"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_alignParentRight="true"-->
+            <!--android:layout_alignParentTop="true"-->
+            <!--android:layout_centerVertical="true"-->
+            <!--android:text="00:00"-->
+            <!--android:textColor="@color/black" />-->
+            <!--</RelativeLayout>-->
+
+
+            <TextView
+                android:id="@+id/mTvSubmit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_edittext"
+                android:text="Đồng ý"
+                android:textSize="@dimen/_10sdp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatImageView
+            android:id="@+id/mImgAvatar"
+            android:layout_width="@dimen/_80sdp"
+            android:layout_height="@dimen/_80sdp"
+            android:layout_centerHorizontal="true"
+            android:src="@drawable/banner" />
+
+        <ImageView
+            android:id="@+id/mImgCancelDialog"
+            android:layout_width="@dimen/_25sdp"
+            android:layout_height="@dimen/_25sdp"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/mLinearProfile"
+            android:layout_marginTop="@dimen/dialog_cancel"
+            android:background="@drawable/ic_btn_cancel_chat" />
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/mTvHide"

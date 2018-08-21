@@ -41,8 +41,8 @@ public class SessionManager {
      *
      * @param token
      */
-    public void setKeyImageStart(Bitmap token) {
-        sharedPref.edit().putString(KEY_SAVE_IMAGE_START, String.valueOf(token)).apply();
+    public void setKeyImageStart(String token) {
+        sharedPref.edit().putString(KEY_SAVE_IMAGE_START, token).apply();
     }
 
     /**

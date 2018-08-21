@@ -2,9 +2,11 @@ package com.example.danazone04.danazone.ui.splash.main;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.SearchManager;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,6 +20,7 @@ import android.location.GpsStatus;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -157,7 +160,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
 
     @Extra
-    Bitmap mBitmapStart;
+    String mBitmapStart;
     @Extra
     String mLat;
     @Extra
@@ -175,6 +178,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private static Data data;
 
     private boolean firstfix;
+    private ContentValues values;
+    private Uri imageUri;
 
 
     private String date;
@@ -396,55 +401,63 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     private void dispatchTakenPictureIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
         }
     }
 
     private void takenImageEnd() {
+
+        values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
-        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
+
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case MY_CAMERA_REQUEST_CODE_END:
+                if (requestCode == MY_CAMERA_REQUEST_CODE_END)
+                    if (resultCode == Activity.RESULT_OK) {
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(
+                                    getContentResolver(), imageUri);
+                            new DialogCheckin(MainActivity.this, bitmap, new DialogCheckin.OnDialogClickListener() {
+                                @Override
+                                public void onCallSerVice() {
+                                    resetData();
+                                    BaseImageActivity_.intent(MainActivity.this)
+                                            .mStart(mBitmapStart)
+                                            .mEnd(String.valueOf(imageUri))
+                                            .mTime(numTime)
+                                            .mKM(ms2)
+                                            .mSpeed(ms1)
+                                            .mMaxSpeed(ms)
+                                            .mCalo(String.valueOf(calos) + " calo")
+                                            .mTimeStart(time)
+                                            .mTimeEnd(timeEnd)
+                                            .mDate(date)
+                                            .mLats(mLat)
+                                            .mLngs(mLng)
+                                            .mLate(mLate)
+                                            .mLnge(mLnge)
+                                            .start();
+                                    finish();
+                                }
+                            }).show();
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MY_CAMERA_REQUEST_CODE_END) {
-                Bundle bundle = data.getExtras();
-                final Bitmap bm = (Bitmap) bundle.get("data");
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
 
-//                new DialogCheckin(MainActivity.this, bm, new DialogCheckin.OnDialogClickListener() {
-//                    @Override
-//                    public void onCallSerVice() {
-//
-//                        SessionManager.getInstance().setKeySaveImageEnd(bm);
-//                        resetData();
-//
-//                        BaseImageActivity_.intent(MainActivity.this)
-//                                .mStart(mBitmapStart)
-//                                .mEnd(bm)
-//                                .mTime(numTime)
-//                                .mKM(ms2)
-//                                .mSpeed(ms1)
-//                                .mMaxSpeed(ms)
-//                                .mCalo(String.valueOf(calos) + " calo")
-//                                .mTimeStart(time)
-//                                .mTimeEnd(timeEnd)
-//                                .mDate(date)
-//                                .mLats(mLat)
-//                                .mLngs(mLng)
-//                                .mLate(mLate)
-//                                .mLnge(mLnge)
-//                                .start();
-//                        finish();
-//                    }
-//                }).show();
-            }
+                    }
         }
     }
 

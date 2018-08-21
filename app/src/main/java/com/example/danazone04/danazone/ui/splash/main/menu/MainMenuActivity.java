@@ -1,6 +1,7 @@
 package com.example.danazone04.danazone.ui.splash.main.menu;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -8,7 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseActivity;
@@ -21,13 +21,10 @@ import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment;
 import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment_;
 import com.example.danazone04.danazone.ui.splash.main.contact.FragmentContact;
 import com.example.danazone04.danazone.ui.splash.main.contact.FragmentContact_;
-import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity;
-import com.example.danazone04.danazone.ui.splash.main.setting.SettingFragment;
-import com.example.danazone04.danazone.ui.splash.main.setting.SettingFragment_;
+import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment_;
 
-import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -106,21 +103,30 @@ public class MainMenuActivity extends BaseActivity {
                 break;
 
             case R.id.mSetting:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof SettingFragment))
-                    replaceFragment(SettingFragment_.builder().build());
-
+                MetterActivity_.intent(this).start();
                 break;
+
             case R.id.mCoin:
                 if (!((BaseContainerFragment) getCurrentFragment() instanceof CoinFragment))
                     replaceFragment(CoinFragment_.builder().build());
                 break;
+
             case R.id.mContact:
                 if (!((BaseContainerFragment) getCurrentFragment() instanceof FragmentContact))
                     replaceFragment(FragmentContact_.builder().build());
                 break;
+
             case R.id.mBMI:
                 if (!((BaseContainerFragment) getCurrentFragment() instanceof BmiFragment))
                     replaceFragment(BmiFragment_.builder().build());
+                break;
+
+            case R.id.mExit:
+                Intent a = new Intent(Intent.ACTION_MAIN);
+                a.addCategory(Intent.CATEGORY_HOME);
+                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(a);
+                finish();
                 break;
         }
         item.setChecked(true);

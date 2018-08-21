@@ -2,9 +2,12 @@ package com.example.danazone04.danazone.ui.splash.main.start;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.GpsStatus;
@@ -29,10 +32,13 @@ import android.widget.Toast;
 import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
+import com.example.danazone04.danazone.common.BaseImageActivity_;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.GpsDialog;
 import com.example.danazone04.danazone.dialog.StartDialog;
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
+import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
+import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
 import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
 import com.example.danazone04.danazone.ui.splash.main.start.info.InformationFragment_;
 import com.google.android.gms.common.ConnectionResult;
@@ -55,6 +61,7 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
@@ -82,7 +89,9 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     private static final int MY_CAMERA_REQUEST_CODE = 100;
     private String mLat, mLng;
     private LocationManager mLocationManager;
-    private  File mTempCameraPhotoFile= null;
+    private File mTempCameraPhotoFile = null;
+    private ContentValues values;
+    private Uri imageUri;
 
     @ViewById
     ImageView mImgStart;
@@ -181,68 +190,67 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
 
     private void dispatchTakenPictureIntent() {
 
+        values = new ContentValues();
+        values.put(MediaStore.Images.Media.TITLE, "New Picture");
+        values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
+        imageUri = getActivity().getContentResolver().insert(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        System.out.println("4444444444444444444444777777777777777" + imageUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
-//        }
-
-
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-            File exportDir = new File(Environment.getExternalStorageDirectory(), "TempFolder");
-            if (!exportDir.exists()) {
-                exportDir.mkdirs();
-            } else {
-                exportDir.delete();
-            }
-             mTempCameraPhotoFile = new File(exportDir, "/" + UUID.randomUUID().toString().replaceAll("-", "") + ".jpg");
-
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTempCameraPhotoFile));
-            startActivityForResult(takePictureIntent, MY_CAMERA_REQUEST_CODE);
-        }
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case MY_CAMERA_REQUEST_CODE:
+                if (requestCode == MY_CAMERA_REQUEST_CODE)
+                    if (resultCode == Activity.RESULT_OK) {
 
-        if (resultCode == RESULT_OK) {
-            if (requestCode == MY_CAMERA_REQUEST_CODE) {
-//                Bundle extras = data.getExtras();
-//                bitmap = (Bitmap) extras.get("data");
+                        try {
+                            bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                          //  SessionManager.getInstance().setKeyImageStart(String.valueOf(imageUri));
 
-                    String filePath = mTempCameraPhotoFile.getPath();
-                System.out.println("5555555555555555555555" + filePath);
-
-                /*
-                // extracted file path can be load into imageview for example with Picasso loader
-                Uri uri = Uri.fromFile(new File(mReportImageList.get(position).getUrl()));
-                Picasso.with(mContext)
-                        .load(uri)
-                        .fit()
-                        .centerCrop()
-                        .into(ivPhoto);*/
-
-
-                if (filePath != null) {
-
-                    new DialogCheckin(getContext(), filePath, new DialogCheckin.OnDialogClickListener() {
-                        @Override
-                        public void onCallSerVice() {
-                            SessionManager.getInstance().setKeyImageStart(bitmap);
-                            if (mLat != null && mLng != null) {
-                                MainActivity_.intent(getContext())
-                                        .mLat(mLat)
-                                        .mLng(mLng)
-                                        .mBitmapStart(bitmap)
-                                        .start();
-                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
                         }
-                    }).show();
-                }
-            }
+
+                        new DialogCheckin(getActivity(), bitmap, new DialogCheckin.OnDialogClickListener() {
+                            @Override
+                            public void onCallSerVice() {
+
+//                                    if (mLat != null && mLng != null) {
+//
+//                                        MainActivity_.intent(getContext())
+//                                                .mLat(mLat)
+//                                                .mLng(mLng)
+//                                                .mBitmapStart(bitmap)
+//                                                .start();
+
+                                MainActivity_.intent(getContext())
+                                        .mLng(mLng)
+                                        .mLng(mLng)
+                                        .mBitmapStart(String.valueOf(imageUri))
+                                        .start();
+//                                    }
+                            }
+                        }).show();
+
+                    }
+                break;
         }
+    }
+
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
     }
 
     private boolean checkPlayServices() {
@@ -309,7 +317,7 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
 
     @Override
     public void onConnected(@Nullable Bundle bundle) {
-        System.out.println("11111111111111111111111111111122222");
+
         displayLocation();
         //  startLocationUpdates();
     }

@@ -48,9 +48,9 @@ public class TakeImage extends BaseActivity {
 
     @Override
     protected void afterView() {
-
+        getSupportActionBar().hide();
         completePath = Environment
-                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/"+ fileName + ".jpg";
+                .getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM) + "/Camera/" + fileName + ".jpg";
         System.out.println("00000000000000: " + completePath);
         Glide.with(TakeImage.this).load(completePath).error(R.drawable.image1).into(iv_image);
         FacebookSdk.sdkInitialize(this.getApplicationContext());
