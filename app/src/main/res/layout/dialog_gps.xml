@@ -42,6 +42,7 @@
             android:background="@drawable/bg_edittext"
             android:textSize="@dimen/_10sdp"
             android:text="Đông ý"
+            android:textColor="@color/colorWhite"
             android:layout_marginBottom="@dimen/_5sdp"/>
 
     </android.support.v7.widget.LinearLayoutCompat>

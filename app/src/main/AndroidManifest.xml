@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.danazone04.danazone"
+        package="com.example.danazone04.danazone"
     android:installLocation="auto">
 
     <!-- network -->
@@ -30,6 +30,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <uses-library
             android:name="com.google.android.maps"
@@ -53,6 +55,7 @@
         <activity android:name=".ui.splash.main.base.BaseImageActivity_" />
         <activity android:name=".ui.splash.main.metter.MetterActivity_" />
         <activity android:name=".ui.splash.main.menu.MainMenuActivity_"/>
+        <activity android:name=".ui.splash.main.base.take.fanpage.FanpageActivity_"/>
 
         <service android:name=".speed.GpsServices" />
 
@@ -62,7 +65,7 @@
 
         <provider
             android:name="com.facebook.FacebookContentProvider"
-            android:authorities="com.facebook.app.FacebookContentProvider229417001107563"
+            android:authorities="com.facebook.app.FacebookContentProvider1911421102447461"
             android:exported="true" />
 
     </application>

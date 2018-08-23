@@ -89,7 +89,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     @ViewById
     RelativeLayout mRlBase;
     @ViewById
-    LinearLayout mLnTake;
+    RelativeLayout mLnTake;
     @ViewById
     TextView mTvSubmit;
     @ViewById
@@ -240,6 +240,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         }
 
         mTvTimeStart.setText(mTimeStart + "h");
+        System.out.println("9999999999999999999999: " + mTimeStart + " - " + mCalo);
         mTvTimeEnd.setText(mTimeEnd + "h");
         mTvData.setText(mDate);
         mTvMaxSpeed.setText(mMaxSpeed);
@@ -253,42 +254,39 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
     private void insertHistory() {
         Run run = new Run();
-        if(mTime == null){
+        if (mTime == null) {
             run.setTime("00:00");
-        }else{
+        } else {
             run.setTime(mTime);
         }
 
-        if(mDate == null){
+        if (mDate == null) {
             run.setDate("");
-        }else{
+        } else {
             run.setDate(mDate);
         }
 
-        if(mSpeed == null){
+        if (mSpeed == null) {
             run.setSpeed("0 Km/h");
-        }else{
+        } else {
             run.setSpeed(mSpeed);
         }
 
-        if(mKM == null){
+        if (mKM == null) {
             run.setDistance("0 Km");
-        }else{
+        } else {
             run.setDistance(mKM);
         }
-        if(mCalo == null){
+        if (mCalo == null) {
             run.setCalo("0 Calo");
-        }else{
+        } else {
             run.setCalo(mCalo);
         }
-        if(mTimeStart == null){
-            run.setTimeStart("0");
-        }else{
+        if (mTimeStart == null) {
+            run.setTimeStart("0h");
+        } else {
             run.setTimeStart(mTimeStart);
         }
-
-
-
 
 
         dbManager.addHistory(run);

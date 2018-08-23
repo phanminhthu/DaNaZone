@@ -38,10 +38,12 @@ public class HistoryFragment extends BaseContainerFragment {
         mAdapter = new HistoryAdapter(getContext(), mRun, new HistoryAdapter.OnHistoryClickListener() {
             @Override
             public void onClickItem(int position) {
-                Toast.makeText(getContext(), "" + position, Toast.LENGTH_SHORT).show();
+                dbManager.deleteStudent(mRun.get(position));
+                mRun.remove(position);
+                mAdapter.notifyDataSetChanged();
             }
         });
         mRecycleView.setAdapter(mAdapter);
-        mAdapter.notifyDataSetChanged();
+
     }
 }

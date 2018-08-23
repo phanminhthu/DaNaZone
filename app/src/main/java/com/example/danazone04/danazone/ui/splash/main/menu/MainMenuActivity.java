@@ -9,12 +9,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.BaseFragment;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.ui.splash.main.bmi.BmiFragment;
 import com.example.danazone04.danazone.ui.splash.main.bmi.BmiFragment_;
 import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment;
@@ -27,6 +30,7 @@ import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment_;
 
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
@@ -39,6 +43,8 @@ public class MainMenuActivity extends BaseActivity {
     DrawerLayout mDrawer;
     @ViewById
     NavigationView mNV;
+
+    View v;
 
     private ActionBarDrawerToggle mToggle;
     private Toast mToastExit;
@@ -53,7 +59,16 @@ public class MainMenuActivity extends BaseActivity {
         replaceFragment(HomeFragment_.builder().build());
         mToastExit = Toast.makeText(MainMenuActivity.this, getResources().getString(R.string.text_back_exit), Toast.LENGTH_SHORT);
         setupDrawerContent(mNV);
+
+        v = mNV.getHeaderView(0);
+        TextView mName = (TextView) v.findViewById(R.id.mName);
+        TextView mCoin = (TextView) v.findViewById(R.id.mCoin);
+        mCoin.setText(SessionManager.getInstance().getKeySaveCoin());
+        mName.setText(SessionManager.getInstance().getKeySaveName());
+
+
     }
+
 
     /**
      * Open new fragment

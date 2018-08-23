@@ -73,6 +73,7 @@
             android:layout_marginBottom="@dimen/_5sdp"/>
 
         <TextView
+            android:textColor="@color/colorWhite"
             android:id="@+id/mTvSubmit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

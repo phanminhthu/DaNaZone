@@ -180,7 +180,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private String date;
     private String time, timeEnd, numTime;
     private String ms, ms1, ms2, ms3;
-    private double calos;
+    private String calos;
     private AlertDialog waitingDialog;
     boolean mLocked;
 
@@ -244,11 +244,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
                 DecimalFormat dcf = new DecimalFormat("#.###");
                 double a = averageTemp / 20.0;
-//                if (a != 0.00) {
-//                    calos = Math.ceil(a * 1000 / 1000);
-//                } else {
-//                    mTvCalo.setText("0.00");
-//                }
+                calos = dcf.format(a);
 
                 mTvCalo.setText(String.valueOf(dcf.format(a)));
 
@@ -443,7 +439,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                             .mKM(ms2)
                                             .mSpeed(ms1)
                                             .mMaxSpeed(ms)
-                                            .mCalo(String.valueOf(calos) + " calo")
+                                            .mCalo(calos + " calo")
                                             .mTimeStart(time)
                                             .mTimeEnd(timeEnd)
                                             .mDate(date)

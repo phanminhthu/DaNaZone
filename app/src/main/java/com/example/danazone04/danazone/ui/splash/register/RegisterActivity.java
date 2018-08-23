@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
@@ -69,6 +70,7 @@ public class RegisterActivity extends BaseActivity {
 
                 SessionManager.getInstance().setKeySaveId(phone);
                 SessionManager.getInstance().setKeySavePass(password);
+                SessionManager.getInstance().setKeyName(username);
 
                 MainMenuActivity_.intent(RegisterActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK

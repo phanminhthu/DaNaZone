@@ -10,8 +10,7 @@ import android.graphics.Bitmap;
 
 public class SessionManager {
     private static final String SHARED_PREFERENCES_NAME = "com.example.danazone04.danazone";
-    private static final String KEY_SAVE_IMAGE_START = "key_save_image_start";
-    private static final String KEY_SAVE_IMAGE_END = "key_save_image_end";
+    private static final String KEY_SAVE_NAME = "key_save_name";
     private static final String KEY_SAVE_ID = "key_save_id";
     private static final String KEY_SAVE_PASS = "key_save_pass";
     private static final String KEY_SAVE_COIN = "key_save_coin";
@@ -41,8 +40,8 @@ public class SessionManager {
      *
      * @param token
      */
-    public void setKeyImageStart(String token) {
-        sharedPref.edit().putString(KEY_SAVE_IMAGE_START, token).apply();
+    public void setKeyName(String token) {
+        sharedPref.edit().putString(KEY_SAVE_NAME, token).apply();
     }
 
     /**
@@ -50,27 +49,10 @@ public class SessionManager {
      *
      * @return
      */
-    public String getKeySaveImageStart() {
-        return sharedPref.getString(KEY_SAVE_IMAGE_START, "");
+    public String getKeySaveName() {
+        return sharedPref.getString(KEY_SAVE_NAME, "");
     }
 
-    /**
-     * Set key save pass
-     *
-     * @param token
-     */
-    public void setKeySaveImageEnd(Bitmap token) {
-        sharedPref.edit().putString(KEY_SAVE_IMAGE_END, String.valueOf(token)).apply();
-    }
-
-    /**
-     * get key save pass
-     *
-     * @return
-     */
-    public String getKeySaveImageEnd() {
-        return sharedPref.getString(KEY_SAVE_IMAGE_END, "");
-    }
 
 
     /**

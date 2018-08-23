@@ -55,8 +55,8 @@
         android:id="@+id/mRlBase"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="false"
-        android:layout_marginTop="@dimen/_40sdp">
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_5sdp">
 
         <LinearLayout
             android:id="@+id/mLinearProfile"
@@ -69,12 +69,12 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/mLnTake"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_200sdp"
                 android:layout_marginTop="@dimen/_40sdp">
 
                 <LinearLayout
-                    android:id="@+id/mLnTake"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
@@ -278,7 +278,7 @@
                     android:id="@+id/mImgc"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:background="@drawable/ic_alarm" />
+                    android:background="@drawable/ic_km" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -336,7 +336,7 @@
                     android:id="@+id/mImge"
                     android:layout_width="@dimen/_20sdp"
                     android:layout_height="@dimen/_20sdp"
-                    android:background="@drawable/ic_alarm" />
+                    android:background="@drawable/ic_calo" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -366,6 +366,7 @@
                 android:layout_marginBottom="@dimen/_5sdp"
                 android:layout_marginTop="@dimen/_10sdp"
                 android:background="@drawable/bg_edittext"
+                android:textColor="@color/colorWhite"
                 android:text="Đồng ý"
                 android:textSize="@dimen/_10sdp" />
 
@@ -396,6 +397,7 @@
         android:layout_centerHorizontal="true"
         android:layout_gravity="center"
         android:layout_marginBottom="@dimen/_10sdp"
+        android:textColor="@color/colorWhite"
         android:background="@drawable/bg_edittext"
         android:text="Hiển thị lại"
         android:textSize="@dimen/_10sdp"

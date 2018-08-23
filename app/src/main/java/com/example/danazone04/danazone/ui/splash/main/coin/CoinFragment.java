@@ -28,7 +28,7 @@ public class CoinFragment extends BaseContainerFragment {
         mTvCoin.setText(coin);
         mTvCode.setText(SessionManager.getInstance().getKeySaveCode());
         if (!mTvCoin.getText().toString().equals("0")) {
-            if (mTvCoin.getText().toString().equals("2")) {
+            if (mTvCoin.getText().toString().equals("20")) {
                 new ShareDialog(getContext(), new ShareDialog.OnDialogClickListener() {
                     @Override
                     public void onCallSerVice() {

@@ -62,7 +62,7 @@ dependencies {
 
     implementation 'com.google.code.gson:gson:+'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
+    implementation 'com.facebook.android:facebook-android-sdk:4.19.0'
     implementation 'uk.co.chrisjenx:calligraphy:2.3.0'
 }
 //apply plugin: 'com.google.gms.google-services'

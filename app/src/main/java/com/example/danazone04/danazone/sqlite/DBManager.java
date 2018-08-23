@@ -82,8 +82,8 @@ public class DBManager extends SQLiteOpenHelper {
                 run.setDate(cursor.getString(2));
                 run.setSpeed(cursor.getString(3));
                 run.setDistance(cursor.getString(4));
-                run.setCalo(cursor.getString(4));
-                run.setTimeStart(cursor.getString(4));
+                run.setCalo(cursor.getString(5));
+                run.setTimeStart(cursor.getString(6));
                 listStudent.add(run);
             } while (cursor.moveToNext());
         }
