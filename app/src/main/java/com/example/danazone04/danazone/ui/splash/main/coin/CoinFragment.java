@@ -6,7 +6,6 @@ import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.dialog.ShareDialog;
-import com.example.danazone04.danazone.ui.splash.main.setting.outCome.OutComeActivity;
 
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;

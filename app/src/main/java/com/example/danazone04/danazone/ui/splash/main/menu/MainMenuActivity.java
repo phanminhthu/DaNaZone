@@ -21,6 +21,8 @@ import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment;
 import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment_;
 import com.example.danazone04.danazone.ui.splash.main.contact.FragmentContact;
 import com.example.danazone04.danazone.ui.splash.main.contact.FragmentContact_;
+import com.example.danazone04.danazone.ui.splash.main.history.HistoryFragment;
+import com.example.danazone04.danazone.ui.splash.main.history.HistoryFragment_;
 import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment_;
@@ -119,6 +121,11 @@ public class MainMenuActivity extends BaseActivity {
             case R.id.mBMI:
                 if (!((BaseContainerFragment) getCurrentFragment() instanceof BmiFragment))
                     replaceFragment(BmiFragment_.builder().build());
+                break;
+
+            case R.id.mHistory:
+                if (!((BaseContainerFragment) getCurrentFragment() instanceof HistoryFragment))
+                    replaceFragment(HistoryFragment_.builder().build());
                 break;
 
             case R.id.mExit:

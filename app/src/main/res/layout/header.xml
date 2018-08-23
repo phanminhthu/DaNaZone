@@ -6,26 +6,51 @@
     android:orientation="vertical"
     android:padding="@dimen/_20sdp">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <ImageView
+            android:id="@+id/mImgAvatar"
             android:layout_width="@dimen/_75sdp"
             android:layout_height="@dimen/_75sdp"
             android:background="@drawable/banner" />
 
-        <TextView
-            android:id="@+id/mName"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="Thu pro"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_toRightOf="@+id/mImgAvatar">
 
-        <TextView
-            android:id="@+id/mCoin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_5sdp"
-            android:text="minhthuvlt@gmail.com"
-            android:textColor="@color/colorWhite"
-            android:textStyle="bold" />
+            <TextView
+                android:id="@+id/mName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="2"
+                android:textColor="@color/colorWhite"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/mImgFavorite"
+                android:layout_width="@dimen/_20sdp"
+                android:layout_height="@dimen/_20sdp"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/_10sdp"
+                android:layout_toRightOf="@+id/mName"
+                android:background="@drawable/ic_favourites" />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/mCoin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:text="minhthuvlt@gmail.com"
+        android:textColor="@color/colorWhite"
+        android:textStyle="bold" />
 </LinearLayout>

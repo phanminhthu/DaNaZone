@@ -27,6 +27,6 @@
         android:layout_marginTop="@dimen/_30sdp"
         android:gravity="center"
         android:textStyle="italic|bold"
-        android:text="Cảm ơn quý khách đã sử dụng dịch vụ của chúng tồi !"
+        android:text="Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi !"
         android:textColor="#aaaaaa" />
 </LinearLayout>

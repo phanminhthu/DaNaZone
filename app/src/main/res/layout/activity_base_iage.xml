@@ -70,31 +70,43 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_160sdp">
+                android:layout_height="@dimen/_200sdp"
+                android:layout_marginTop="@dimen/_40sdp">
 
                 <LinearLayout
+                    android:id="@+id/mLnTake"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal"
                     android:weightSum="2">
 
-                    <ImageView
-                        android:id="@+id/mImgStart"
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/_2sdp"
-                        android:layout_marginTop="@dimen/_40sdp"
-                        android:layout_weight="1"
-                        android:scaleType="fitCenter" />
+                        android:layout_weight="1">
 
-                    <ImageView
-                        android:id="@+id/mImgEnd"
+                        <ImageView
+                            android:id="@+id/mImgStart"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginRight="@dimen/_2sdp"
-                        android:layout_marginTop="@dimen/_40sdp"
-                        android:layout_weight="1"
-                        android:scaleType="fitCenter" />
+                        android:layout_weight="1">
+
+                        <ImageView
+                            android:id="@+id/mImgEnd"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop" />
+                    </RelativeLayout>
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -258,9 +270,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10sdp"
+                android:layout_marginTop="@dimen/_10sdp"
                 android:paddingLeft="@dimen/_5sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:visibility="gone">
+                android:paddingRight="@dimen/_5sdp">
 
                 <ImageView
                     android:id="@+id/mImgc"
@@ -318,8 +330,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_10sdp"
                 android:paddingLeft="@dimen/_5sdp"
-                android:paddingRight="@dimen/_5sdp"
-                android:visibility="gone">
+                android:paddingRight="@dimen/_5sdp">
 
                 <ImageView
                     android:id="@+id/mImge"
@@ -346,69 +357,6 @@
                     android:text="00:00"
                     android:textColor="@color/black" />
             </RelativeLayout>
-
-            <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="@dimen/_10sdp">-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/mImgf"-->
-            <!--android:layout_width="@dimen/_20sdp"-->
-            <!--android:layout_height="@dimen/_20sdp"-->
-            <!--android:background="@drawable/ic_alarm" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="@dimen/_10sdp"-->
-            <!--android:layout_toRightOf="@id/mImgf"-->
-            <!--android:text="BẮT ĐẦU"-->
-            <!--android:textColor="@color/black" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/mTvStart"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:text="00:00"-->
-            <!--android:textColor="@color/black" />-->
-            <!--</RelativeLayout>-->
-
-            <!--<RelativeLayout-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_marginBottom="@dimen/_10sdp">-->
-
-            <!--<ImageView-->
-            <!--android:id="@+id/mImgg"-->
-            <!--android:layout_width="@dimen/_20sdp"-->
-            <!--android:layout_height="@dimen/_20sdp"-->
-            <!--android:background="@drawable/ic_alarm" />-->
-
-            <!--<TextView-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:layout_marginLeft="@dimen/_10sdp"-->
-            <!--android:layout_toRightOf="@id/mImgg"-->
-            <!--android:text="KẾT THÚC"-->
-            <!--android:textColor="@color/black" />-->
-
-            <!--<TextView-->
-            <!--android:id="@+id/mTvEnd"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_alignParentRight="true"-->
-            <!--android:layout_alignParentTop="true"-->
-            <!--android:layout_centerVertical="true"-->
-            <!--android:text="00:00"-->
-            <!--android:textColor="@color/black" />-->
-            <!--</RelativeLayout>-->
-
 
             <TextView
                 android:id="@+id/mTvSubmit"

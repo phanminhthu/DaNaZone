@@ -6,17 +6,11 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
-import com.example.danazone04.danazone.common.Common;
-import com.example.danazone04.danazone.common.MySingleton;
 import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
-import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
 import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
-import com.example.danazone04.danazone.ui.splash.main.start.StartActivity_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;

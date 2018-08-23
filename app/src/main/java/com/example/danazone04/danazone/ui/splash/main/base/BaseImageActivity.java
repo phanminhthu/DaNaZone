@@ -1,13 +1,14 @@
-package com.example.danazone04.danazone.common;
+package com.example.danazone04.danazone.ui.splash.main.base;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.location.Location;
+import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,8 +29,11 @@ import android.widget.Toast;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
+import com.example.danazone04.danazone.bean.Run;
+import com.example.danazone04.danazone.common.GGApi;
 import com.example.danazone04.danazone.remote.IGoogleApi;
-import com.example.danazone04.danazone.ui.splash.TakeImage_;
+import com.example.danazone04.danazone.sqlite.DBManager;
+import com.example.danazone04.danazone.ui.splash.main.base.take.TakeImage_;
 import com.example.danazone04.danazone.utils.ConnectionUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -84,6 +89,8 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     @ViewById
     RelativeLayout mRlBase;
     @ViewById
+    LinearLayout mLnTake;
+    @ViewById
     TextView mTvSubmit;
     @ViewById
     TextView mTvTime;
@@ -129,6 +136,10 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     String mLate;
     @Extra
     String mLnge;
+    @Extra
+    String mUrlStart;
+    @Extra
+    String mUrlEnd;
 
     @ViewById
     TextView mTvTimeStart;
@@ -164,6 +175,8 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     private List<LatLng> polyLineList;
     private Uri mUriStart, mUriEnd;
     private Bitmap bmStart, bmEnd;
+    private ExifInterface exifInterface, exifInterface1;
+    private DBManager dbManager;
 
 
     @Override
@@ -171,9 +184,11 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(BaseImageActivity.this);
+        dbManager = new DBManager(getBaseContext());
         buidGoogleApiClient();
         createLocationRequest();
         displayLocation();
+
 
         if (ConnectionUtil.isConnected(this)) {
             mService = GGApi.getGoogleAPI();
@@ -192,16 +207,29 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         try {
             bmStart = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriStart);
             bmEnd = MediaStore.Images.Media.getBitmap(getContentResolver(), mUriEnd);
+
         } catch (IOException e) {
             e.printStackTrace();
         }
-        mImgStart.setImageBitmap(bmStart);
-        mImgEnd.setImageBitmap(bmEnd);
+
+        try {
+            exifInterface = new ExifInterface(mUrlStart);
+            exifInterface1 = new ExifInterface(mUrlEnd);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        int oritation = exifInterface.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        int oritation1 = exifInterface1.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_UNDEFINED);
+        Bitmap bm1 = rotateBitmap(bmStart, oritation);
+        Bitmap bm2 = rotateBitmap(bmEnd, oritation1);
+        mImgStart.setImageBitmap(bm1);
+        mImgEnd.setImageBitmap(bm2);
+
         mTvTime.setText(mTime);
         if (mSpeed == null) {
             mTvSpeed.setText("0 KM/H");
 
-        }else{
+        } else {
             mTvSpeed.setText(mSpeed);
         }
 
@@ -219,6 +247,51 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
         filename = String.valueOf(Random());
         fn_permission();
+
+        insertHistory();
+    }
+
+    private void insertHistory() {
+        Run run = new Run();
+        if(mTime == null){
+            run.setTime("00:00");
+        }else{
+            run.setTime(mTime);
+        }
+
+        if(mDate == null){
+            run.setDate("");
+        }else{
+            run.setDate(mDate);
+        }
+
+        if(mSpeed == null){
+            run.setSpeed("0 Km/h");
+        }else{
+            run.setSpeed(mSpeed);
+        }
+
+        if(mKM == null){
+            run.setDistance("0 Km");
+        }else{
+            run.setDistance(mKM);
+        }
+        if(mCalo == null){
+            run.setCalo("0 Calo");
+        }else{
+            run.setCalo(mCalo);
+        }
+        if(mTimeStart == null){
+            run.setTimeStart("0");
+        }else{
+            run.setTimeStart(mTimeStart);
+        }
+
+
+
+
+
+        dbManager.addHistory(run);
     }
 
 
@@ -231,7 +304,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
                 } else {
                     if (boolean_permission) {
-                        Bitmap bitmap1 = loadBitmapFromView(mRlBase, mRlBase.getWidth(), mRlBase.getHeight());
+                        Bitmap bitmap1 = loadBitmapFromView(mLnTake, mLnTake.getWidth(), mLnTake.getHeight());
                         saveBitmap(bitmap1);
                     } else {
                     }
@@ -517,4 +590,56 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
                     .position(new LatLng(Double.valueOf(mLats), Double.valueOf(mLngs))));
         }
     }
+
+
+    public static Bitmap rotateBitmap(Bitmap bitmap, int oritation) {
+        Matrix matrix = new Matrix();
+        switch (oritation) {
+            case ExifInterface.ORIENTATION_NORMAL:
+
+                return bitmap;
+            case ExifInterface.ORIENTATION_FLIP_HORIZONTAL:
+                matrix.setScale(-1, 1);
+                return bitmap;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                matrix.setRotate(180);
+
+                break;
+            case ExifInterface.ORIENTATION_FLIP_VERTICAL:
+                matrix.setRotate(180);
+                matrix.postScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_TRANSPOSE:
+                matrix.setRotate(90);
+                matrix.setScale(-1, 1);
+
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                matrix.setRotate(90);
+                break;
+
+            case ExifInterface.ORIENTATION_TRANSVERSE:
+                matrix.setRotate(-90);
+                matrix.setScale(-1, 1);
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                matrix.setRotate(-90);
+                break;
+
+            default:
+                return bitmap;
+
+
+        }
+        try {
+            Bitmap bmRotate = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+            bitmap.recycle();
+            return bmRotate;
+        } catch (OutOfMemoryError e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
 }

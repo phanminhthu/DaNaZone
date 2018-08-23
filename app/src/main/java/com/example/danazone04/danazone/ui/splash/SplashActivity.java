@@ -12,11 +12,7 @@ import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
 
-import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
-
 import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
-import com.example.danazone04.danazone.ui.splash.main.start.StartActivity_;
-import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
 
 import org.androidannotations.annotations.EActivity;

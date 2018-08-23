@@ -13,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 
 import android.location.GpsSatellite;
@@ -50,21 +51,13 @@ import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
-import com.example.danazone04.danazone.SessionManager;
-import com.example.danazone04.danazone.common.BaseImageActivity_;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.EndDialog;
 import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.GpsDialog;
-import com.example.danazone04.danazone.dialog.ShareDialog;
-import com.example.danazone04.danazone.dialog.StartDialog;
-import com.example.danazone04.danazone.remote.IGoogleApi;
 import com.example.danazone04.danazone.speed.Data;
 import com.example.danazone04.danazone.speed.GpsServices;
-import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
-import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
-import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
-import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
+import com.example.danazone04.danazone.ui.splash.main.base.BaseImageActivity_;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -95,6 +88,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -157,14 +151,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     ImageView mImgUnlocked;
     @ViewById
     ImageView mImgLocked;
-
-
     @Extra
     String mBitmapStart;
     @Extra
     String mLat;
     @Extra
     String mLng;
+    @Extra
+    String mSL;
 
     private LocationManager mLocationManager;
     private Bitmap bitmap;
@@ -180,6 +174,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private boolean firstfix;
     private ContentValues values;
     private Uri imageUri;
+    private String sl;
 
 
     private String date;
@@ -194,12 +189,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         getSupportActionBar().hide();
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
-
         data = new Data(onGpsServiceUpdate);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         waitingDialog = new SpotsDialog(MainActivity.this);
-
+        //waitingDialog.show();
         updateService();
         buidGoogleApiClient();
         createLocationRequest();
@@ -248,14 +242,15 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 ms1 = String.valueOf(s);
                 mTvMinxSpeed.setText(s);
 
+                DecimalFormat dcf = new DecimalFormat("#.###");
                 double a = averageTemp / 20.0;
-                if (a != 0.00) {
-                    calos = Math.ceil(a * 1000 / 1000);
-                } else {
-                    mTvCalo.setText("0.00");
-                }
+//                if (a != 0.00) {
+//                    calos = Math.ceil(a * 1000 / 1000);
+//                } else {
+//                    mTvCalo.setText("0.00");
+//                }
 
-                mTvCalo.setText(String.valueOf(calos));
+                mTvCalo.setText(String.valueOf(dcf.format(a)));
 
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
@@ -413,12 +408,20 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
         imageUri = getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+        sl = getRealPathFromURI(imageUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
 
     }
-
+    public String getRealPathFromURI(Uri contentUri) {
+        String[] proj = {MediaStore.Images.Media.DATA};
+        Cursor cursor = managedQuery(contentUri, proj, null, null, null);
+        int column_index = cursor
+                .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(column_index);
+    }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -429,7 +432,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(
                                     getContentResolver(), imageUri);
-                            new DialogCheckin(MainActivity.this, bitmap, new DialogCheckin.OnDialogClickListener() {
+                            new DialogCheckin(MainActivity.this, bitmap,sl, new DialogCheckin.OnDialogClickListener() {
                                 @Override
                                 public void onCallSerVice() {
                                     resetData();
@@ -448,6 +451,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                             .mLngs(mLng)
                                             .mLate(mLate)
                                             .mLnge(mLnge)
+                                            .mUrlStart(mSL)
+                                            .mUrlEnd(sl)
                                             .start();
                                     finish();
                                 }
@@ -750,10 +755,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
     public void resetData() {
         mTvTime.stop();
-        mTvMaxSpeed.setText("");
-        mTvMinxSpeed.setText("");
-        mTvDistance.setText("");
-        mTvTime.setText("00:00:00");
+        mTvMaxSpeed.setText("0");
+        mTvMinxSpeed.setText("0");
+        mTvDistance.setText("0");
+        mTvTime.setText("00:00");
+        mTvSpeed.setText("0");
+        mTvCalo.setText("0");
         data = new Data(onGpsServiceUpdate);
     }
 

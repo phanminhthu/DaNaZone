@@ -49,17 +49,9 @@
         </activity>
         <activity android:name=".ui.splash.login.LoginActivity_" />
         <activity android:name=".ui.splash.register.RegisterActivity_" />
-        <activity android:name=".ui.splash.main.setting.information.InformationActivity_" />
-        <activity android:name=".ui.splash.main.setting.SettingActivity_" />
-        <activity android:name=".ui.splash.main.setting.outCome.OutComeActivity_" />
-        <activity android:name=".ui.splash.main.setting.reset.ResetPassWord_" />
-        <activity android:name=".ui.splash.main.setting.update.UpdateActivity_" />
-        <activity android:name=".ui.splash.TakeImage_" />
-        <activity android:name=".common.BaseImageActivity_" />
+        <activity android:name=".ui.splash.main.base.take.TakeImage_" />
+        <activity android:name=".ui.splash.main.base.BaseImageActivity_" />
         <activity android:name=".ui.splash.main.metter.MetterActivity_" />
-        <activity android:name=".ui.splash.main.setting.contact.ContactActivity_" />
-        <activity android:name=".ui.splash.main.setting.run.SettingRunActivity_" />
-        <activity android:name=".ui.splash.main.start.StartActivity_" />
         <activity android:name=".ui.splash.main.menu.MainMenuActivity_"/>
 
         <service android:name=".speed.GpsServices" />

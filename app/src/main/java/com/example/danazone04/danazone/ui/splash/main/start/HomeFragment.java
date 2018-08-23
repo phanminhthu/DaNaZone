@@ -31,16 +31,10 @@ import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.R;
-import com.example.danazone04.danazone.SessionManager;
-import com.example.danazone04.danazone.common.BaseImageActivity_;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
 import com.example.danazone04.danazone.dialog.GpsDialog;
 import com.example.danazone04.danazone.dialog.StartDialog;
 import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
-import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
-import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
-import com.example.danazone04.danazone.ui.splash.main.setting.SettingActivity_;
-import com.example.danazone04.danazone.ui.splash.main.start.info.InformationFragment_;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -92,6 +86,7 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     private File mTempCameraPhotoFile = null;
     private ContentValues values;
     private Uri imageUri;
+    private String sl;
 
     @ViewById
     ImageView mImgStart;
@@ -162,30 +157,22 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
         }
     }
 
-    @Click({R.id.mImgStart, R.id.mTvSetting})
+    @Click(R.id.mImgStart)
     void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.mTvSetting:
-                SettingActivity_.intent(getContext()).start();
-                break;
-
-            case R.id.mImgStart:
-                new StartDialog(getContext(), new StartDialog.OnDialogClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onCallSerVice() {
-                        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                            dispatchTakenPictureIntent();
-                        } else {
-                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
-                            }
-                            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
-                        }
-
+        new StartDialog(getContext(), new StartDialog.OnDialogClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onCallSerVice() {
+                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    dispatchTakenPictureIntent();
+                } else {
+                    if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     }
-                }).show();
-                break;
-        }
+                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+                }
+
+            }
+        }).show();
     }
 
     private void dispatchTakenPictureIntent() {
@@ -196,6 +183,7 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
         imageUri = getActivity().getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
         System.out.println("4444444444444444444444777777777777777" + imageUri);
+        sl = getRealPathFromURI(imageUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
         startActivityForResult(intent, MY_CAMERA_REQUEST_CODE);
@@ -212,28 +200,21 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
 
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                          //  SessionManager.getInstance().setKeyImageStart(String.valueOf(imageUri));
+                            //  SessionManager.getInstance().setKeyImageStart(String.valueOf(imageUri));
 
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
 
-                        new DialogCheckin(getActivity(), bitmap, new DialogCheckin.OnDialogClickListener() {
+                        new DialogCheckin(getActivity(), bitmap, sl, new DialogCheckin.OnDialogClickListener() {
                             @Override
                             public void onCallSerVice() {
-
-//                                    if (mLat != null && mLng != null) {
-//
-//                                        MainActivity_.intent(getContext())
-//                                                .mLat(mLat)
-//                                                .mLng(mLng)
-//                                                .mBitmapStart(bitmap)
-//                                                .start();
 
                                 MainActivity_.intent(getContext())
                                         .mLng(mLng)
                                         .mLng(mLng)
                                         .mBitmapStart(String.valueOf(imageUri))
+                                        .mSL(sl)
                                         .start();
 //                                    }
                             }
@@ -360,6 +341,8 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
         }
         mLocationManager.addGpsStatusListener(this);
         setUpLocation();
+
+
     }
 
     @Override

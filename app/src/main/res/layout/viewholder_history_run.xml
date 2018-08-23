@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/_5sdp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_shadow_textview"
+        android:orientation="vertical">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_alarm"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="22/8/2018"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvStartTime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_alarm"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="15:15"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvDistance"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_km"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="10 km/h"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvSpeed"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_alarm"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="8 km"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvCalo"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_alarm"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="20 calo"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/mTvTimeRun"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:drawableLeft="@drawable/ic_alarm"
+            android:drawablePadding="@dimen/_10sdp"
+            android:paddingLeft="@dimen/_5sdp"
+            android:text="1 : 10 : 04"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_9sdp" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/mImgDelete"
+        android:layout_width="@dimen/_25sdp"
+        android:layout_height="@dimen/_25sdp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="@dimen/_20sdp"
+        android:background="@drawable/ic_btn_cancel_chat" />
+</RelativeLayout>

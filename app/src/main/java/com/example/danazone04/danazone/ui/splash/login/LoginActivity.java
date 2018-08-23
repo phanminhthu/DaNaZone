@@ -4,15 +4,11 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
-
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
-import com.example.danazone04.danazone.ui.splash.main.MainActivity_;
-import com.example.danazone04.danazone.ui.splash.main.start.StartActivity_;
-import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
+import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
-
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -58,7 +54,7 @@ public class LoginActivity extends BaseActivity {
 
                 SessionManager.getInstance().setKeySaveId(phone);
                 SessionManager.getInstance().setKeySavePass(password);
-                StartActivity_.intent(LoginActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                MainMenuActivity_.intent(LoginActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
                         | Intent.FLAG_ACTIVITY_NEW_TASK).start();
                 finish();

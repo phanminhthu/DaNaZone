@@ -1,10 +1,8 @@
-package com.example.danazone04.danazone.ui.splash;
+package com.example.danazone04.danazone.ui.splash.main.base.take;
 
 import android.annotation.SuppressLint;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
 import android.os.Environment;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,7 +20,6 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.SharePhoto;
 import com.facebook.share.model.SharePhotoContent;
 import com.facebook.share.widget.ShareDialog;
-import com.google.android.gms.games.internal.game.Screenshot;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -30,8 +27,6 @@ import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
-
-import java.io.File;
 
 @SuppressLint("Registered")
 @EActivity(R.layout.activity_take_image)
