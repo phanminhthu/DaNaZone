@@ -141,7 +141,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Quãng Đường"
                             android:textColor="@color/colorWhite" />
@@ -165,7 +167,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Vận Tốc"
                             android:textColor="@color/colorWhite" />
@@ -191,7 +195,9 @@
                         android:orientation="vertical">
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:textSize="@dimen/_10sdp"
+                            android:gravity="center"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Thời Gian"
                             android:textColor="@color/colorWhite" />

@@ -31,10 +31,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="QUÃNG ĐƯỜNG (KM)"
-                    android:textColor="@color/black" />
+                    android:gravity="center"
+                    android:text="QUÃNG ĐƯỜNG"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/mTvDistance"
@@ -46,11 +48,13 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:gravity="center"
                     android:text="TỐC ĐỘ"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/mTvSpeed"
@@ -62,11 +66,13 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:gravity="center"
                     android:text="TỐC ĐỘ TỐI ĐA"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/mTvMaxSpeed"
@@ -86,10 +92,12 @@
                 android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="THỜI GIAN"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <Chronometer
                     android:id="@+id/mTvTime"
@@ -101,11 +109,13 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:gravity="center"
                     android:text="CALO (cl)"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/mTvCalo"
@@ -117,11 +127,13 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginTop="@dimen/_7sdp"
+                    android:gravity="center"
                     android:text="TỐC ĐỘ TRUNG BÌNH"
-                    android:textColor="@color/black" />
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_10sdp" />
 
                 <TextView
                     android:id="@+id/mTvMinxSpeed"
@@ -141,7 +153,7 @@
         android:name="com.google.android.gms.maps.SupportMapFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/_190sdp" />
+        android:layout_marginTop="@dimen/_210sdp" />
 
     <ImageView
         android:id="@+id/mImgStart"

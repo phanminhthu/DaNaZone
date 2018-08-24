@@ -8,12 +8,15 @@ public class Run {
     private String distance;
     private String calo;
     private String timeStart;
+    private int sumTime;
+    private Double sumDistance;
+    private Double sumCalo;
 
     public Run() {
 
     }
 
-    public Run(int id, String time, String date, String speed, String distance, String calo, String timeStart) {
+    public Run(int id, String time, String date, String speed, String distance, String calo, String timeStart, int sumTime, Double sumDistance, Double sumCalo) {
         this.id = id;
         this.time = time;
         this.date = date;
@@ -21,6 +24,9 @@ public class Run {
         this.distance = distance;
         this.calo = calo;
         this.timeStart = timeStart;
+        this.sumTime = sumTime;
+        this.sumDistance = sumDistance;
+        this.sumCalo = sumCalo;
     }
 
     public int getId() {
@@ -77,5 +83,29 @@ public class Run {
 
     public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
+    }
+
+    public int getSumTime() {
+        return sumTime;
+    }
+
+    public void setSumTime(int sumTime) {
+        this.sumTime = sumTime;
+    }
+
+    public Double getSumDistance() {
+        return sumDistance;
+    }
+
+    public void setSumDistance(Double sumDistance) {
+        this.sumDistance = sumDistance;
+    }
+
+    public Double getSumCalo() {
+        return sumCalo;
+    }
+
+    public void setSumCalo(Double sumCalo) {
+        this.sumCalo = sumCalo;
     }
 }

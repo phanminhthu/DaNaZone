@@ -2,8 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/mHome"
-        android:icon="@drawable/home"
-        android:title="Trang chủ" />
+        android:icon="@drawable/run_activity"
+        android:title="Vận động" />
     <item
         android:id="@+id/mSetting"
         android:icon="@drawable/settings"
@@ -20,6 +20,18 @@
         android:id="@+id/mHistory"
         android:icon="@drawable/history_run"
         android:title="Lịch sử" />
+    <item
+        android:id="@+id/mOverall"
+        android:icon="@drawable/chart_bar_stacked"
+        android:title="Tổng quan" />
+    <item
+        android:id="@+id/mFeddBack"
+        android:icon="@drawable/feedback"
+        android:title="Phản hồi" />
+    <item
+        android:id="@+id/mShare"
+        android:icon="@drawable/share_variant"
+        android:title="Chia sẻ" />
     <item
         android:id="@+id/mContact"
         android:icon="@drawable/contact_mail"

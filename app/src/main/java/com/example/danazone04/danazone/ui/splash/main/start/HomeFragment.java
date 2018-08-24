@@ -160,29 +160,42 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     @Click(R.id.mImgStart)
     void onClick(View v) {
         new StartDialog(getContext(), new StartDialog.OnDialogClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+            // @RequiresApi(api = Build.VERSION_CODES.M)
             @Override
             public void onCallSerVice() {
-                if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                if (ContextCompat.checkSelfPermission(getContext(),
+
+
+                        Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED &&
+                        ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                == PackageManager.PERMISSION_GRANTED
+                        && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager
+                        .PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(getContext(), Manifest.permission
+                        .ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                        ) {
                     dispatchTakenPictureIntent();
                 } else {
                     if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
                     }
-                    requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+                    requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission
+                            .ACCESS_COARSE_LOCATION, Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
                 }
-
             }
         }).show();
     }
 
     private void dispatchTakenPictureIntent() {
+        if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
+                ) {
+            return;
+        }
 
         values = new ContentValues();
         values.put(MediaStore.Images.Media.TITLE, "New Picture");
         values.put(MediaStore.Images.Media.DESCRIPTION, "From your Camera");
         imageUri = getActivity().getContentResolver().insert(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        System.out.println("4444444444444444444444777777777777777" + imageUri);
         sl = getRealPathFromURI(imageUri);
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -200,7 +213,6 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
 
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
-                            //  SessionManager.getInstance().setKeyImageStart(String.valueOf(imageUri));
 
                         } catch (IOException e) {
                             e.printStackTrace();
@@ -209,14 +221,17 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
                         new DialogCheckin(getActivity(), bitmap, sl, new DialogCheckin.OnDialogClickListener() {
                             @Override
                             public void onCallSerVice() {
-
-                                MainActivity_.intent(getContext())
-                                        .mLng(mLng)
-                                        .mLng(mLng)
-                                        .mBitmapStart(String.valueOf(imageUri))
-                                        .mSL(sl)
-                                        .start();
-//                                    }
+                                if(mLat == null && mLng == null){
+                                    showAlertDialog("Vui lòng bật định vị GPS để tiếp tục sử dụng dịch vụ");
+                                    return;
+                                }else {
+                                    MainActivity_.intent(getContext())
+                                            .mLng(mLng)
+                                            .mLng(mLng)
+                                            .mBitmapStart(String.valueOf(imageUri))
+                                            .mSL(sl)
+                                            .start();
+                                }
                             }
                         }).show();
 
@@ -250,11 +265,11 @@ public class HomeFragment extends BaseContainerFragment implements OnMapReadyCal
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == MY_CAMERA_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED && grantResults[2] == PackageManager.PERMISSION_GRANTED && grantResults[3] == PackageManager.PERMISSION_GRANTED) {
                 dispatchTakenPictureIntent();
             } else {
-                Toast.makeText(getApplicationContext(), "Permission Needed.", Toast.LENGTH_LONG).show();
-                dispatchTakenPictureIntent();
+                showAlertDialog("Để tiếp tục sở dụng dịch vụ. Vui lòng bật các quyền truy cập");
+                // dispatchTakenPictureIntent();
             }
         } else {
             super.onRequestPermissionsResult(requestCode, permissions, grantResults);

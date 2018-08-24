@@ -177,6 +177,8 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     private Bitmap bmStart, bmEnd;
     private ExifInterface exifInterface, exifInterface1;
     private DBManager dbManager;
+    private Double sumDistance, sumCalo;
+    private int sumTime;
 
 
     @Override
@@ -225,7 +227,12 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         mImgStart.setImageBitmap(bm1);
         mImgEnd.setImageBitmap(bm2);
 
-        mTvTime.setText(mTime);
+        if (mTime == null) {
+            mTvTime.setText("00.00");
+        } else {
+            mTvTime.setText(mTime);
+        }
+
         if (mSpeed == null) {
             mTvSpeed.setText("0 KM/H");
 
@@ -240,24 +247,56 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         }
 
         mTvTimeStart.setText(mTimeStart + "h");
-        System.out.println("9999999999999999999999: " + mTimeStart + " - " + mCalo);
         mTvTimeEnd.setText(mTimeEnd + "h");
         mTvData.setText(mDate);
         mTvMaxSpeed.setText(mMaxSpeed);
-        mTvCalo.setText(mCalo);
+        mTvCalo.setText(mCalo + " Calo");
 
         filename = String.valueOf(Random());
         fn_permission();
 
+        convertOverall();
         insertHistory();
+
+    }
+
+    private void convertOverall() {
+        String timestampStr = "00:59:00";
+        if(mTime !=null) {
+            String[] tokens = mTime.split(":");
+            int hours = Integer.parseInt(tokens[0]);
+            int minutes = Integer.parseInt(tokens[1]);
+            int seconds = Integer.parseInt(tokens[2]);
+            int duration = 3600 * hours + 60 * minutes + seconds;
+            sumTime = duration;
+        }else{
+            sumTime = 0;
+        }
+
+        String km;
+        if (mKM != null) {
+            km = mKM.replaceAll("m", "");
+            sumDistance = Double.valueOf(km.replaceAll(",", ".").trim());
+        } else {
+            sumDistance = 0.0;
+        }
+
+        if(mCalo !=null) {
+            sumCalo = Double.valueOf(mCalo.trim());
+        }else{
+            sumCalo = 0.0;
+        }
+       // System.out.println("333333333333333333: " + sumTime + " - " + sumDistance + " - " + sumCalo);
     }
 
     private void insertHistory() {
         Run run = new Run();
         if (mTime == null) {
             run.setTime("00:00");
+            run.setSumTime(0);
         } else {
             run.setTime(mTime);
+            run.setSumTime(sumTime);
         }
 
         if (mDate == null) {
@@ -274,13 +313,17 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
         if (mKM == null) {
             run.setDistance("0 Km");
+            run.setSumDistance(0.0);
         } else {
             run.setDistance(mKM);
+            run.setSumDistance(sumDistance);
         }
         if (mCalo == null) {
             run.setCalo("0 Calo");
+            run.setSumCalo(0.0);
         } else {
-            run.setCalo(mCalo);
+            run.setCalo(mCalo + " Calo");
+            run.setSumCalo(sumCalo);
         }
         if (mTimeStart == null) {
             run.setTimeStart("0h");
@@ -638,6 +681,4 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
             return null;
         }
     }
-
-
 }

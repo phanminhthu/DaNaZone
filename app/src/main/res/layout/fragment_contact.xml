@@ -6,26 +6,26 @@
     android:orientation="vertical">
 
     <TextView
+        android:paddingLeft="@dimen/_10sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_10sdp"
-        android:gravity="center"
         android:text="HOTLINE: 0905 277 623"
         android:textColor="#FF0000"
         android:textSize="@dimen/_18sdp" />
 
     <TextView
+        android:paddingLeft="@dimen/_10sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_20sdp"
-        android:gravity="center"
         android:text="@string/add"
         android:textColor="#000000" />
     <TextView
+        android:paddingLeft="@dimen/_10sdp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_30sdp"
-        android:gravity="center"
         android:textStyle="italic|bold"
         android:text="Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi !"
         android:textColor="#aaaaaa" />

@@ -2,6 +2,8 @@ package com.example.danazone04.danazone.ui.splash.main.menu;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -27,6 +29,8 @@ import com.example.danazone04.danazone.ui.splash.main.contact.FragmentContact_;
 import com.example.danazone04.danazone.ui.splash.main.history.HistoryFragment;
 import com.example.danazone04.danazone.ui.splash.main.history.HistoryFragment_;
 import com.example.danazone04.danazone.ui.splash.main.metter.MetterActivity_;
+import com.example.danazone04.danazone.ui.splash.main.overall.OverallFragment;
+import com.example.danazone04.danazone.ui.splash.main.overall.OverallFragment_;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment;
 import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment_;
 
@@ -43,9 +47,7 @@ public class MainMenuActivity extends BaseActivity {
     DrawerLayout mDrawer;
     @ViewById
     NavigationView mNV;
-
     View v;
-
     private ActionBarDrawerToggle mToggle;
     private Toast mToastExit;
 
@@ -65,10 +67,7 @@ public class MainMenuActivity extends BaseActivity {
         TextView mCoin = (TextView) v.findViewById(R.id.mCoin);
         mCoin.setText(SessionManager.getInstance().getKeySaveCoin());
         mName.setText(SessionManager.getInstance().getKeySaveName());
-
-
     }
-
 
     /**
      * Open new fragment
@@ -141,6 +140,27 @@ public class MainMenuActivity extends BaseActivity {
             case R.id.mHistory:
                 if (!((BaseContainerFragment) getCurrentFragment() instanceof HistoryFragment))
                     replaceFragment(HistoryFragment_.builder().build());
+                break;
+
+            case R.id.mOverall:
+//                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
+//                    replaceFragment(OverallFragment_.builder().build());
+                break;
+
+            case R.id.mFeddBack:
+                Intent email = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "lehieudev01@gmail.com", null));
+                email.putExtra(Intent.EXTRA_SUBJECT, "Phản hồi ứng dụng");
+                email.putExtra(Intent.EXTRA_TEXT, "Ứng dụng: DaNaZone \n Phiên bản ứng dụng: 1.0 \n \n Chúng tôi có thể làm gì để ứng dụng được tốt hơn?");
+                startActivity(Intent.createChooser(email, "Gởi phản hồi"));
+                break;
+
+            case R.id.mShare:
+
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Chia sẻ ứng dụng đến nhiều người");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.devpro.xedapdana");
+                startActivity(Intent.createChooser(shareIntent, "Share App"));
                 break;
 
             case R.id.mExit:

@@ -251,6 +251,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 ms2 = String.valueOf(s);
+                System.out.println("3333333333333333333333333: " + ms2);
                 mTvDistance.setText(s);
 
 
@@ -366,8 +367,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 break;
 
             case R.id.mImgLock:
-
-                System.out.println("6666666666666666666666: " + mLocked);
                 if (!mLocked) {
                     mImgLocked.setVisibility(View.VISIBLE);
                     mImgUnlocked.setVisibility(View.GONE);
@@ -439,7 +438,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                             .mKM(ms2)
                                             .mSpeed(ms1)
                                             .mMaxSpeed(ms)
-                                            .mCalo(calos + " calo")
+                                            .mCalo(calos)
                                             .mTimeStart(time)
                                             .mTimeEnd(timeEnd)
                                             .mDate(date)

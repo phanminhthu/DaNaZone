@@ -3,7 +3,7 @@
     android:shape="rectangle">
     <solid android:color="@color/colorWhite"
         />
-    <stroke android:color="@color/bmi"
+    <stroke android:color="#bbbbbb"
         android:width="@dimen/_1sdp"
         />
     <corners
