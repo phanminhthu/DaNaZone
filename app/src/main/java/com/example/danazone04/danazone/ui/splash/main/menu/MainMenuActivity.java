@@ -143,8 +143,8 @@ public class MainMenuActivity extends BaseActivity {
                 break;
 
             case R.id.mOverall:
-//                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
-//                    replaceFragment(OverallFragment_.builder().build());
+                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
+                    replaceFragment(OverallFragment_.builder().build());
                 break;
 
             case R.id.mFeddBack:

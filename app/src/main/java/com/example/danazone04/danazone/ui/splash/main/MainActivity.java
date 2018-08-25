@@ -251,7 +251,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 ms2 = String.valueOf(s);
-                System.out.println("3333333333333333333333333: " + ms2);
                 mTvDistance.setText(s);
 
 

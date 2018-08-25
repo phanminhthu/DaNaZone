@@ -191,7 +191,6 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         createLocationRequest();
         displayLocation();
 
-
         if (ConnectionUtil.isConnected(this)) {
             mService = GGApi.getGoogleAPI();
             getDirection();
@@ -261,15 +260,15 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     }
 
     private void convertOverall() {
-        String timestampStr = "00:59:00";
-        if(mTime !=null) {
+        String timestampStr = "00:00:06";
+        if (mTime != null) {
             String[] tokens = mTime.split(":");
             int hours = Integer.parseInt(tokens[0]);
             int minutes = Integer.parseInt(tokens[1]);
             int seconds = Integer.parseInt(tokens[2]);
             int duration = 3600 * hours + 60 * minutes + seconds;
             sumTime = duration;
-        }else{
+        } else {
             sumTime = 0;
         }
 
@@ -281,12 +280,11 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
             sumDistance = 0.0;
         }
 
-        if(mCalo !=null) {
-            sumCalo = Double.valueOf(mCalo.trim());
-        }else{
+        if (mCalo != null) {
+            sumCalo = Double.valueOf(mCalo.trim().replaceAll(",", "."));
+        } else {
             sumCalo = 0.0;
         }
-       // System.out.println("333333333333333333: " + sumTime + " - " + sumDistance + " - " + sumCalo);
     }
 
     private void insertHistory() {

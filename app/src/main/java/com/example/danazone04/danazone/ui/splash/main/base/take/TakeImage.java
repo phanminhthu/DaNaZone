@@ -1,6 +1,7 @@
 package com.example.danazone04.danazone.ui.splash.main.base.take;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -41,6 +42,8 @@ public class TakeImage extends BaseActivity {
     TextView mTvSubmit;
     @ViewById
     TextView mTvShareFanpage;
+    @ViewById
+    TextView mTvOut;
     @Extra
     String fileName;
     String completePath;
@@ -74,14 +77,13 @@ public class TakeImage extends BaseActivity {
         }
     }
 
-    @Click({R.id.mTvSubmit, R.id.mTvShareFanpage})
+    @Click({R.id.mTvSubmit, R.id.mTvShareFanpage, R.id.mTvOut})
     void clickView(View v) {
         switch (v.getId()) {
             case R.id.mTvSubmit:
                 SharePhoto photo = new SharePhoto.Builder().setBitmap(BitmapFactory.decodeFile(completePath)).build();
                 SharePhotoContent content = new SharePhotoContent.Builder().addPhoto(photo).build();
                 shareDialog.show(content);
-
                 shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
                     @Override
                     public void onSuccess(Sharer.Result result) {
@@ -102,6 +104,14 @@ public class TakeImage extends BaseActivity {
 
             case R.id.mTvShareFanpage:
                 FanpageActivity_.intent(this).start();
+                break;
+
+            case R.id.mTvOut:
+                Intent a = new Intent(Intent.ACTION_MAIN);
+                a.addCategory(Intent.CATEGORY_HOME);
+                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                startActivity(a);
+                finish();
                 break;
         }
     }

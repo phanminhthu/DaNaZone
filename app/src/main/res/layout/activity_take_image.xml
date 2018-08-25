@@ -66,6 +66,19 @@
                 android:text="Share Fanpage"
                 android:textColor="@color/colorWhite"
                 android:textSize="@dimen/_10sdp" />
+            <TextView
+                android:id="@+id/mTvOut"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                android:background="@drawable/bg_text_share_fanpage"
+                android:text="Thoát"
+                android:paddingLeft="@dimen/_45sdp"
+                android:paddingRight="@dimen/_45sdp"
+                android:textColor="@color/colorWhite"
+                android:textSize="@dimen/_10sdp" />
         </LinearLayout>
 
     </LinearLayout>
