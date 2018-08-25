@@ -15,7 +15,9 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.ui.splash.SplashActivity;
 import com.example.danazone04.danazone.ui.splash.main.base.take.fanpage.FanpageActivity_;
+import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -107,10 +109,9 @@ public class TakeImage extends BaseActivity {
                 break;
 
             case R.id.mTvOut:
-                Intent a = new Intent(Intent.ACTION_MAIN);
-                a.addCategory(Intent.CATEGORY_HOME);
-                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(a);
+                MainMenuActivity_.intent(TakeImage.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK).mKey(1).start();
                 finish();
                 break;
         }

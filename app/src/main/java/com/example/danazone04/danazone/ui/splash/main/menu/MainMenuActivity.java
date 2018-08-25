@@ -36,6 +36,7 @@ import com.example.danazone04.danazone.ui.splash.main.start.HomeFragment_;
 
 import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.Extra;
 import org.androidannotations.annotations.ViewById;
 
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN;
@@ -51,8 +52,18 @@ public class MainMenuActivity extends BaseActivity {
     private ActionBarDrawerToggle mToggle;
     private Toast mToastExit;
 
+    @Extra
+    int mKey;
+
     @Override
     protected void afterView() {
+        if(mKey == 1){
+            Intent a = new Intent(Intent.ACTION_MAIN);
+            a.addCategory(Intent.CATEGORY_HOME);
+            a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(a);
+            finish();
+        }
         mToggle = new ActionBarDrawerToggle(this, mDrawer, R.string.open, R.string.colose);
         mDrawer.addDrawerListener(mToggle);
         mToggle.syncState();
@@ -142,10 +153,10 @@ public class MainMenuActivity extends BaseActivity {
                     replaceFragment(HistoryFragment_.builder().build());
                 break;
 
-            case R.id.mOverall:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
-                    replaceFragment(OverallFragment_.builder().build());
-                break;
+//            case R.id.mOverall:
+////                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
+////                    replaceFragment(OverallFragment_.builder().build());
+//                break;
 
             case R.id.mFeddBack:
                 Intent email = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "lehieudev01@gmail.com", null));

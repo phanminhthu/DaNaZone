@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_50sdp"
             android:gravity="center"
-            android:text="Chụp ảnh checkin để kết thúc chuyến đi"
+            android:text="Chụp ảnh checkout để kết thúc chuyến đi"
             android:textColor="@color/colorMain"
             android:textSize="@dimen/_16sdp"
             android:textStyle="bold" />
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/_10sdp"
             android:gravity="center"
-            android:text="Nhấn đồng ý để bắt đầu"
+            android:text="Nhấn đồng ý để kết thúc"
             android:textColor="@color/black" />
 
         <TextView

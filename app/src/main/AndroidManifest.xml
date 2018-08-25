@@ -41,21 +41,39 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.splash.main.MainActivity_" />
-        <activity android:name=".ui.splash.SplashActivity_">
+        <activity android:name=".ui.splash.main.MainActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.SplashActivity_"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.splash.login.LoginActivity_" />
-        <activity android:name=".ui.splash.register.RegisterActivity_" />
-        <activity android:name=".ui.splash.main.base.take.TakeImage_" />
-        <activity android:name=".ui.splash.main.base.BaseImageActivity_" />
-        <activity android:name=".ui.splash.main.metter.MetterActivity_" />
-        <activity android:name=".ui.splash.main.menu.MainMenuActivity_"/>
-        <activity android:name=".ui.splash.main.base.take.fanpage.FanpageActivity_"/>
+        <activity android:name=".ui.splash.login.LoginActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.register.RegisterActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.main.base.take.TakeImage_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.main.base.BaseImageActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.main.metter.MetterActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.main.menu.MainMenuActivity_"
+            android:screenOrientation="portrait"
+            />
+        <activity android:name=".ui.splash.main.base.take.fanpage.FanpageActivity_"
+            android:screenOrientation="portrait"
+            />
 
         <service android:name=".speed.GpsServices" />
 

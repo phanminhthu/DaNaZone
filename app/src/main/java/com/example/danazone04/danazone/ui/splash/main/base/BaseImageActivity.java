@@ -34,6 +34,7 @@ import com.example.danazone04.danazone.common.GGApi;
 import com.example.danazone04.danazone.remote.IGoogleApi;
 import com.example.danazone04.danazone.sqlite.DBManager;
 import com.example.danazone04.danazone.ui.splash.main.base.take.TakeImage_;
+import com.example.danazone04.danazone.ui.splash.main.history.HistoryFragment;
 import com.example.danazone04.danazone.utils.ConnectionUtil;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -248,53 +249,62 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         mTvTimeStart.setText(mTimeStart + "h");
         mTvTimeEnd.setText(mTimeEnd + "h");
         mTvData.setText(mDate);
-        mTvMaxSpeed.setText(mMaxSpeed);
-        mTvCalo.setText(mCalo + " Calo");
+        if(mCalo == null){
+            mTvMaxSpeed.setText("0.0 KM/H");
+        }else{
+            mTvMaxSpeed.setText(mMaxSpeed);
+        }
+
+        if(mCalo == null){
+            mTvCalo.setText("0.0 Calo");
+        }else{
+            mTvCalo.setText(mCalo + " Calo");
+        }
 
         filename = String.valueOf(Random());
         fn_permission();
 
-        convertOverall();
+       // convertOverall();
         insertHistory();
 
     }
 
-    private void convertOverall() {
-        String timestampStr = "00:00:06";
-        if (mTime != null) {
-            String[] tokens = mTime.split(":");
-            int hours = Integer.parseInt(tokens[0]);
-            int minutes = Integer.parseInt(tokens[1]);
-            int seconds = Integer.parseInt(tokens[2]);
-            int duration = 3600 * hours + 60 * minutes + seconds;
-            sumTime = duration;
-        } else {
-            sumTime = 0;
-        }
-
-        String km;
-        if (mKM != null) {
-            km = mKM.replaceAll("m", "");
-            sumDistance = Double.valueOf(km.replaceAll(",", ".").trim());
-        } else {
-            sumDistance = 0.0;
-        }
-
-        if (mCalo != null) {
-            sumCalo = Double.valueOf(mCalo.trim().replaceAll(",", "."));
-        } else {
-            sumCalo = 0.0;
-        }
-    }
+//    private void convertOverall() {
+//        String timestampStr = "00:00:06";
+//        if (mTime != null) {
+//            String[] tokens = mTime.split(":");
+//            int hours = Integer.parseInt(tokens[0]);
+//            int minutes = Integer.parseInt(tokens[1]);
+//            int seconds = Integer.parseInt(tokens[2]);
+//            int duration = 3600 * hours + 60 * minutes + seconds;
+//            sumTime = duration;
+//        } else {
+//            sumTime = 0;
+//        }
+//
+//        String km;
+//        if (mKM != null) {
+//            km = mKM.replaceAll("m", "");
+//            sumDistance = Double.valueOf(km.replaceAll(",", ".").trim());
+//        } else {
+//            sumDistance = 0.0;
+//        }
+//
+//        if (mCalo != null) {
+//            sumCalo = Double.valueOf(mCalo.trim().replaceAll(",", "."));
+//        } else {
+//            sumCalo = 0.0;
+//        }
+//    }
 
     private void insertHistory() {
         Run run = new Run();
         if (mTime == null) {
             run.setTime("00:00");
-            run.setSumTime(0);
+           // run.setSumTime(0);
         } else {
             run.setTime(mTime);
-            run.setSumTime(sumTime);
+            //run.setSumTime(sumTime);
         }
 
         if (mDate == null) {
@@ -311,24 +321,23 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
 
         if (mKM == null) {
             run.setDistance("0 Km");
-            run.setSumDistance(0.0);
+            //run.setSumDistance(0.0);
         } else {
             run.setDistance(mKM);
-            run.setSumDistance(sumDistance);
+            //run.setSumDistance(sumDistance);
         }
         if (mCalo == null) {
             run.setCalo("0 Calo");
-            run.setSumCalo(0.0);
+            //run.setSumCalo(0.0);
         } else {
             run.setCalo(mCalo + " Calo");
-            run.setSumCalo(sumCalo);
+            //run.setSumCalo(sumCalo);
         }
         if (mTimeStart == null) {
             run.setTimeStart("0h");
         } else {
             run.setTimeStart(mTimeStart);
         }
-
 
         dbManager.addHistory(run);
     }
@@ -430,6 +439,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
                 Toast.makeText(getApplicationContext(), "Please allow the permission", Toast.LENGTH_LONG).show();
 
             }
+
         }
     }
 

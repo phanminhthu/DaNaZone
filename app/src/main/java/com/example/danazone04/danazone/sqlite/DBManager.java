@@ -41,10 +41,7 @@ public class DBManager extends SQLiteOpenHelper {
                 SPEED + " TEXT, " +
                 DISTANCE + " TEXT, " +
                 CALO + " TEXT, " +
-                TIME_START + " TEXT, " +
-                SUM_TIME + " TEXT, " +
-                SUM_DISTANCE + " TEXT, " +
-                SUM_CALO + " TEXT)";
+                TIME_START + " TEXT)";
         db.execSQL(sqlQuery);
     }
 
@@ -64,9 +61,6 @@ public class DBManager extends SQLiteOpenHelper {
         values.put(DISTANCE, run.getDistance());
         values.put(CALO, run.getCalo());
         values.put(TIME_START, run.getTimeStart());
-        values.put(SUM_TIME, run.getSumTime());
-        values.put(SUM_DISTANCE, run.getSumDistance());
-        values.put(SUM_CALO, run.getSumCalo());
         db.insert(TABLE_NAME, null, values);
         db.close();
     }
@@ -92,9 +86,6 @@ public class DBManager extends SQLiteOpenHelper {
                 run.setDistance(cursor.getString(4));
                 run.setCalo(cursor.getString(5));
                 run.setTimeStart(cursor.getString(6));
-                run.setSumTime(cursor.getInt(7));
-                run.setSumDistance(cursor.getDouble(8));
-                run.setSumCalo(cursor.getDouble(9));
                 listStudent.add(run);
             } while (cursor.moveToNext());
         }
@@ -113,39 +104,39 @@ public class DBManager extends SQLiteOpenHelper {
         db.close();
     }
 
-    public int getSumTime() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cu = db.rawQuery("SELECT SUM(sum_time) FROM run", null);
-        if (cu.moveToFirst()) {
-            return cu.getInt(0);
-        }
-        return cu.getInt(0);
-    }
+//    public int getSumTime() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cu = db.rawQuery("SELECT SUM(sum_time) FROM run", null);
+//        if (cu.moveToFirst()) {
+//            return cu.getInt(0);
+//        }
+//        return cu.getInt(0);
+//    }
 
-    public int getId() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cu = db.rawQuery("SELECT SUM(id) FROM run", null);
-        if (cu.moveToFirst()) {
-            return cu.getInt(0);
-        }
-        return cu.getInt(0);
-    }
-
-    public double getSumDistance() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cu = db.rawQuery("SELECT SUM(sum_distance) FROM run", null);
-        if (cu.moveToFirst()) {
-            return cu.getDouble(0);
-        }
-        return cu.getDouble(0);
-    }
-
-    public double getSumCalo() {
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor cu = db.rawQuery("SELECT SUM(sum_calo) FROM run", null);
-        if (cu.moveToFirst()) {
-            return cu.getDouble(0);
-        }
-        return cu.getDouble(0);
-    }
+//    public int getId() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cu = db.rawQuery("SELECT SUM(id) FROM run", null);
+//        if (cu.moveToFirst()) {
+//            return cu.getInt(0);
+//        }
+//        return cu.getInt(0);
+//    }
+//
+//    public double getSumDistance() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cu = db.rawQuery("SELECT SUM(sum_distance) FROM run", null);
+//        if (cu.moveToFirst()) {
+//            return cu.getDouble(0);
+//        }
+//        return cu.getDouble(0);
+//    }
+//
+//    public double getSumCalo() {
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor cu = db.rawQuery("SELECT SUM(sum_calo) FROM run", null);
+//        if (cu.moveToFirst()) {
+//            return cu.getDouble(0);
+//        }
+//        return cu.getDouble(0);
+//    }
 }

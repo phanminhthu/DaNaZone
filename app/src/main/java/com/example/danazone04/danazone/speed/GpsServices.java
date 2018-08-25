@@ -89,7 +89,7 @@ public class GpsServices extends Service implements LocationListener, GpsStatus.
     @SuppressLint("StringFormatMatches")
     public void updateNotification(boolean asData){
         Notification.Builder builder = new Notification.Builder(getBaseContext())
-                .setContentTitle(getString(R.string.running))
+                .setContentTitle(getString(R.string.app_name))
                 .setSmallIcon(R.drawable.ic_logo)
                 .setContentIntent(contentIntent);
 

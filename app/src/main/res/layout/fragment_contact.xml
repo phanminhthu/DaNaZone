@@ -4,29 +4,8 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite"
     android:orientation="vertical">
-
-    <TextView
-        android:paddingLeft="@dimen/_10sdp"
+    <WebView
+        android:id="@+id/mWebView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:text="HOTLINE: 0905 277 623"
-        android:textColor="#FF0000"
-        android:textSize="@dimen/_18sdp" />
-
-    <TextView
-        android:paddingLeft="@dimen/_10sdp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_20sdp"
-        android:text="@string/add"
-        android:textColor="#000000" />
-    <TextView
-        android:paddingLeft="@dimen/_10sdp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/_30sdp"
-        android:textStyle="italic|bold"
-        android:text="Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi !"
-        android:textColor="#aaaaaa" />
+        android:layout_height="match_parent" />
 </LinearLayout>

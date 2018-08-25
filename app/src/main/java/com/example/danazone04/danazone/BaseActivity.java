@@ -16,10 +16,6 @@ import android.support.annotation.StringRes;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
@@ -51,10 +47,10 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
         CalligraphyConfig.initDefault(new CalligraphyConfig.Builder().setDefaultFontPath("fonts/Lato_Regular.ttf").setFontAttrId(R.attr.fontPath).build());
     }
 
+
     @Override
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-
     }
 
     @AfterViews
@@ -221,6 +217,4 @@ public abstract class BaseActivity extends AppCompatActivity implements BaseActi
 
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
-
-
 }

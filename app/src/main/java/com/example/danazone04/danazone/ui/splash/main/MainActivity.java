@@ -51,7 +51,9 @@ import android.widget.Toast;
 
 import com.example.danazone04.danazone.BaseActivity;
 import com.example.danazone04.danazone.R;
+import com.example.danazone04.danazone.SessionManager;
 import com.example.danazone04.danazone.dialog.DialogCheckin;
+import com.example.danazone04.danazone.dialog.DialogCheckout;
 import com.example.danazone04.danazone.dialog.EndDialog;
 import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.GpsDialog;
@@ -117,7 +119,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private static int DISPLACEMENT = 10;
     private JSONObject jsonObject;
 
-
     @ViewById
     RelativeLayout mTvSetting;
     @ViewById
@@ -176,13 +177,13 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private Uri imageUri;
     private String sl;
 
-
     private String date;
     private String time, timeEnd, numTime;
     private String ms, ms1, ms2, ms3;
     private String calos;
     private AlertDialog waitingDialog;
     boolean mLocked;
+    private int mCheck;
 
     @Override
     protected void afterView() {
@@ -193,7 +194,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         waitingDialog = new SpotsDialog(MainActivity.this);
-        //waitingDialog.show();
+        waitingDialog.show();
         updateService();
         buidGoogleApiClient();
         createLocationRequest();
@@ -299,7 +300,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
             }
         });
-
     }
 
     @Click({R.id.mImgStops, R.id.mTvSetting, R.id.mImgPlay, R.id.mImgLock})
@@ -321,6 +321,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     data.setRunning(false);
                     stopService(new Intent(getBaseContext(), GpsServices.class));
                 }
+                mCheck = 1;
                 break;
 
             case R.id.mTvSetting:
@@ -334,35 +335,37 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 if (intent.resolveActivity(getPackageManager()) != null) {
                     startActivity(intent);
                 }
-
                 break;
-
             case R.id.mImgStops:
-                setUpTimeEnd();
-                data.setRunning(false);
-                stopService(new Intent(getBaseContext(), GpsServices.class));
-                numTime = mTvTime.getText().toString();
+                if (mCheck == 1) {
+                    setUpTimeEnd();
+                    data.setRunning(false);
+                    stopService(new Intent(getBaseContext(), GpsServices.class));
+                    numTime = mTvTime.getText().toString();
+                    resetData();
+                    new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
+                        @RequiresApi(api = Build.VERSION_CODES.M)
+                        @Override
+                        public void onCallSerVice() {
 
-                new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
-                    @RequiresApi(api = Build.VERSION_CODES.M)
-                    @Override
-                    public void onCallSerVice() {
-
-                        if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                            takenImageEnd();
-                        } else {
-                            if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                            if (ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                                takenImageEnd();
+                            } else {
+                                if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                                }
+                                requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
                             }
-                            requestPermissions(new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_CAMERA_REQUEST_CODE);
+
+                            mCurrent = mMap.addMarker(new MarkerOptions().position(mLatLng)
+                                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
+                            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.0f));
+                            end();
                         }
-
-                        mCurrent = mMap.addMarker(new MarkerOptions().position(mLatLng)
-                                .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_marker)));
-                        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(mLatLng, 15.0f));
-                        end();
-
-                    }
-                }).show();
+                    }).show();
+                } else {
+                    showAlertDialog("Để tiếp tục. Hãy click vào Play trước khi click Stop!");
+                    return;
+                }
                 break;
 
             case R.id.mImgLock:
@@ -388,6 +391,14 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+            resetData();
+            stopService(new Intent(getBaseContext(), GpsServices.class));
+
+    }
+
     private void dispatchTakenPictureIntent() {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getPackageManager()) != null) {
@@ -408,6 +419,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         startActivityForResult(intent, MY_CAMERA_REQUEST_CODE_END);
 
     }
+
     public String getRealPathFromURI(Uri contentUri) {
         String[] proj = {MediaStore.Images.Media.DATA};
         Cursor cursor = managedQuery(contentUri, proj, null, null, null);
@@ -416,6 +428,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         cursor.moveToFirst();
         return cursor.getString(column_index);
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -426,7 +439,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                         try {
                             bitmap = MediaStore.Images.Media.getBitmap(
                                     getContentResolver(), imageUri);
-                            new DialogCheckin(MainActivity.this, bitmap,sl, new DialogCheckin.OnDialogClickListener() {
+                            new DialogCheckout(MainActivity.this, bitmap, sl, new DialogCheckout.OnDialogClickListener() {
                                 @Override
                                 public void onCallSerVice() {
                                     resetData();
@@ -459,7 +472,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     }
         }
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -645,7 +657,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         mLocationRequest.setSmallestDisplacement(DISPLACEMENT);
     }
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -692,19 +703,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         prefsEditor.commit();
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        resetData();
-        stopService(new Intent(getBaseContext(), GpsServices.class));
-    }
 
     @Override
     public void onGpsStatusChanged(int event) {
         switch (event) {
             case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-
-
                 if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                     return;
                 }
@@ -761,7 +764,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     public static Data getData() {
         return data;
     }
-
 
     /**
      * setup date

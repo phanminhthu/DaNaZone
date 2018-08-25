@@ -10,5 +10,5 @@
         android:layout_width="@dimen/_90sdp"
         android:layout_height="@dimen/_90sdp"
         android:layout_gravity="center"
-        android:background="@drawable/ic_logo" />
+        android:background="@drawable/banner" />
 </android.support.v7.widget.LinearLayoutCompat>

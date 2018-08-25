@@ -15,6 +15,7 @@ public class SessionManager {
     private static final String KEY_SAVE_PASS = "key_save_pass";
     private static final String KEY_SAVE_COIN = "key_save_coin";
     private static final String KEY_SAVE_CODE = "key_save_code";
+    private static final String KEY_SAVE_SS = "key_save_ss";
 
     private static SessionManager sInstance;
 
@@ -49,10 +50,27 @@ public class SessionManager {
      *
      * @return
      */
+    public String getKeySavess() {
+        return sharedPref.getString(KEY_SAVE_SS, "");
+    }
+
+    /**
+     * Set key save email
+     *
+     * @param token
+     */
+    public void setKeyss(String token) {
+        sharedPref.edit().putString(KEY_SAVE_SS, token).apply();
+    }
+
+    /**
+     * get key save email
+     *
+     * @return
+     */
     public String getKeySaveName() {
         return sharedPref.getString(KEY_SAVE_NAME, "");
     }
-
 
 
     /**

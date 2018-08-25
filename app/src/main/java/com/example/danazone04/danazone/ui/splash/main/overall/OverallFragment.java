@@ -22,32 +22,32 @@ public class OverallFragment extends BaseContainerFragment {
     @ViewById
     TextView mTvCalo;
 
-    private DBManager dbManager;
+   // private DBManager dbManager;
 
 
     @Override
     protected void afterViews() {
-        dbManager = new DBManager(getContext());
-        int time = dbManager.getSumTime();
-        double distance = dbManager.getSumDistance();
-        double calo = dbManager.getSumCalo();
-
-
-        mTvTime.setText("" + getCountDownStringInMinutes(time));
-        mTvDistance.setText("" + dbManager.getSumTime());
-        mTvCalo.setText(calo + " Calo");
+//        dbManager = new DBManager(getContext());
+//        int time = dbManager.getSumTime();
+//        double distance = dbManager.getSumDistance();
+//        double calo = dbManager.getSumCalo();
+//
+//
+//        mTvTime.setText("" + getCountDownStringInMinutes(time));
+//        mTvDistance.setText("" + dbManager.getSumTime());
+//        mTvCalo.setText(calo + " Calo");
     }
 
-    private String getCountDownStringInMinutes(int timeInSeconds) {
-        return getTwoDecimalsValue(timeInSeconds / 3600) + ":" + getTwoDecimalsValue(timeInSeconds / 60) + ":" + getTwoDecimalsValue(timeInSeconds % 60);
-    }
-
-
-    private static String getTwoDecimalsValue(int value) {
-        if (value >= 0 && value <= 9) {
-            return "0" + value;
-        } else {
-            return value + "";
-        }
-    }
+//    private String getCountDownStringInMinutes(int timeInSeconds) {
+//        return getTwoDecimalsValue(timeInSeconds / 3600) + ":" + getTwoDecimalsValue(timeInSeconds / 60) + ":" + getTwoDecimalsValue(timeInSeconds % 60);
+//    }
+//
+//
+//    private static String getTwoDecimalsValue(int value) {
+//        if (value >= 0 && value <= 9) {
+//            return "0" + value;
+//        } else {
+//            return value + "";
+//        }
+//    }
 }
