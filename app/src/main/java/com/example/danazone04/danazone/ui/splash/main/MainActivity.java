@@ -563,6 +563,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
 
             if (firstfix) {
+                if (!data.isRunning()) {
+
+                }
                 firstfix = false;
             }
         } else {

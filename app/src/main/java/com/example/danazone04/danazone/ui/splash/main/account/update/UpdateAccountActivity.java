@@ -26,6 +26,7 @@ import com.example.danazone04.danazone.common.MySingleton;
 import com.example.danazone04.danazone.dialog.BikeDialog;
 import com.example.danazone04.danazone.dialog.SexDialog;
 import com.example.danazone04.danazone.ui.splash.login.LoginActivity_;
+import com.example.danazone04.danazone.ui.splash.main.account.AccountFragment;
 import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity;
 import com.kosalgeek.android.photoutil.GalleryPhoto;
@@ -79,6 +80,7 @@ public class UpdateAccountActivity extends BaseActivity {
     private File file;
     private String selectPhoto, url, kq;
     private int iduser;
+    private String mUlrImage;
 
     @Override
     protected void afterView() {
@@ -91,7 +93,6 @@ public class UpdateAccountActivity extends BaseActivity {
         mTvSex.setText(users.getSex());
         mTvBike.setText(users.getBike());
         iduser = users.getId();
-        System.out.println("99999999999999999999: " + iduser);
         if (users.getAvatar().equals("NULL")) {
 
         } else {
@@ -151,7 +152,7 @@ public class UpdateAccountActivity extends BaseActivity {
                 final String username = mEdtName.getText().toString();
                 final String phone = mEdtPhone.getText().toString().trim();
                 final String email = mEdtEmail.getText().toString().trim();
-                final String birthday = mTvBike.getText().toString().trim();
+                final String birthday = mTvBirthDay.getText().toString().trim();
                 final String sex = mTvSex.getText().toString().trim();
                 final String bike = mTvBike.getText().toString().trim();
                 if (username.equals("")) {
@@ -178,21 +179,24 @@ public class UpdateAccountActivity extends BaseActivity {
                     return;
                 }
 
-
                 final AlertDialog waitingDialog = new SpotsDialog(UpdateAccountActivity.this);
                 waitingDialog.show();
 
+                if(selectPhoto == null){
+                    mUlrImage = users.getAvatar();
+                }else{
+                    mUlrImage = file.getName().toString().replace(file.getName().toString(), gio() + kq + ".jpeg");
+                }
 
                 try {
-                    bitmap = ImageLoader.init().from(selectPhoto).requestSize(1024, 1024).getBitmap();
-
-                    final String encodeIamge = ImageBase64.encode(bitmap);
                     StringRequest stringRequest = new StringRequest(Request.Method.POST,
                             Common.URL_UPDATE_INFORMATION, new Response.Listener<String>() {
                         @Override
                         public void onResponse(String response) {
                             if (response.contains("thanhcong")) {
                                 waitingDialog.dismiss();
+                                SessionManager.getInstance().updateSaveId(phone);
+                                finish();
                             } else {
                                 waitingDialog.dismiss();
                                 showAlertDialog("Lỗi!");
@@ -212,7 +216,7 @@ public class UpdateAccountActivity extends BaseActivity {
                             parms.put("iduser", String.valueOf(iduser));
                             parms.put("username", username);
                             parms.put("phone", phone);
-                            parms.put("avatar", file.getName().toString().replace(file.getName().toString(), gio() + kq + ".jpeg"));
+                            parms.put("avatar", mUlrImage);
                             parms.put("email", email);
                             parms.put("birthday", birthday);
                             parms.put("sex", sex);
@@ -221,29 +225,34 @@ public class UpdateAccountActivity extends BaseActivity {
                             return parms;
                         }
                     };//ket thuc stringresquet
-
-                    // String url1 = "http://pmthu.esy.es/dulichviet/uplavatar.php";
-                    StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Common.URL_IMAGE_TO_SERVER, new Response.Listener<String>() {
-                        @Override
-                        public void onResponse(String response) {
-                            //Toast.makeText(MainActivity.this,response, Toast.LENGTH_SHORT).show();
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError error) {
-                            // Toast.makeText(CapNhatFragment.this.getActivity(),"loi upload", Toast.LENGTH_SHORT).show();
-                        }
-                    }) {
-                        @Override
-                        protected Map<String, String> getParams() throws AuthFailureError {
-                            Map<String, String> params = new HashMap<>();
-                            params.put("i", encodeIamge);
-                            params.put("r", kq);
-                            return params;
-                        }
-                    };
-                    MySingleton.getInstance(this).addToRequestQueue(stringRequest1);
                     MySingleton.getInstance(getApplicationContext()).addToRequestQueue(stringRequest);
+
+                    if(selectPhoto !=null) {
+                        bitmap = ImageLoader.init().from(selectPhoto).requestSize(1024, 1024).getBitmap();
+                        final String encodeIamge = ImageBase64.encode(bitmap);
+
+                        // String url1 = "http://pmthu.esy.es/dulichviet/uplavatar.php";
+                        StringRequest stringRequest1 = new StringRequest(Request.Method.POST, Common.URL_IMAGE_TO_SERVER, new Response.Listener<String>() {
+                            @Override
+                            public void onResponse(String response) {
+                                //Toast.makeText(MainActivity.this,response, Toast.LENGTH_SHORT).show();
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                // Toast.makeText(CapNhatFragment.this.getActivity(),"loi upload", Toast.LENGTH_SHORT).show();
+                            }
+                        }) {
+                            @Override
+                            protected Map<String, String> getParams() throws AuthFailureError {
+                                Map<String, String> params = new HashMap<>();
+                                params.put("i", encodeIamge);
+                                params.put("r", kq);
+                                return params;
+                            }
+                        };
+                        MySingleton.getInstance(this).addToRequestQueue(stringRequest1);
+                    }
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
@@ -264,7 +273,7 @@ public class UpdateAccountActivity extends BaseActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
-                        mTvBirthDay.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        mTvBirthDay.setText(dayOfMonth + "/" + (monthOfYear + 1) + "/" + year);
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();

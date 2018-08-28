@@ -6,9 +6,25 @@
     android:gravity="center"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_40sdp"
+        android:background="@color/colorMain">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="Cập nhật tài khoản"
+            android:textColor="@color/colorWhite" />
+
+    </RelativeLayout>
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_10sdp"
         android:scrollbars="none">
 
         <RelativeLayout
@@ -22,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/_10sdp"
                 android:layout_marginRight="@dimen/_10sdp"
-                android:layout_marginTop="@dimen/_50sdp"
+                android:layout_marginTop="@dimen/_40sdp"
                 android:background="@drawable/bg_shadow_all"
                 android:orientation="vertical">
 
@@ -96,7 +112,6 @@
                     android:textSize="@dimen/_11sdp" />
 
                 <TextView
-                    android:text="Cập nhật"
                     android:id="@+id/mTvSubmit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -104,12 +119,13 @@
                     android:layout_marginBottom="@dimen/_5sdp"
                     android:layout_marginTop="@dimen/_30sdp"
                     android:background="@drawable/bg_edittext"
+                    android:text="Cập nhật"
                     android:textColor="@color/colorWhite"
                     android:textSize="@dimen/_10sdp" />
 
             </LinearLayout>
 
-            <ImageView
+            <com.example.danazone04.danazone.utils.CircleImageView
                 android:id="@+id/mImgAvatar"
                 android:layout_width="@dimen/_90sdp"
                 android:layout_height="@dimen/_90sdp"

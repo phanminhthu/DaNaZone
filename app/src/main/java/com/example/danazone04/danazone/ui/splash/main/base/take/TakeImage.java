@@ -113,7 +113,7 @@ public class TakeImage extends BaseActivity {
             case R.id.mTvOut:
                 MainMenuActivity_.intent(TakeImage.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                        | Intent.FLAG_ACTIVITY_NEW_TASK).mKey(1).start();
+                        | Intent.FLAG_ACTIVITY_NEW_TASK).start();
                 finish();
                 break;
 

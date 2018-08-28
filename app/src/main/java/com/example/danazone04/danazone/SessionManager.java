@@ -97,7 +97,9 @@ public class SessionManager {
     public void setKeySaveId(String token) {
         sharedPref.edit().putString(KEY_SAVE_ID, token).apply();
     }
-
+    public void updateSaveId(String token){
+        sharedPref.edit().putString(KEY_SAVE_ID, token).apply();
+    }
     public String getKeySaveCoin() {
         return sharedPref.getString(KEY_SAVE_COIN, "");
     }
