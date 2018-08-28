@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-        package="com.example.danazone04.danazone"
+    package="com.example.danazone04.danazone"
     android:installLocation="auto">
 
     <!-- network -->
@@ -21,17 +21,18 @@
     <!-- Lock screen -->
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
+
     <uses-feature android:name="android.hardware.camera" />
 
     <application
         android:name=".BaseApp_"
         android:allowBackup="true"
+        android:hardwareAccelerated="false"
         android:icon="@drawable/ic_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:hardwareAccelerated="false"
-        android:largeHeap="true"
         android:theme="@style/AppTheme">
         <uses-library
             android:name="com.google.android.maps"
@@ -41,39 +42,42 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ui.splash.main.MainActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.SplashActivity_"
-            android:screenOrientation="portrait"
-            >
+        <activity
+            android:name=".ui.splash.main.MainActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.SplashActivity_"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.splash.login.LoginActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.register.RegisterActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.main.base.take.TakeImage_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.main.base.BaseImageActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.main.metter.MetterActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.main.menu.MainMenuActivity_"
-            android:screenOrientation="portrait"
-            />
-        <activity android:name=".ui.splash.main.base.take.fanpage.FanpageActivity_"
-            android:screenOrientation="portrait"
-            />
+        <activity
+            android:name=".ui.splash.login.LoginActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.register.RegisterActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.base.take.TakeImage_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.base.BaseImageActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.metter.MetterActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.menu.MainMenuActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.base.take.fanpage.FanpageActivity_"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.splash.main.account.update.UpdateAccountActivity_"
+            android:screenOrientation="portrait" />
 
         <service android:name=".speed.GpsServices" />
 

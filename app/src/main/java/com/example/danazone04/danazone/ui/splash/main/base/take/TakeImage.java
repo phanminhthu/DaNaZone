@@ -46,6 +46,8 @@ public class TakeImage extends BaseActivity {
     TextView mTvShareFanpage;
     @ViewById
     TextView mTvOut;
+    @ViewById
+    TextView mTvReset;
     @Extra
     String fileName;
     String completePath;
@@ -79,7 +81,7 @@ public class TakeImage extends BaseActivity {
         }
     }
 
-    @Click({R.id.mTvSubmit, R.id.mTvShareFanpage, R.id.mTvOut})
+    @Click({R.id.mTvSubmit, R.id.mTvShareFanpage, R.id.mTvOut, R.id.mTvReset})
     void clickView(View v) {
         switch (v.getId()) {
             case R.id.mTvSubmit:
@@ -109,6 +111,13 @@ public class TakeImage extends BaseActivity {
                 break;
 
             case R.id.mTvOut:
+                MainMenuActivity_.intent(TakeImage.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        | Intent.FLAG_ACTIVITY_NEW_TASK).mKey(1).start();
+                finish();
+                break;
+
+            case R.id.mTvReset:
                 MainMenuActivity_.intent(TakeImage.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
                         | Intent.FLAG_ACTIVITY_NEW_TASK).mKey(1).start();

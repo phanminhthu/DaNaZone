@@ -27,20 +27,19 @@
                 android:orientation="vertical">
 
                 <EditText
-                    android:layout_marginTop="@dimen/_50sdp"
                     android:id="@+id/mEdtName"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_30sdp"
                     android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_50sdp"
+                    android:background="@drawable/bg_edittext"
                     android:hint="Tên hiển thị"
                     android:imeOptions="actionNext"
                     android:maxLines="1"
                     android:textColor="@color/colorWhite"
-                    android:textSize="@dimen/_11sdp"
-                    android:background="@drawable/bg_edittext"
                     android:textColorHint="@color/colorWhite"
-                    />
+                    android:textSize="@dimen/_11sdp" />
 
                 <EditText
                     android:id="@+id/mEdtPhone"
@@ -48,15 +47,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_30sdp"
                     android:layout_marginRight="@dimen/_30sdp"
-                    android:hint="Số điện thoại"
-                    android:textColorHint="@color/colorWhite"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:background="@drawable/bg_edittext"
+                    android:hint="Số điện thoại"
                     android:imeOptions="actionNext"
                     android:inputType="phone"
+                    android:maxLength="11"
                     android:maxLines="1"
                     android:textColor="@color/colorWhite"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:maxLength="11"
+                    android:textColorHint="@color/colorWhite"
                     android:textSize="@dimen/_11sdp" />
 
 
@@ -66,13 +65,67 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_30sdp"
                     android:layout_marginRight="@dimen/_30sdp"
-                    android:hint="Mật khẩu"
+                    android:layout_marginTop="@dimen/_10sdp"
                     android:background="@drawable/bg_edittext"
-                    android:textColorHint="@color/colorWhite"
+                    android:hint="Mật khẩu"
                     android:inputType="textPassword"
                     android:maxLines="1"
                     android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <EditText
+                    android:id="@+id/mEdtEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/mTvBirthDay"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:text="Năm sinh"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/mTvSex"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:text="Giới tính"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="@dimen/_11sdp" />
+
+                <TextView
+                    android:id="@+id/mTvBike"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_30sdp"
+                    android:layout_marginRight="@dimen/_30sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/bg_edittext"
+                    android:text="Loại xe"
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite"
                     android:textSize="@dimen/_11sdp" />
 
                 <TextView

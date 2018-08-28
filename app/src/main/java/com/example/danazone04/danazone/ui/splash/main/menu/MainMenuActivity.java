@@ -20,6 +20,9 @@ import com.example.danazone04.danazone.BaseContainerFragment;
 import com.example.danazone04.danazone.BaseFragment;
 import com.example.danazone04.danazone.R;
 import com.example.danazone04.danazone.SessionManager;
+import com.example.danazone04.danazone.speed.Data;
+import com.example.danazone04.danazone.ui.splash.main.account.AccountFragment;
+import com.example.danazone04.danazone.ui.splash.main.account.AccountFragment_;
 import com.example.danazone04.danazone.ui.splash.main.bmi.BmiFragment;
 import com.example.danazone04.danazone.ui.splash.main.bmi.BmiFragment_;
 import com.example.danazone04.danazone.ui.splash.main.coin.CoinFragment;
@@ -54,9 +57,10 @@ public class MainMenuActivity extends BaseActivity {
 
     @Extra
     int mKey;
-
+    private static Data data;
     @Override
     protected void afterView() {
+        data = new Data();
         if(mKey == 1){
             Intent a = new Intent(Intent.ACTION_MAIN);
             a.addCategory(Intent.CATEGORY_HOME);
@@ -122,66 +126,65 @@ public class MainMenuActivity extends BaseActivity {
     }
 
     private void Selected(MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.mHome:
+                    if (!((BaseContainerFragment) getCurrentFragment() instanceof HomeFragment))
+                        replaceFragment(HomeFragment_.builder().build());
+                    break;
 
-        switch (item.getItemId()) {
-            case R.id.mHome:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof HomeFragment))
-                    replaceFragment(HomeFragment_.builder().build());
+                case R.id.mSetting:
+                    MetterActivity_.intent(this).start();
+                    break;
+
+                case R.id.mCoin:
+                    if (!((BaseContainerFragment) getCurrentFragment() instanceof CoinFragment))
+                        replaceFragment(CoinFragment_.builder().build());
+                    break;
+
+                case R.id.mContact:
+                    if (!((BaseContainerFragment) getCurrentFragment() instanceof FragmentContact))
+                        replaceFragment(FragmentContact_.builder().build());
+                    break;
+
+                case R.id.mBMI:
+                    if (!((BaseContainerFragment) getCurrentFragment() instanceof BmiFragment))
+                        replaceFragment(BmiFragment_.builder().build());
+                    break;
+
+                case R.id.mHistory:
+                    if (!((BaseContainerFragment) getCurrentFragment() instanceof HistoryFragment))
+                        replaceFragment(HistoryFragment_.builder().build());
+                    break;
+
+            case R.id.mAccount:
+                if (!((BaseContainerFragment) getCurrentFragment() instanceof AccountFragment))
+                    replaceFragment(AccountFragment_.builder().build());
                 break;
 
-            case R.id.mSetting:
-                MetterActivity_.intent(this).start();
-                break;
+                case R.id.mFeddBack:
+                    Intent email = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "lehieudev01@gmail.com", null));
+                    email.putExtra(Intent.EXTRA_SUBJECT, "Phản hồi ứng dụng");
+                    email.putExtra(Intent.EXTRA_TEXT, "Ứng dụng: DaNaZone \n Phiên bản ứng dụng: 1.0 \n \n Chúng tôi có thể làm gì để ứng dụng được tốt hơn?");
+                    startActivity(Intent.createChooser(email, "Gởi phản hồi"));
+                    break;
 
-            case R.id.mCoin:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof CoinFragment))
-                    replaceFragment(CoinFragment_.builder().build());
-                break;
+                case R.id.mShare:
 
-            case R.id.mContact:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof FragmentContact))
-                    replaceFragment(FragmentContact_.builder().build());
-                break;
+                    Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Chia sẻ ứng dụng đến nhiều người");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.devpro.xedapdana");
+                    startActivity(Intent.createChooser(shareIntent, "Share App"));
+                    break;
 
-            case R.id.mBMI:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof BmiFragment))
-                    replaceFragment(BmiFragment_.builder().build());
-                break;
-
-            case R.id.mHistory:
-                if (!((BaseContainerFragment) getCurrentFragment() instanceof HistoryFragment))
-                    replaceFragment(HistoryFragment_.builder().build());
-                break;
-
-//            case R.id.mOverall:
-////                if (!((BaseContainerFragment) getCurrentFragment() instanceof OverallFragment))
-////                    replaceFragment(OverallFragment_.builder().build());
-//                break;
-
-            case R.id.mFeddBack:
-                Intent email = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "lehieudev01@gmail.com", null));
-                email.putExtra(Intent.EXTRA_SUBJECT, "Phản hồi ứng dụng");
-                email.putExtra(Intent.EXTRA_TEXT, "Ứng dụng: DaNaZone \n Phiên bản ứng dụng: 1.0 \n \n Chúng tôi có thể làm gì để ứng dụng được tốt hơn?");
-                startActivity(Intent.createChooser(email, "Gởi phản hồi"));
-                break;
-
-            case R.id.mShare:
-
-                Intent shareIntent = new Intent(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Chia sẻ ứng dụng đến nhiều người");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, "https://play.google.com/store/apps/details?id=com.devpro.xedapdana");
-                startActivity(Intent.createChooser(shareIntent, "Share App"));
-                break;
-
-            case R.id.mExit:
-                Intent a = new Intent(Intent.ACTION_MAIN);
-                a.addCategory(Intent.CATEGORY_HOME);
-                a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                startActivity(a);
-                finish();
-                break;
-        }
+                case R.id.mExit:
+                    Intent a = new Intent(Intent.ACTION_MAIN);
+                    a.addCategory(Intent.CATEGORY_HOME);
+                    a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                    startActivity(a);
+                    finish();
+                    break;
+            }
         item.setChecked(true);
         setTitle(item.getTitle());
         mDrawer.closeDrawers();

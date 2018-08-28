@@ -41,7 +41,9 @@ public class SplashActivity extends BaseActivity {
         mAnimation.setRepeatCount(android.view.animation.Animation.INFINITE);
         mAnimation.setRepeatMode(Animation.REVERSE);
         mImgLogo.startAnimation(mAnimation);
+
         printKeyHash();
+
         if (!SessionManager.getInstance().getKeySaveId().equals("") && !SessionManager.getInstance().getKeySavePass().equals("")) {
             MainMenuActivity_.intent(SplashActivity.this).flags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -57,6 +59,7 @@ public class SplashActivity extends BaseActivity {
             mHandler.postDelayed(mActivityStarter, 2000);
         }
     }
+
 
     private void printKeyHash() {
         try {

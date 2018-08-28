@@ -184,6 +184,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private AlertDialog waitingDialog;
     boolean mLocked;
     private int mCheck;
+    private double mKey, mKeyAVG;
+    private double speed = 0.0;
+    private double avg = 0.0;
 
     @Override
     protected void afterView() {
@@ -194,11 +197,21 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         waitingDialog = new SpotsDialog(MainActivity.this);
-        waitingDialog.show();
+        //waitingDialog.show();
         updateService();
+        // playNow();
         buidGoogleApiClient();
         createLocationRequest();
         displayLocation();
+    }
+
+    private void playNow() {
+        mImgPlay.setImageDrawable(getResources().getDrawable(R.drawable.new_pause));
+        data.setRunning(true);
+        mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
+        mTvTime.start();
+        data.setFirstTime(true);
+        startService(new Intent(getBaseContext(), GpsServices.class));
     }
 
     private void updateService() {
@@ -213,6 +226,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 } else {
                     averageTemp = data.getAverageSpeed();
                 }
+                // save avg speed
+                //  double avg = 0.0;
+                // ms = String.valueOf(s);
+
 
                 String speedUnits;
                 String distanceUnits;
@@ -234,13 +251,31 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 SpannableString s = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
+                // Save maxspeed
+                SpannableString max = new SpannableString(String.format("%.0f", maxSpeedTemp));
+                max.setSpan(new RelativeSizeSpan(0.5f), max.length() - 4, max.length(), 0);
+
+                // double speed = 0.0;
                 ms = String.valueOf(s);
+                if (speed <= Double.valueOf(ms)) {
+                    speed = Double.valueOf(ms);
+                    mKey = speed;
+                }
 
                 mTvMaxSpeed.setText(s);
 
                 s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
-                ms1 = String.valueOf(s);
+                //save avg speed
+                SpannableString avgs = new SpannableString(String.format("%.0f") + speedUnits);
+                avgs.setSpan(new RelativeSizeSpan(0.5f), avgs.length() - 4, avgs.length(), 0);
+
+                ms1 = String.valueOf(avgs);
+                if (avg <= Double.valueOf(ms1)) {
+                    avg = Double.valueOf(ms1);
+                    mKeyAVG = avg;
+                }
+
                 mTvMinxSpeed.setText(s);
 
                 DecimalFormat dcf = new DecimalFormat("#.###");
@@ -253,17 +288,10 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
                 ms2 = String.valueOf(s);
                 mTvDistance.setText(s);
-
-
             }
         };
 
         mLocationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
-//        if (checkPermission()) {
-//            mLocationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, TIME_UPDATES, DISTANCE_UPDATES, this);
-//        } else {
-//            requestPermission();
-//        }
         mTvTime.setText("00:00:00");
         mTvTime.setOnChronometerTickListener(new Chronometer.OnChronometerTickListener() {
             boolean isPair = true;
@@ -394,8 +422,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     @Override
     public void onDestroy() {
         super.onDestroy();
-            resetData();
-            stopService(new Intent(getBaseContext(), GpsServices.class));
+        SessionManager.getInstance().setKeyss("1");
+        data = new Data(onGpsServiceUpdate);
+        stopService(new Intent(getBaseContext(), GpsServices.class));
 
     }
 
@@ -448,8 +477,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                                             .mEnd(String.valueOf(imageUri))
                                             .mTime(numTime)
                                             .mKM(ms2)
-                                            .mSpeed(ms1)
-                                            .mMaxSpeed(ms)
+                                            .mSpeed(String.valueOf(mKeyAVG) + "km/h")
+                                            .mMaxSpeed(String.valueOf(mKey) + "km/h")
                                             .mCalo(calos)
                                             .mTimeStart(time)
                                             .mTimeEnd(timeEnd)
@@ -534,10 +563,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
             s.setSpan(new RelativeSizeSpan(0.75f), s.length() - 1, s.length(), 0);
 
             if (firstfix) {
-                //mRlPause.setVisibility(View.VISIBLE);
-                if (!data.isRunning()) {
-
-                }
                 firstfix = false;
             }
         } else {
@@ -689,6 +714,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
 
         mLocationManager.addGpsStatusListener(this);
+
     }
 
     @Override

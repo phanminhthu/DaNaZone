@@ -20,10 +20,14 @@
         android:id="@+id/mHistory"
         android:icon="@drawable/history_run"
         android:title="Lịch sử" />
+    <item
+        android:id="@+id/mAccount"
+        android:icon="@drawable/account_new"
+        android:title="Tài khoản" />
     <!--<item-->
-        <!--android:id="@+id/mOverall"-->
-        <!--android:icon="@drawable/chart_bar_stacked"-->
-        <!--android:title="Tổng quan" />-->
+    <!--android:id="@+id/mOverall"-->
+    <!--android:icon="@drawable/chart_bar_stacked"-->
+    <!--android:title="Tổng quan" />-->
     <item
         android:id="@+id/mFeddBack"
         android:icon="@drawable/feedback"
