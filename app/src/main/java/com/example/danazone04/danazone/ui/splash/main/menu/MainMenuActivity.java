@@ -169,7 +169,6 @@ public class MainMenuActivity extends BaseActivity {
                     break;
 
                 case R.id.mShare:
-
                     Intent shareIntent = new Intent(Intent.ACTION_SEND);
                     shareIntent.setType("text/plain");
                     shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Chia sẻ ứng dụng đến nhiều người");

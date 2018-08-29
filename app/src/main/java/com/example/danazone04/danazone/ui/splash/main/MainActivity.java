@@ -197,21 +197,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         waitingDialog = new SpotsDialog(MainActivity.this);
-        //waitingDialog.show();
+        waitingDialog.show();
         updateService();
-        // playNow();
+
         buidGoogleApiClient();
         createLocationRequest();
         displayLocation();
-    }
-
-    private void playNow() {
-        mImgPlay.setImageDrawable(getResources().getDrawable(R.drawable.new_pause));
-        data.setRunning(true);
-        mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
-        mTvTime.start();
-        data.setFirstTime(true);
-        startService(new Intent(getBaseContext(), GpsServices.class));
     }
 
     private void updateService() {
@@ -226,9 +217,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 } else {
                     averageTemp = data.getAverageSpeed();
                 }
-                // save avg speed
-                //  double avg = 0.0;
-                // ms = String.valueOf(s);
 
 
                 String speedUnits;
@@ -255,8 +243,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 SpannableString max = new SpannableString(String.format("%.0f", maxSpeedTemp));
                 max.setSpan(new RelativeSizeSpan(0.5f), max.length() - 4, max.length(), 0);
 
-                // double speed = 0.0;
-                ms = String.valueOf(s);
+
+                ms = String.valueOf(max);
                 if (speed <= Double.valueOf(ms)) {
                     speed = Double.valueOf(ms);
                     mKey = speed;
@@ -423,7 +411,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     public void onDestroy() {
         super.onDestroy();
         SessionManager.getInstance().setKeyss("1");
-        data = new Data(onGpsServiceUpdate);
+        resetData();
         stopService(new Intent(getBaseContext(), GpsServices.class));
 
     }
