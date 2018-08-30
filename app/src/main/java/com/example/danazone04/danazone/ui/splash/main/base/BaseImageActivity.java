@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -11,6 +12,7 @@ import android.location.Location;
 import android.media.ExifInterface;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -63,10 +65,14 @@ import org.androidannotations.annotations.ViewById;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -203,6 +209,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         } else {
             SessionManager.getInstance().setKeySaveCoin(String.valueOf(key));
         }
+
         mUriStart = Uri.parse(mStart);
         mUriEnd = Uri.parse(mEnd);
 
@@ -226,6 +233,7 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         Bitmap bm2 = rotateBitmap(bmEnd, oritation1);
         mImgStart.setImageBitmap(bm1);
         mImgEnd.setImageBitmap(bm2);
+
 
         if (mTime == null) {
             mTvTime.setText("00.00");
@@ -268,34 +276,6 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
         insertHistory();
 
     }
-
-//    private void convertOverall() {
-//        String timestampStr = "00:00:06";
-//        if (mTime != null) {
-//            String[] tokens = mTime.split(":");
-//            int hours = Integer.parseInt(tokens[0]);
-//            int minutes = Integer.parseInt(tokens[1]);
-//            int seconds = Integer.parseInt(tokens[2]);
-//            int duration = 3600 * hours + 60 * minutes + seconds;
-//            sumTime = duration;
-//        } else {
-//            sumTime = 0;
-//        }
-//
-//        String km;
-//        if (mKM != null) {
-//            km = mKM.replaceAll("m", "");
-//            sumDistance = Double.valueOf(km.replaceAll(",", ".").trim());
-//        } else {
-//            sumDistance = 0.0;
-//        }
-//
-//        if (mCalo != null) {
-//            sumCalo = Double.valueOf(mCalo.trim().replaceAll(",", "."));
-//        } else {
-//            sumCalo = 0.0;
-//        }
-//    }
 
     private void insertHistory() {
         Run run = new Run();
@@ -347,16 +327,11 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
     void onClick(View v) {
         switch (v.getId()) {
             case R.id.mTvSubmit:
-                if (boolean_save) {
-                    TakeImage_.intent(this).fileName(filename).start();
-
-                } else {
                     if (boolean_permission) {
                         Bitmap bitmap1 = loadBitmapFromView(mLnTake, mLnTake.getWidth(), mLnTake.getHeight());
                         saveBitmap(bitmap1);
                     } else {
                     }
-                }
                 break;
             case R.id.mTvHide:
                 mRlBase.setVisibility(View.VISIBLE);
@@ -381,8 +356,10 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
             fos.flush();
             fos.close();
             boolean_save = true;
-
-            mTvSubmit.setText("Check image");
+            if(boolean_save){
+                TakeImage_.intent(this).fileName(filename).start();
+            }
+           // mTvSubmit.setText("Check image");
 
             Log.e("ImageSave", "Saveimage");
         } catch (FileNotFoundException e) {
@@ -689,4 +666,5 @@ public class BaseImageActivity extends BaseActivity implements OnMapReadyCallbac
             return null;
         }
     }
+
 }

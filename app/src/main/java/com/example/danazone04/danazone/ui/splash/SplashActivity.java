@@ -18,6 +18,7 @@ import com.example.danazone04.danazone.SessionManager;
 
 import com.example.danazone04.danazone.ui.splash.main.menu.MainMenuActivity_;
 import com.example.danazone04.danazone.ui.splash.register.RegisterActivity_;
+import com.example.danazone04.danazone.utils.ConnectionUtil;
 
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
@@ -36,6 +37,11 @@ public class SplashActivity extends BaseActivity {
     @Override
     protected void afterView() {
         getSupportActionBar().hide();
+        if(!ConnectionUtil.isConnected(this)){
+            showAlertDialog("Vui lòng kiểm tra kết nối internet");
+            return;
+        }
+
         Animation mAnimation = new AlphaAnimation(1, 0);
         mAnimation.setDuration(400);
         mAnimation.setRepeatCount(android.view.animation.Animation.INFINITE);

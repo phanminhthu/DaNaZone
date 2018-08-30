@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.danazone04.danazone"
     android:installLocation="auto">
 
@@ -34,6 +35,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
+        <meta-data android:name="com.facebook.accountkit.ApplicationName"
+            android:value="@string/app_name"/>
+        <meta-data android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id"/>
+        <meta-data android:name="com.facebook.accountkit.ClientToken"
+            android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN"/>
+
         <uses-library
             android:name="com.google.android.maps"
             android:required="true" />
@@ -41,7 +50,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-
+        <activity android:name="com.facebook.accountkit.ui.AccountKitActivity"
+            android:theme="@style/CustomFbStyle" tools:replace="android:theme"/>
         <activity
             android:name=".ui.splash.main.MainActivity_"
             android:screenOrientation="portrait" />

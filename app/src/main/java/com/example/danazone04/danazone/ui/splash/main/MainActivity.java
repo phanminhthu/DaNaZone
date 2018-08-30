@@ -57,6 +57,7 @@ import com.example.danazone04.danazone.dialog.DialogCheckout;
 import com.example.danazone04.danazone.dialog.EndDialog;
 import com.example.danazone04.danazone.dialog.FinishDialog;
 import com.example.danazone04.danazone.dialog.GpsDialog;
+import com.example.danazone04.danazone.speed.Calo;
 import com.example.danazone04.danazone.speed.Data;
 import com.example.danazone04.danazone.speed.GpsServices;
 import com.example.danazone04.danazone.ui.splash.main.base.BaseImageActivity_;
@@ -90,6 +91,7 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Time;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -172,6 +174,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private SharedPreferences sharedPreferences;
     private static Data data;
 
+    private Calo.onGpsServiceUpdate onCaloServiceUpdate;
+    private static Calo calo;
+
     private boolean firstfix;
     private ContentValues values;
     private Uri imageUri;
@@ -187,6 +192,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
     private double mKey, mKeyAVG;
     private double speed = 0.0;
     private double avg = 0.0;
+    private CountDownTimer Timer;
+    private int mCount;
+    private double value;
 
     @Override
     protected void afterView() {
@@ -197,7 +205,9 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
 
         waitingDialog = new SpotsDialog(MainActivity.this);
-        waitingDialog.show();
+      //  waitingDialog.show();
+      //  waitingDialog.setMessage("Đang lấy vị trí...");
+      //  waitingDialog.setCancelable(false);
         updateService();
 
         buidGoogleApiClient();
@@ -217,7 +227,6 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 } else {
                     averageTemp = data.getAverageSpeed();
                 }
-
 
                 String speedUnits;
                 String distanceUnits;
@@ -240,11 +249,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
                 // Save maxspeed
-                SpannableString max = new SpannableString(String.format("%.0f", maxSpeedTemp));
-                max.setSpan(new RelativeSizeSpan(0.5f), max.length() - 4, max.length(), 0);
+                SpannableString max = new SpannableString(String.format("%.0f", maxSpeedTemp) + speedUnits);
+                max.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
 
                 ms = String.valueOf(max);
+                ms = ms.replace("km/h","");
                 if (speed <= Double.valueOf(ms)) {
                     speed = Double.valueOf(ms);
                     mKey = speed;
@@ -255,10 +265,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                 s = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
                 //save avg speed
-                SpannableString avgs = new SpannableString(String.format("%.0f") + speedUnits);
-                avgs.setSpan(new RelativeSizeSpan(0.5f), avgs.length() - 4, avgs.length(), 0);
+                SpannableString avgs = new SpannableString(String.format("%.0f", averageTemp) + speedUnits);
+                avgs.setSpan(new RelativeSizeSpan(0.5f), s.length() - 4, s.length(), 0);
 
                 ms1 = String.valueOf(avgs);
+                ms1 = ms1.replace("km/h","");
                 if (avg <= Double.valueOf(ms1)) {
                     avg = Double.valueOf(ms1);
                     mKeyAVG = avg;
@@ -266,11 +277,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
 
                 mTvMinxSpeed.setText(s);
 
-                DecimalFormat dcf = new DecimalFormat("#.###");
-                double a = averageTemp / 20.0;
-                calos = dcf.format(a);
-
-                mTvCalo.setText(String.valueOf(dcf.format(a)));
+                value = mKeyAVG / 20.0;
 
                 s = new SpannableString(String.format("%.3f", distanceTemp) + distanceUnits);
                 s.setSpan(new RelativeSizeSpan(0.5f), s.length() - 2, s.length(), 0);
@@ -330,6 +337,8 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     mTvTime.setBase(SystemClock.elapsedRealtime() - data.getTime());
                     mTvTime.start();
                     data.setFirstTime(true);
+                    countDownt();
+
                     startService(new Intent(getBaseContext(), GpsServices.class));
 
                 } else {
@@ -358,6 +367,7 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
                     data.setRunning(false);
                     stopService(new Intent(getBaseContext(), GpsServices.class));
                     numTime = mTvTime.getText().toString();
+                    Timer.cancel();
                     resetData();
                     new EndDialog(MainActivity.this, new EndDialog.OnDialogClickListener() {
                         @RequiresApi(api = Build.VERSION_CODES.M)
@@ -407,11 +417,45 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         }
     }
 
+    private void countDownt() {
+        Timer = new CountDownTimer(11000, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                mCount = Integer.valueOf(String.valueOf(millisUntilFinished/1000));
+                DecimalFormat dcf = new DecimalFormat("#.###");
+                calos = dcf.format(value);
+                mTvCalo.setText(String.valueOf(calos));
+            }
+
+            @Override
+            public void onFinish() {
+               if(Double.valueOf(mKeyAVG) < 5.0) {
+                   value += 0.0041;
+               }else if(Double.valueOf(mKeyAVG) < 10.0 && Double.valueOf(mKeyAVG) > 5.0){
+                   value += 0.0042;
+               }else if(Double.valueOf(mKeyAVG) < 15.0 && Double.valueOf(mKeyAVG) > 10.0){
+                   value += 0.0045;
+               }else if(Double.valueOf(mKeyAVG) < 20.0 && Double.valueOf(mKeyAVG) > 15.0){
+                   value += 0.0047;
+               }else if(Double.valueOf(mKeyAVG) < 25.0 && Double.valueOf(mKeyAVG) > 20.0){
+                   value += 0.0050;
+               }else if(Double.valueOf(mKeyAVG) < 40.0 && Double.valueOf(mKeyAVG) > 25.0){
+                   value += 0.0055;
+               }else{
+                   value += 0.0076;
+               }
+                    countDownt();
+
+            }
+        }.start();
+    }
+
     @Override
     public void onDestroy() {
         super.onDestroy();
         SessionManager.getInstance().setKeyss("1");
         resetData();
+        Timer.cancel();
         stopService(new Intent(getBaseContext(), GpsServices.class));
 
     }
@@ -782,6 +826,12 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         return data;
     }
 
+    public void resetCalo(){
+        calo = new Calo(onCaloServiceUpdate);
+    }
+    public static Calo getCalo() {
+        return calo;
+    }
     /**
      * setup date
      * dd/MM/yyyy
@@ -802,5 +852,11 @@ public class MainActivity extends BaseActivity implements OnMapReadyCallback,
         String pattern = "HH:mm";
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat(pattern);
         timeEnd = simpleDateFormat.format(new Date());
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Timer.cancel();
     }
 }
